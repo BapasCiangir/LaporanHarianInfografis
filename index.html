@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
+    <!-- Tailwind CSS for Layout -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf for PDF Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        .gold-gradient-text {
+            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gold-border {
+            border-color: #d4af37;
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .editable {
+            outline: none;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            padding: 2px 4px;
+        }
+
+        .editable:hover, .editable:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px #d4af37;
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #0f2027 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            .report-container {
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 10px !important;
+                box-shadow: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8 flex flex-col items-center">
+
+    <!-- Control Panel / Actions -->
+    <div class="no-print w-full max-w-5xl mb-6 flex flex-wrap justify-between items-center bg-slate-900/80 p-4 rounded-xl border border-amber-500/30 gap-4">
+        <div class="flex items-center space-x-2 text-amber-400 font-semibold text-sm">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>Mode Edit Aktif: Klik pada teks atau angka untuk mengubah data.</span>
+        </div>
+        <div class="flex space-x-3">
+            <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition">
+                <i class="fa-solid fa-image"></i> Ganti Foto
+            </button>
+            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
+            
+            <button onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-5 py-2 rounded-lg text-sm flex items-center gap-2 transition shadow-lg shadow-amber-600/30">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF / Template
+            </button>
+        </div>
+    </div>
+
+    <!-- Template Laporan -->
+    <div id="reportArea" class="report-container w-full max-w-5xl glass-card rounded-2xl p-6 md:p-8 text-slate-100 relative overflow-hidden">
+        
+        <!-- Background Ornaments -->
+        <div class="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-6 mb-6 gap-4">
+            <!-- Logo Kemenimipas -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
+            
+            <!-- Header Titles -->
+            <div class="text-center flex-1 px-2">
+                <h2 class="text-xs md:text-sm font-semibold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
+                <h1 class="text-2xl md:text-3xl font-extrabold gold-gradient-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
+                <p class="text-lg font-bold text-slate-200 mt-0.5 editable" contenteditable="true">BAPAS KELAS II CIANGIR</p>
+                <div class="inline-block mt-2 px-4 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full">
+                    <span class="text-xs md:text-sm font-semibold text-amber-300 editable" contenteditable="true">PAGI - Sabtu, 19 September 2026</span>
+                </div>
+            </div>
+
+            <!-- Logo Pemasyarakatan -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+            <!-- Left Side: Data Klien & Jenis Perkara (8 cols) -->
+            <div class="md:col-span-8 flex flex-col gap-6">
+                
+                <!-- Section 1: Data Klien -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                    <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-xs"></i> Data Klien Pemasyarakatan
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/80 text-amber-300 border-b border-slate-700">
+                                    <th class="p-2">JENIS BIMBINGAN</th>
+                                    <th class="p-2 text-center">DEWASA (L)</th>
+                                    <th class="p-2 text-center">DEWASA (P)</th>
+                                    <th class="p-2 text-center">ANAK (L)</th>
+                                    <th class="p-2 text-center">ANAK (P)</th>
+                                    <th class="p-2 text-center font-bold text-amber-400">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr>
+                                    <td class="p-2 font-medium">PB</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">1163</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">53</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">14</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">0</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">1230</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">CB</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">62</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">3</td>
+                                    <td class="p-2 text-center editable" contenteditable="true font-medium">1</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">0</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">66</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">CMB</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">Latihan Kerja</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">5</td>
+                                    <td class="p-2 text-center editable" contenteditable="true">-</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">5</td>
+                                </tr>
+                                <tr class="bg-amber-500/10 font-bold text-amber-200">
+                                    <td class="p-2">TOTAL KLIEN</td>
+                                    <td class="p-2 text-center">1225</td>
+                                    <td class="p-2 text-center">56</td>
+                                    <td class="p-2 text-center">20</td>
+                                    <td class="p-2 text-center">0</td>
+                                    <td class="p-2 text-center text-sm font-extrabold text-amber-400">1301</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section 2: Litmas & Jenis Perkara -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Jenis Perkara -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Jenis Perkara Klien</h3>
+                        <div class="space-y-1.5 text-xs">
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Narkotika</span>
+                                <span class="font-semibold text-amber-200 editable" contenteditable="true">582 (Dewasa) / 1 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Terorisme</span>
+                                <span class="font-semibold text-amber-200 editable" contenteditable="true">3 (Dewasa) / 0 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Korupsi</span>
+                                <span class="font-semibold text-amber-200 editable" contenteditable="true">20 (Dewasa) / 0 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-300">Lain - Lain</span>
+                                <span class="font-semibold text-amber-200 editable" contenteditable="true">695 (Dewasa) / 18 (Anak)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rekap Litmas -->
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Rekapitulasi Litmas</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Dewasa</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Asimilasi: <b class="editable" contenteditable="true">3</b></div>
+                                    <div>CB: <b class="editable" contenteditable="true">122</b></div>
+                                    <div>PB: <b class="editable" contenteditable="true">317</b></div>
+                                    <div>Pembinaan Awal: <b class="editable" contenteditable="true">5</b></div>
+                                    <div>Pemindahan: <b class="editable" contenteditable="true">87</b></div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Anak</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Diversi: <b class="editable" contenteditable="true">12</b></div>
+                                    <div>Peradilan: <b class="editable" contenteditable="true">48</b></div>
+                                    <div>PB/CB: <b class="editable" contenteditable="true">3 / 0</b></div>
+                                    <div>Saksi: <b class="editable" contenteditable="true">1</b></div>
+                                    <div>Pendampingan: <b class="editable" contenteditable="true">Ya</b></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Anggaran -->
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60 flex flex-wrap justify-between items-center gap-2 text-xs">
+                    <span class="text-slate-300 font-medium"><i class="fa-solid fa-wallet text-amber-400 mr-1"></i> Alokasi Anggaran:</span>
+                    <span class="font-bold text-amber-300 editable" contenteditable="true">Rp. 4.927.664.000,-</span>
+                    <span class="text-slate-300 font-medium ml-4"><i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i> Penyerapan:</span>
+                    <span class="font-bold text-emerald-400 editable" contenteditable="true">Rp. 3.576.958.795 (72.59%)</span>
+                </div>
+
+            </div>
+
+            <!-- Right Side: Foto Petugas Piket (4 cols) -->
+            <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                <div class="w-full text-center">
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">PETUGAS PIKET</h3>
+                    <div class="relative w-full aspect-[4/5] bg-slate-800 rounded-lg overflow-hidden border-2 border-amber-500/40 shadow-md">
+                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
+                    </div>
+                </div>
+                
+                <div class="mt-4 text-center w-full bg-amber-500/10 py-2 rounded-lg border border-amber-500/30">
+                    <p class="text-xs font-bold text-amber-300 tracking-wider editable" contenteditable="true">FIKRI & FAOZI</p>
+                    <p class="text-[10px] text-slate-300 uppercase mt-0.5">Petugas Dinas Piket Harian</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Sistem Pelaporan Harian Otomatis - Bapas Kelas II Ciangir</span>
+            <span>Kemenimipas RI</span>
+        </div>
+
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // Preview Uploaded Photo
+        function loadFoto(event) {
+            const output = document.getElementById('previewFoto');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src);
+            }
+        }
+
+        // Export/Download to PDF
+        function downloadPDF() {
+            const element = document.getElementById('reportArea');
+            const opt = {
+                margin:       [0.2, 0.2, 0.2, 0.2],
+                filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
+
+            // Use html2pdf library
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>
