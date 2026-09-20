@@ -22,10 +22,10 @@
             min-height: 100vh;
         }
 
-        .gold-gradient-text {
-            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        /* Warna Emas Murni yang Aman untuk Canvas/PDF tanpa Artefak Papan Kuning */
+        .gold-text {
+            color: #fcf6ba;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
         }
 
         .glass-card {
@@ -125,8 +125,8 @@
             
             <div class="text-center flex-1 px-2">
                 <h2 class="text-xs md:text-sm font-semibold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
-                <h1 class="text-2xl md:text-3xl font-extrabold gold-gradient-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
-                <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BAPAS KELAS II CIANGIR</p>
+                <h1 class="text-2xl md:text-3xl font-extrabold gold-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
+                <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
                 <div class="inline-block mt-2 px-4 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full">
                     <span class="text-xs md:text-sm font-semibold text-amber-300 editable-field">PAGI - Minggu, 20 September 2026</span>
                 </div>
@@ -396,7 +396,7 @@
                 margin:       [0.2, 0.2, 0.2, 0.2],
                 filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true },
+                html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
             html2pdf().set(opt).from(element).save();
@@ -407,7 +407,8 @@
             html2canvas(element, {
                 scale: 2,
                 useCORS: true,
-                backgroundColor: null
+                allowTaint: true,
+                backgroundColor: '#0f2027'
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'Laporan_Harian_Bapas_Ciangir.png';
