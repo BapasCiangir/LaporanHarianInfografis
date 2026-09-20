@@ -6,8 +6,9 @@
     <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf for PDF Download -->
+    <!-- html2pdf & html2canvas for PDF and PNG Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -87,6 +88,11 @@
                 <i class="fa-solid fa-image"></i> Ganti Foto Piket
             </button>
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
+
+            <!-- Download PNG Button -->
+            <button onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-image"></i> Download PNG
+            </button>
 
             <!-- Download PDF Button -->
             <button onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
@@ -394,6 +400,20 @@
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
             html2pdf().set(opt).from(element).save();
+        }
+
+        function downloadPNG() {
+            const element = document.getElementById('reportArea');
+            html2canvas(element, {
+                scale: 2,
+                useCORS: true,
+                backgroundColor: null
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'Laporan_Harian_Bapas_Ciangir.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
         }
     </script>
 </body>
