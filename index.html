@@ -89,13 +89,13 @@
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
 
             <!-- Download PNG Button -->
-            <button onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
-                <i class="fa-solid fa-file-image"></i> Download PNG
+            <button id="btnPng" onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-image"></i> <span id="txtPng">Download PNG</span>
             </button>
 
             <!-- Download PDF Button -->
-            <button onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
-                <i class="fa-solid fa-file-pdf"></i> Download PDF
+            <button id="btnPdf" onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-pdf"></i> <span id="txtPdf">Download PDF</span>
             </button>
 
             <!-- Toggle Admin Mode Button -->
@@ -274,8 +274,8 @@
             <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
                 <div class="w-full text-center">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">PETUGAS PIKET</h3>
-                    <div class="relative w-full aspect-[4/5] bg-slate-800 rounded-lg overflow-hidden border-2 border-amber-500/40 shadow-md">
-                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
+                    <div class="relative w-full aspect-[4/5] bg-slate-800 rounded-lg overflow-hidden border-2 border-amber-500/40 shadow-md flex items-center justify-center">
+                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" crossorigin="anonymous" class="w-full h-full object-cover">
                     </div>
                 </div>
                 
@@ -386,7 +386,6 @@
             }
         }
 
-        // Simpan logo ke localStorage dan tampilkan
         function loadLogo(event, containerId, storageKey) {
             if (!isAdmin) return;
             const container = document.getElementById(containerId);
@@ -396,13 +395,16 @@
                 reader.onload = function(e) {
                     const imageData = e.target.result;
                     container.innerHTML = `<img src="${imageData}" class="max-h-20 max-w-full object-contain">`;
-                    localStorage.setItem(storageKey, imageData);
+                    try {
+                        localStorage.setItem(storageKey, imageData);
+                    } catch(err) {
+                        console.warn("Gagal menyimpan logo ke LocalStorage (Ukuran gambar terlalu besar).");
+                    }
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // Muat logo dari localStorage saat halaman dibuka
         function restoreSavedLogos() {
             const savedLogoKiri = localStorage.getItem('savedLogoKiri');
             if (savedLogoKiri) {
@@ -418,37 +420,86 @@
         function loadFoto(event) {
             if (!isAdmin) return;
             const output = document.getElementById('previewFoto');
-            output.src = URL.createObjectURL(event.target.files[0]);
-            output.onload = function() {
-                URL.revokeObjectURL(output.src);
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    output.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
             }
         }
 
-        function downloadPDF() {
+        // Fungsi Download PDF Terperbaiki & Anti-Hanging
+        async function downloadPDF() {
+            if (typeof html2pdf === 'undefined') {
+                alert("Library penunjang PDF belum selesai dimuat. Harap periksa koneksi internet Anda.");
+                return;
+            }
+
+            const btnPdf = document.getElementById('btnPdf');
+            const txtPdf = document.getElementById('txtPdf');
             const element = document.getElementById('reportArea');
+
+            // Nonaktifkan tombol & aktifkan indikator proses
+            btnPdf.disabled = true;
+            txtPdf.innerText = "Memproses...";
+
             const opt = {
                 margin:       [0.2, 0.2, 0.2, 0.2],
                 filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, allowTaint: true },
+                html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
-            html2pdf().set(opt).from(element).save();
+
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (error) {
+                console.error("Gagal mengunduh PDF:", error);
+                alert("Terjadi kesalahan saat membuat file PDF.");
+            } finally {
+                btnPdf.disabled = false;
+                txtPdf.innerText = "Download PDF";
+            }
         }
 
-        function downloadPNG() {
+        // Fungsi Download PNG Terperbaiki & Anti-Hanging
+        async function downloadPNG() {
+            if (typeof html2canvas === 'undefined') {
+                alert("Library penunjang PNG belum selesai dimuat. Harap periksa koneksi internet Anda.");
+                return;
+            }
+
+            const btnPng = document.getElementById('btnPng');
+            const txtPng = document.getElementById('txtPng');
             const element = document.getElementById('reportArea');
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: '#0f2027'
-            }).then(canvas => {
+
+            // Nonaktifkan tombol & aktifkan indikator proses
+            btnPng.disabled = true;
+            txtPng.innerText = "Memproses...";
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    scrollX: 0,
+                    scrollY: 0,
+                    backgroundColor: '#0f2027'
+                });
+
                 const link = document.createElement('a');
                 link.download = 'Laporan_Harian_Bapas_Ciangir.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-            });
+            } catch (error) {
+                console.error("Gagal mengunduh PNG:", error);
+                alert("Terjadi kesalahan saat membuat gambar PNG.");
+            } finally {
+                btnPng.disabled = false;
+                txtPng.innerText = "Download PNG";
+            }
         }
 
         document.addEventListener("DOMContentLoaded", function() {
