@@ -72,13 +72,19 @@
 
         <!-- Action Buttons -->
         <div class="flex flex-wrap items-center gap-2">
-            <!-- Edit Foto (Hanya saat Admin Mode) -->
+            <!-- Input Pilihan Upload Logo Kemenimipas Manual (jika mau ganti file lokal) -->
+            <label id="btnGantiLogo" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-upload"></i> Upload Logo Custom
+                <input type="file" id="logoInput" accept="image/*" class="hidden" onchange="loadLogo(event)">
+            </label>
+
+            <!-- Edit Foto Piket (Hanya saat Admin Mode) -->
             <button id="btnGantiFoto" onclick="document.getElementById('imageInput').click()" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition">
                 <i class="fa-solid fa-image"></i> Ganti Foto Piket
             </button>
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
 
-            <!-- Download PDF Button (Publik + Admin) -->
+            <!-- Download PDF Button -->
             <button onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
                 <i class="fa-solid fa-file-pdf"></i> Download PDF
             </button>
@@ -95,8 +101,15 @@
         
         <!-- Header -->
         <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-6 mb-6 gap-4">
-            <!-- LOGO KEMENIMIPAS TERBARU -->
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
+            
+            <!-- LOGO KEMENIMIPAS (Dengan fallback image CDN) -->
+            <div class="w-20 h-20 flex items-center justify-center">
+                <img id="logoKemenimipas" 
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png/600px-Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" 
+                     alt="Logo Kemenimipas" 
+                     class="max-h-20 max-w-full object-contain"
+                     onerror="this.onerror=null; this.src='https://i.ibb.co/3Y8Z3Zp/imipas.png';">
+            </div>
             
             <div class="text-center flex-1 px-2">
                 <h2 class="text-xs md:text-sm font-semibold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
@@ -108,7 +121,13 @@
             </div>
 
             <!-- LOGO PEMASYARAKATAN -->
-            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
+            <div class="w-20 h-20 flex items-center justify-center">
+                <img id="logoPemasyarakatan" 
+                     src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Logo_Pemasyarakatan.png/600px-Logo_Pemasyarakatan.png" 
+                     alt="Logo Pemasyarakatan" 
+                     class="max-h-20 max-w-full object-contain"
+                     onerror="this.onerror=null; this.src='https://i.ibb.co/L5k69zX/pemasyarakatan.png';">
+            </div>
         </div>
 
         <!-- Main Grid Content -->
@@ -288,6 +307,7 @@
             const adminBadge = document.getElementById('adminBadge');
             const statusInfo = document.getElementById('statusInfo');
             const btnGantiFoto = document.getElementById('btnGantiFoto');
+            const btnGantiLogo = document.getElementById('btnGantiLogo');
             const btnAdminText = document.getElementById('btnAdminText');
             const lockIcon = document.getElementById('lockIcon');
             const fields = document.querySelectorAll('.editable-field');
@@ -302,6 +322,9 @@
 
                 btnGantiFoto.classList.remove('hidden');
                 btnGantiFoto.classList.add('flex');
+                
+                btnGantiLogo.classList.remove('hidden');
+                btnGantiLogo.classList.add('flex');
 
                 fields.forEach(el => {
                     el.setAttribute('contenteditable', 'true');
@@ -316,11 +339,21 @@
                 lockIcon.className = "fa-solid fa-lock";
 
                 btnGantiFoto.classList.add('hidden');
+                btnGantiLogo.classList.add('hidden');
 
                 fields.forEach(el => {
                     el.setAttribute('contenteditable', 'false');
                     el.classList.remove('editable-active');
                 });
+            }
+        }
+
+        function loadLogo(event) {
+            if (!isAdmin) return;
+            const output = document.getElementById('logoKemenimipas');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+                URL.revokeObjectURL(output.src);
             }
         }
 
