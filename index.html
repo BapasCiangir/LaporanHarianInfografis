@@ -128,7 +128,7 @@
                 <h1 class="text-2xl md:text-3xl font-extrabold gold-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
                 <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
                 <div class="inline-block mt-2 px-4 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full">
-                    <span class="text-xs md:text-sm font-semibold text-amber-300 editable-field">PAGI - Minggu, 20 September 2026</span>
+                    <span id="realtimeDate" class="text-xs md:text-sm font-semibold text-amber-300 editable-field">PAGI - Memuat Tanggal...</span>
                 </div>
             </div>
 
@@ -303,6 +303,29 @@
         const ADMIN_PASSWORD = "Bapas2026";
         let isAdmin = false;
 
+        // Fungsi untuk memperbarui tanggal secara Real-Time
+        function updateRealtimeDate() {
+            const now = new Date();
+            const options = { weekday: 'long', day: 'numeric', month: 'Long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('id-ID', options);
+            
+            // Mengatur waktu Pagi/Siang/Sore/Malam berdasarkan jam sistem
+            const hours = now.getHours();
+            let shift = "PAGI";
+            if (hours >= 12 && hours < 15) {
+                shift = "SIANG";
+            } else if (hours >= 15 && hours < 18) {
+                shift = "SORE";
+            } else if (hours >= 18 || hours < 6) {
+                shift = "MALAM";
+            }
+
+            const dateElement = document.getElementById('realtimeDate');
+            if (dateElement) {
+                dateElement.innerText = `${shift} - ${formattedDate}`;
+            }
+        }
+
         function toggleAdminMode() {
             if (!isAdmin) {
                 const pass = prompt("Masukkan Password Admin untuk mengedit data:");
@@ -416,6 +439,9 @@
                 link.click();
             });
         }
+
+        // Jalankan fungsi update tanggal saat dokumen selesai dimuat
+        document.addEventListener("DOMContentLoaded", updateRealtimeDate);
     </script>
 </body>
 </html>
