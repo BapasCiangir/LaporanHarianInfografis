@@ -6,17 +6,17 @@
     <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf for PDF Export -->
+    <!-- html2pdf for PDF Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #0b132b, #1c2541, #1f2a44);
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
             color: #ffffff;
             min-height: 100vh;
         }
@@ -28,117 +28,104 @@
         }
 
         .glass-card {
-            background: rgba(15, 23, 42, 0.82);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        /* Highlight untuk elemen editable saat admin aktif */
         .editable-active[contenteditable="true"] {
             outline: none;
             transition: all 0.2s ease;
             border-radius: 4px;
-            padding: 2px 4px;
-            background-color: rgba(212, 175, 55, 0.12);
+            padding: 1px 3px;
+            background-color: rgba(212, 175, 55, 0.15);
             box-shadow: 0 0 0 1px #d4af37;
-            cursor: text;
         }
 
         .editable-active[contenteditable="true"]:hover, 
         .editable-active[contenteditable="true"]:focus {
-            background-color: rgba(212, 175, 55, 0.25);
-            box-shadow: 0 0 0 2px #f59e0b;
+            background-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 2px #fcf6ba;
         }
 
         @media print {
             .no-print { display: none !important; }
-            body { background: #0b132b !important; }
-            .report-container {
-                box-shadow: none !important;
-                border: 1px solid #d4af37 !important;
-            }
+            body { background: #0f2027 !important; }
         }
     </style>
 </head>
-<body class="p-3 md:p-6 flex flex-col items-center justify-start min-h-screen">
+<body class="p-4 md:p-8 flex flex-col items-center">
 
-    <!-- NAVIGATION / TOOLBAR BAR (SELALU MUNCUL) -->
-    <header class="no-print w-full max-w-5xl mb-6 flex flex-wrap justify-between items-center bg-slate-900/90 p-4 rounded-2xl border border-amber-500/40 shadow-xl gap-4">
+    <!-- Top Action Bar -->
+    <div class="no-print w-full max-w-5xl mb-6 flex flex-wrap justify-between items-center bg-slate-900/90 p-4 rounded-xl border border-amber-500/30 gap-4 shadow-xl">
+        
+        <!-- Mode Status -->
         <div class="flex items-center gap-3">
-            <!-- Badge Status -->
-            <span id="statusBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-600 flex items-center gap-1.5">
-                <i class="fa-solid fa-eye text-sky-400"></i> Mode Publik (Read-Only)
+            <span id="adminBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                Mode Publik (Read-Only)
             </span>
-            <span id="statusMessage" class="hidden md:inline text-xs text-slate-400">
-                Siapapun dapat melihat & mengunduh laporan.
+            <span id="statusInfo" class="text-xs text-slate-300 hidden md:inline">
+                Halaman ini dapat dilihat oleh publik.
             </span>
         </div>
 
-        <div class="flex items-center gap-2 flex-wrap">
-            <!-- Admin Buttons -->
-            <button id="btnGantiFoto" onclick="document.getElementById('imageInput').click()" class="hidden bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/40 px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition">
-                <i class="fa-solid fa-camera"></i> Ganti Foto Petugas
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- Edit Foto (Hanya saat Admin Mode) -->
+            <button id="btnGantiFoto" onclick="document.getElementById('imageInput').click()" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition">
+                <i class="fa-solid fa-image"></i> Ganti Foto Piket
             </button>
             <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
 
-            <!-- Download Button -->
-            <button onclick="downloadPDF()" class="bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-2 transition shadow-lg shadow-amber-500/20">
-                <i class="fa-solid fa-file-pdf text-sm"></i> Download PDF
+            <!-- Download PDF Button (Publik + Admin) -->
+            <button onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
             </button>
 
-            <!-- Mode Toggle Button -->
-            <button id="btnAdminToggle" onclick="openAdminModal()" class="bg-slate-800 hover:bg-slate-700 text-white border border-slate-600 px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition">
-                <i class="fa-solid fa-lock text-amber-400"></i> <span id="lblAdminToggle">Masuk Mode Admin</span>
+            <!-- Toggle Admin Mode Button -->
+            <button id="btnToggleAdmin" onclick="toggleAdminMode()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-lock" id="lockIcon"></i> <span id="btnAdminText">Masuk Mode Admin</span>
             </button>
         </div>
-    </header>
+    </div>
 
-    <!-- TEMPLATE LAPORAN HARIAN (PUBLIC & EDITABLE) -->
-    <main id="reportArea" class="report-container w-full max-w-5xl glass-card rounded-2xl p-6 md:p-8 text-slate-100 relative overflow-hidden">
+    <!-- Template Laporan Infografis -->
+    <div id="reportArea" class="report-container w-full max-w-5xl glass-card rounded-2xl p-6 md:p-8 text-slate-100 relative overflow-hidden">
         
-        <!-- Ornamen Background Latar -->
-        <div class="absolute -top-20 -right-20 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
-        <div class="absolute -bottom-20 -left-20 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
-
-        <!-- HEADER KOP INSTANSI -->
-        <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-5 mb-6 gap-4">
-            <!-- Logo Kemenimipas -->
-            <div class="flex items-center justify-center min-w-[70px]">
-                <img src="https://www.ditjenpas.go.id/uploads/images/image_1680x_676439654a607.jpg" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
-            </div>
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-6 mb-6 gap-4">
+            <!-- LOGO KEMENIMIPAS TERBARU -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
             
-            <!-- Judul Kop -->
             <div class="text-center flex-1 px-2">
                 <h2 class="text-xs md:text-sm font-semibold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
                 <h1 class="text-2xl md:text-3xl font-extrabold gold-gradient-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
-                <p class="text-base md:text-lg font-bold text-slate-100 mt-0.5 editable-field" contenteditable="false">BAPAS KELAS II CIANGIR</p>
+                <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BAPAS KELAS II CIANGIR</p>
                 <div class="inline-block mt-2 px-4 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full">
-                    <span class="text-xs md:text-sm font-semibold text-amber-300 editable-field" contenteditable="false">PAGI - Sabtu, 19 September 2026</span>
+                    <span class="text-xs md:text-sm font-semibold text-amber-300 editable-field">PAGI - Minggu, 20 September 2026</span>
                 </div>
             </div>
 
-            <!-- Logo Pemasyarakatan -->
-            <div class="flex items-center justify-center min-w-[70px]">
-                <img src="https://www.ditjenpas.go.id/uploads/images/image_1680x_676439654a607.jpg" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
-            </div>
+            <!-- LOGO PEMASYARAKATAN -->
+            <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
         </div>
 
-        <!-- ISI LAPORAN GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-5">
+        <!-- Main Grid Content -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-            <!-- KOLOM KIRI (8 COLS) -->
-            <div class="md:col-span-8 flex flex-col gap-5">
+            <!-- Left Side (8 Cols) -->
+            <div class="md:col-span-8 flex flex-col gap-6">
                 
-                <!-- TABEL DATA KLIEN -->
-                <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700/80 shadow-inner">
-                    <h3 class="text-xs md:text-sm font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-amber-400"></i> Data Klien Pemasyarakatan
+                <!-- Data Klien Table -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                    <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-xs"></i> Data Klien Pemasyarakatan
                     </h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-xs text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-800/90 text-amber-300 border-b border-slate-700">
+                                <tr class="bg-slate-800/80 text-amber-300 border-b border-slate-700">
                                     <th class="p-2">JENIS BIMBINGAN</th>
                                     <th class="p-2 text-center">DEWASA (L)</th>
                                     <th class="p-2 text-center">DEWASA (P)</th>
@@ -149,43 +136,43 @@
                             </thead>
                             <tbody class="divide-y divide-slate-800">
                                 <tr>
-                                    <td class="p-2 font-medium text-slate-200">PB</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">1163</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">53</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">14</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">0</td>
+                                    <td class="p-2 font-medium">PB</td>
+                                    <td class="p-2 text-center editable-field">1163</td>
+                                    <td class="p-2 text-center editable-field">53</td>
+                                    <td class="p-2 text-center editable-field">14</td>
+                                    <td class="p-2 text-center editable-field">0</td>
                                     <td class="p-2 text-center font-bold text-amber-300">1230</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 font-medium text-slate-200">CB</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">62</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">3</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">1</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">0</td>
+                                    <td class="p-2 font-medium">CB</td>
+                                    <td class="p-2 text-center editable-field">62</td>
+                                    <td class="p-2 text-center editable-field">3</td>
+                                    <td class="p-2 text-center editable-field">1</td>
+                                    <td class="p-2 text-center editable-field">0</td>
                                     <td class="p-2 text-center font-bold text-amber-300">66</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 font-medium text-slate-200">CMB</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
+                                    <td class="p-2 font-medium">CMB</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
                                     <td class="p-2 text-center font-bold text-amber-300">0</td>
                                 </tr>
                                 <tr>
-                                    <td class="p-2 font-medium text-slate-200">Latihan Kerja</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">5</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">-</td>
+                                    <td class="p-2 font-medium">Latihan Kerja</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">5</td>
+                                    <td class="p-2 text-center editable-field">-</td>
                                     <td class="p-2 text-center font-bold text-amber-300">5</td>
                                 </tr>
-                                <tr class="bg-amber-500/15 font-bold text-amber-200">
+                                <tr class="bg-amber-500/10 font-bold text-amber-200">
                                     <td class="p-2">TOTAL KLIEN</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">1225</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">56</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">20</td>
-                                    <td class="p-2 text-center editable-field" contenteditable="false">0</td>
+                                    <td class="p-2 text-center">1225</td>
+                                    <td class="p-2 text-center">56</td>
+                                    <td class="p-2 text-center">20</td>
+                                    <td class="p-2 text-center">0</td>
                                     <td class="p-2 text-center text-sm font-extrabold text-amber-400">1301</td>
                                 </tr>
                             </tbody>
@@ -193,206 +180,146 @@
                     </div>
                 </div>
 
-                <!-- JENIS PERKARA & REKAP LITMAS -->
+                <!-- Perkara & Litmas -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Jenis Perkara -->
-                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700/80">
-                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2.5 flex items-center gap-2">
-                            <i class="fa-solid fa-scale-balanced text-amber-400"></i> Jenis Perkara Klien
-                        </h3>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Jenis Perkara Klien</h3>
                         <div class="space-y-1.5 text-xs">
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Narkotika</span>
-                                <span class="font-semibold text-amber-200 editable-field" contenteditable="false">582 (Dewasa) / 1 (Anak)</span>
+                                <span class="font-semibold text-amber-200 editable-field">582 (Dewasa) / 1 (Anak)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Terorisme</span>
-                                <span class="font-semibold text-amber-200 editable-field" contenteditable="false">3 (Dewasa) / 0 (Anak)</span>
+                                <span class="font-semibold text-amber-200 editable-field">3 (Dewasa) / 0 (Anak)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Korupsi</span>
-                                <span class="font-semibold text-amber-200 editable-field" contenteditable="false">20 (Dewasa) / 0 (Anak)</span>
+                                <span class="font-semibold text-amber-200 editable-field">20 (Dewasa) / 0 (Anak)</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-300">Lain - Lain</span>
-                                <span class="font-semibold text-amber-200 editable-field" contenteditable="false">695 (Dewasa) / 18 (Anak)</span>
+                                <span class="font-semibold text-amber-200 editable-field">695 (Dewasa) / 18 (Anak)</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Rekap Litmas -->
-                    <div class="bg-slate-900/70 p-4 rounded-xl border border-slate-700/80">
-                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2.5 flex items-center gap-2">
-                            <i class="fa-solid fa-file-contract text-amber-400"></i> Rekapitulasi Litmas
-                        </h3>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Rekapitulasi Litmas</h3>
                         <div class="grid grid-cols-2 gap-2 text-xs">
-                            <div class="bg-slate-800/60 p-2 rounded border border-slate-700/60">
-                                <div class="text-slate-400 font-semibold mb-1 text-[11px]">Litmas Dewasa</div>
-                                <div class="text-[10px] space-y-0.5 text-slate-200">
-                                    <div>Asimilasi: <b class="editable-field" contenteditable="false">3</b></div>
-                                    <div>CB: <b class="editable-field" contenteditable="false">122</b></div>
-                                    <div>PB: <b class="editable-field" contenteditable="false">317</b></div>
-                                    <div>Pembinaan Awal: <b class="editable-field" contenteditable="false">5</b></div>
-                                    <div>Pemindahan: <b class="editable-field" contenteditable="false">87</b></div>
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Dewasa</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Asimilasi: <b class="editable-field">3</b></div>
+                                    <div>CB: <b class="editable-field">122</b></div>
+                                    <div>PB: <b class="editable-field">317</b></div>
+                                    <div>Pembinaan Awal: <b class="editable-field">5</b></div>
                                 </div>
                             </div>
-                            <div class="bg-slate-800/60 p-2 rounded border border-slate-700/60">
-                                <div class="text-slate-400 font-semibold mb-1 text-[11px]">Litmas Anak</div>
-                                <div class="text-[10px] space-y-0.5 text-slate-200">
-                                    <div>Diversi: <b class="editable-field" contenteditable="false">12</b></div>
-                                    <div>Peradilan: <b class="editable-field" contenteditable="false">48</b></div>
-                                    <div>PB/CB: <b class="editable-field" contenteditable="false">3 / 0</b></div>
-                                    <div>Saksi: <b class="editable-field" contenteditable="false">1</b></div>
-                                    <div>Pendampingan: <b class="editable-field" contenteditable="false">Ya</b></div>
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Anak</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Diversi: <b class="editable-field">12</b></div>
+                                    <div>Peradilan: <b class="editable-field">48</b></div>
+                                    <div>PB/CB: <b class="editable-field">3 / 0</b></div>
+                                    <div>Saksi: <b class="editable-field">1</b></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ALOKASI ANGGARAN -->
-                <div class="bg-slate-900/70 p-3 rounded-xl border border-slate-700/80 flex flex-wrap justify-between items-center gap-2 text-xs">
-                    <span class="text-slate-300 font-medium flex items-center gap-1.5">
-                        <i class="fa-solid fa-wallet text-amber-400"></i> Alokasi Anggaran:
-                    </span>
-                    <span class="font-bold text-amber-300 editable-field" contenteditable="false">Rp. 4.927.664.000,-</span>
-                    <span class="text-slate-300 font-medium ml-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-chart-line text-emerald-400"></i> Penyerapan:
-                    </span>
-                    <span class="font-bold text-emerald-400 editable-field" contenteditable="false">Rp. 3.576.958.795 (72.59%)</span>
+                <!-- Anggaran -->
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60 flex flex-wrap justify-between items-center gap-2 text-xs">
+                    <span class="text-slate-300 font-medium"><i class="fa-solid fa-wallet text-amber-400 mr-1"></i> Alokasi Anggaran:</span>
+                    <span class="font-bold text-amber-300 editable-field">Rp. 4.927.664.000,-</span>
+                    <span class="text-slate-300 font-medium ml-4"><i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i> Penyerapan:</span>
+                    <span class="font-bold text-emerald-400 editable-field">Rp. 3.576.958.795 (72.59%)</span>
                 </div>
 
             </div>
 
-            <!-- KOLOM KANAN / FOTO PETUGAS (4 COLS) -->
-            <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/70 p-4 rounded-xl border border-slate-700/80">
+            <!-- Right Side / Foto Petugas Piket (4 Cols) -->
+            <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
                 <div class="w-full text-center">
-                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-user-shield"></i> Petugas Piket Harian
-                    </h3>
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">PETUGAS PIKET</h3>
                     <div class="relative w-full aspect-[4/5] bg-slate-800 rounded-lg overflow-hidden border-2 border-amber-500/40 shadow-md">
-                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
+                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" class="w-full h-full object-cover">
                     </div>
                 </div>
                 
-                <div class="mt-4 text-center w-full bg-amber-500/10 py-2.5 rounded-lg border border-amber-500/30">
-                    <p class="text-xs font-bold text-amber-300 tracking-wider editable-field" contenteditable="false">FIKRI & FAOZI</p>
-                    <p class="text-[10px] text-slate-300 uppercase mt-0.5">PETUGAS DIPIKET HARIAN</p>
+                <div class="mt-4 text-center w-full bg-amber-500/10 py-2 rounded-lg border border-amber-500/30">
+                    <p class="text-xs font-bold text-amber-300 tracking-wider editable-field">FIKRI & FAOZI</p>
+                    <p class="text-[10px] text-slate-300 uppercase mt-0.5">Petugas Dinas Piket Harian</p>
                 </div>
             </div>
 
         </div>
 
-        <!-- FOOTER INFOGRAFIS -->
+        <!-- Footer -->
         <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
-            <span>Sistem Informasi Laporan Harian - Bapas Kelas II Ciangir</span>
-            <span>Kementerian Imigrasi dan Pemasyarakatan RI</span>
+            <span>Sistem Pelaporan Harian Otomatis - Bapas Kelas II Ciangir</span>
+            <span>Kemenimipas RI</span>
         </div>
 
-    </main>
-
-    <!-- MODAL POPUP LOGIN ADMIN -->
-    <div id="adminModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-6 w-full max-w-sm shadow-2xl relative">
-            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <div class="text-center mb-5">
-                <div class="w-12 h-12 bg-amber-500/20 text-amber-400 rounded-full flex items-center justify-center mx-auto mb-3 border border-amber-500/30">
-                    <i class="fa-solid fa-user-gear text-xl"></i>
-                </div>
-                <h3 class="text-base font-bold text-white">Verifikasi Admin</h3>
-                <p class="text-xs text-slate-400 mt-1">Masukkan password admin untuk membuka fitur edit data laporan.</p>
-            </div>
-
-            <form onsubmit="verifyAdmin(event)" class="space-y-4">
-                <div>
-                    <input type="password" id="adminPassword" placeholder="Masukkan Password Admin" required class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-amber-400 text-center tracking-widest">
-                    <p id="errorMsg" class="hidden text-red-400 text-[11px] text-center mt-2">Password salah! Silakan coba lagi.</p>
-                </div>
-                <button type="submit" class="w-full bg-gradient-to-r from-amber-600 to-amber-500 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition shadow-lg">
-                    Buka Fitur Edit
-                </button>
-            </form>
-            <p class="text-[10px] text-slate-500 text-center mt-4">Password bawaan: <code class="text-amber-400">admin123</code></p>
-        </div>
     </div>
 
-    <!-- JAVASCRIPT LOGIC -->
+    <!-- JavaScript logic -->
     <script>
+        const ADMIN_PASSWORD = "admin123";
         let isAdmin = false;
-        const ADMIN_PASSWORD_DEFAULT = "Bapas2026";
 
-        function openAdminModal() {
-            if (isAdmin) {
-                // Logout dari mode admin
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                const pass = prompt("Masukkan Password Admin untuk mengedit data:");
+                if (pass === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    updateUIState();
+                } else if (pass !== null) {
+                    alert("Password salah! Akses ditolak.");
+                }
+            } else {
                 isAdmin = false;
-                updateAdminUI();
-            } else {
-                document.getElementById('adminModal').classList.remove('hidden');
-                document.getElementById('adminPassword').focus();
+                updateUIState();
             }
         }
 
-        function closeAdminModal() {
-            document.getElementById('adminModal').classList.add('hidden');
-            document.getElementById('errorMsg').classList.add('hidden');
-            document.getElementById('adminPassword').value = '';
-        }
-
-        function verifyAdmin(e) {
-            e.preventDefault();
-            const pass = document.getElementById('adminPassword').value;
-            if (pass === ADMIN_PASSWORD_DEFAULT) {
-                isAdmin = true;
-                closeAdminModal();
-                updateAdminUI();
-            } else {
-                document.getElementById('errorMsg').classList.remove('hidden');
-            }
-        }
-
-        function updateAdminUI() {
-            const statusBadge = document.getElementById('statusBadge');
-            const statusMessage = document.getElementById('statusMessage');
+        function updateUIState() {
+            const adminBadge = document.getElementById('adminBadge');
+            const statusInfo = document.getElementById('statusInfo');
             const btnGantiFoto = document.getElementById('btnGantiFoto');
-            const lblAdminToggle = document.getElementById('lblAdminToggle');
+            const btnAdminText = document.getElementById('btnAdminText');
+            const lockIcon = document.getElementById('lockIcon');
             const fields = document.querySelectorAll('.editable-field');
 
             if (isAdmin) {
-                // Tampilan Admin Aktif
-                statusBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 flex items-center gap-1.5";
-                statusBadge.innerHTML = '<i class="fa-solid fa-pen-to-square"></i> Mode Admin Aktif';
+                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                adminBadge.innerText = "Mode Admin (Edit Aktif)";
+                statusInfo.innerText = "Klik pada teks/angka mana saja di layar untuk mengubah data.";
                 
-                statusMessage.innerText = "Klik pada teks/angka mana saja di laporan untuk langsung mengedit.";
-                statusMessage.classList.remove('hidden');
-                
+                btnAdminText.innerText = "Keluar Mode Admin";
+                lockIcon.className = "fa-solid fa-unlock";
+
                 btnGantiFoto.classList.remove('hidden');
                 btnGantiFoto.classList.add('flex');
-                
-                lblAdminToggle.innerText = "Kunci / Keluar Admin";
 
-                // Aktifkan edit pada elemen
-                fields.forEach(f => {
-                    f.setAttribute('contenteditable', 'true');
-                    f.classList.add('editable-active');
+                fields.forEach(el => {
+                    el.setAttribute('contenteditable', 'true');
+                    el.classList.add('editable-active');
                 });
             } else {
-                // Tampilan Mode Publik / Read Only
-                statusBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-600 flex items-center gap-1.5";
-                statusBadge.innerHTML = '<i class="fa-solid fa-eye text-sky-400"></i> Mode Publik (Read-Only)';
-                
-                statusMessage.innerText = "Siapapun dapat melihat & mengunduh laporan.";
-                
-                btnGantiFoto.classList.add('hidden');
-                btnGantiFoto.classList.remove('flex');
-                
-                lblAdminToggle.innerText = "Masuk Mode Admin";
+                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40";
+                adminBadge.innerText = "Mode Publik (Read-Only)";
+                statusInfo.innerText = "Halaman ini dapat dilihat oleh publik.";
 
-                // Matikan edit pada elemen
-                fields.forEach(f => {
-                    f.setAttribute('contenteditable', 'false');
-                    f.classList.remove('editable-active');
+                btnAdminText.innerText = "Masuk Mode Admin";
+                lockIcon.className = "fa-solid fa-lock";
+
+                btnGantiFoto.classList.add('hidden');
+
+                fields.forEach(el => {
+                    el.setAttribute('contenteditable', 'false');
+                    el.classList.remove('editable-active');
                 });
             }
         }
@@ -408,24 +335,14 @@
 
         function downloadPDF() {
             const element = document.getElementById('reportArea');
-            
-            // Temporary hide edit highlights if admin is active during print
-            const fields = document.querySelectorAll('.editable-field');
-            fields.forEach(f => f.classList.remove('editable-active'));
-
             const opt = {
                 margin:       [0.2, 0.2, 0.2, 0.2],
                 filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0b132b' },
+                html2canvas:  { scale: 2, useCORS: true },
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
             };
-
-            html2pdf().set(opt).from(element).save().then(() => {
-                if(isAdmin) {
-                    fields.forEach(f => f.classList.add('editable-active'));
-                }
-            });
+            html2pdf().set(opt).from(element).save();
         }
     </script>
 </body>
