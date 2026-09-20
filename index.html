@@ -22,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* Warna Emas Murni yang Aman untuk Canvas/PDF tanpa Artefak Papan Kuning */
         .gold-text {
             color: #fcf6ba;
             text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
@@ -74,13 +73,13 @@
             <!-- Upload Manual Logo Kiri -->
             <label id="btnGantiLogoKiri" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
                 <i class="fa-solid fa-upload"></i> Logo Kiri
-                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoKemenimipasContainer')">
+                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoKemenimipasContainer', 'savedLogoKiri')">
             </label>
 
             <!-- Upload Manual Logo Kanan -->
             <label id="btnGantiLogoKanan" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
                 <i class="fa-solid fa-upload"></i> Logo Kanan
-                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoPemasyarakatanContainer')">
+                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoPemasyarakatanContainer', 'savedLogoKanan')">
             </label>
 
             <!-- Edit Foto Piket -->
@@ -112,7 +111,7 @@
         <!-- Header -->
         <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-6 mb-6 gap-4">
             
-            <!-- LOGO KIRI (KEMENIMIPAS EMBLEM SVG) -->
+            <!-- LOGO KIRI (KEMENIMIPAS EMBLEM SVG / CUSTOM) -->
             <div id="logoKemenimipasContainer" class="w-20 h-20 flex items-center justify-center">
                 <svg class="w-full h-full text-amber-400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="3" fill="#0f172a"/>
@@ -132,14 +131,12 @@
                 </div>
             </div>
 
-            <!-- LOGO KANAN (PEMASYARAKATAN EMBLEM SVG) -->
+            <!-- LOGO KANAN (PEMASYARAKATAN EMBLEM SVG / CUSTOM) -->
             <div id="logoPemasyarakatanContainer" class="w-20 h-20 flex items-center justify-center">
                 <svg class="w-full h-full text-amber-400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="3" fill="#0f172a"/>
-                    <!-- Pohon Beringin / Emas Pemasyarakatan -->
                     <path d="M50 20 C32 20 25 35 25 48 C25 60 35 66 42 68 L42 80 L58 80 L58 68 C65 66 75 60 75 48 C75 35 68 20 50 20 Z" fill="#d4af37"/>
                     <path d="M50 25 C38 25 32 36 32 46 C32 55 40 60 45 62 L45 76 L55 76 L55 62 C60 60 68 55 68 46 C68 36 62 25 50 25 Z" fill="#fcf6ba"/>
-                    <!-- Padi dan Kapas/Garis Ornamen -->
                     <path d="M22 50 C22 70 38 82 50 82 C62 82 78 70 78 50" stroke="#bf953f" stroke-width="3" stroke-dasharray="4 2"/>
                 </svg>
             </div>
@@ -303,13 +300,11 @@
         const ADMIN_PASSWORD = "Bapas2026";
         let isAdmin = false;
 
-        // Fungsi untuk memperbarui tanggal secara Real-Time
         function updateRealtimeDate() {
             const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'Long', year: 'numeric' };
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             const formattedDate = now.toLocaleDateString('id-ID', options);
             
-            // Mengatur waktu Pagi/Siang/Sore/Malam berdasarkan jam sistem
             const hours = now.getHours();
             let shift = "PAGI";
             if (hours >= 12 && hours < 15) {
@@ -391,16 +386,32 @@
             }
         }
 
-        function loadLogo(event, containerId) {
+        // Simpan logo ke localStorage dan tampilkan
+        function loadLogo(event, containerId, storageKey) {
             if (!isAdmin) return;
             const container = document.getElementById(containerId);
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    container.innerHTML = `<img src="${e.target.result}" class="max-h-20 max-w-full object-contain">`;
+                    const imageData = e.target.result;
+                    container.innerHTML = `<img src="${imageData}" class="max-h-20 max-w-full object-contain">`;
+                    localStorage.setItem(storageKey, imageData);
                 };
                 reader.readAsDataURL(file);
+            }
+        }
+
+        // Muat logo dari localStorage saat halaman dibuka
+        function restoreSavedLogos() {
+            const savedLogoKiri = localStorage.getItem('savedLogoKiri');
+            if (savedLogoKiri) {
+                document.getElementById('logoKemenimipasContainer').innerHTML = `<img src="${savedLogoKiri}" class="max-h-20 max-w-full object-contain">`;
+            }
+
+            const savedLogoKanan = localStorage.getItem('savedLogoKanan');
+            if (savedLogoKanan) {
+                document.getElementById('logoPemasyarakatanContainer').innerHTML = `<img src="${savedLogoKanan}" class="max-h-20 max-w-full object-contain">`;
             }
         }
 
@@ -440,8 +451,10 @@
             });
         }
 
-        // Jalankan fungsi update tanggal saat dokumen selesai dimuat
-        document.addEventListener("DOMContentLoaded", updateRealtimeDate);
+        document.addEventListener("DOMContentLoaded", function() {
+            updateRealtimeDate();
+            restoreSavedLogos();
+        });
     </script>
 </body>
 </html>
