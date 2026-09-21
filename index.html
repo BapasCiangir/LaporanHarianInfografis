@@ -102,10 +102,6 @@
             <span class="inline-flex items-center justify-center p-2.5 bg-navy-900 text-gold-400 rounded-lg font-bold">
                 <i class="fa-solid fa-user-gear text-lg"></i>
             </span>
-            <div>
-                <h1 class="text-base font-bold text-navy-900">Dashboard Editor Laporan (Potrait)</h1>
-                <p class="text-xs text-slate-500">Aktifkan Mode Admin untuk mengubah teks, angka, logo, atau foto.</p>
-            </div>
         </div>
         
         <div class="flex flex-wrap items-center gap-2">
@@ -691,7 +687,6 @@
             formatAndCalculateBudget();
         }
 
-        // OPTIMIZED EXPORT FUNCTION FOR HIGH RESOLUTION & CLEAR TEXT
         async function exportAsImage() {
             const btn = document.getElementById('btn-export');
             const originalText = btn.innerHTML;
@@ -700,20 +695,18 @@
             btn.disabled = true;
 
             try {
-                // Pastikan font sudah dimuat dengan sempurna
                 await document.fonts.ready;
 
                 const reportNode = document.getElementById('report-card');
                 
                 const canvas = await html2canvas(reportNode, {
-                    scale: 3, // Meningkatkan resolusi render gambar agar teks tajam
-                    useCORS: true, // Memungkinkan pengambilan gambar/logo eksternal
+                    scale: 3,
+                    useCORS: true,
                     allowTaint: true,
                     backgroundColor: "#ffffff",
-                    letterRendering: true, // Memperbaiki kerning dan render karakter huruf
+                    letterRendering: true,
                     logging: false,
                     onclone: (clonedDoc) => {
-                        // Memastikan tampilan clone yang ditangkap tidak bermasalah dengan font
                         const element = clonedDoc.getElementById('report-card');
                         element.style.transform = 'none';
                     }
