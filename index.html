@@ -67,7 +67,7 @@
         /* Portrait Container Page Ratio */
         .portrait-card {
             width: 100%;
-            max-width: 794px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <!-- MAIN PORTRAIT INFOGRAPHIC CARD -->
+    <!-- MAIN INFOGRAPHIC CARD -->
     <div id="report-card" class="print-container portrait-card bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-6 sm:p-8 space-y-5">
 
         <!-- HEADER SECTION WITH UPDATED KOP SURAT -->
@@ -224,269 +224,229 @@
             </div>
         </div>
 
-        <!-- MAIN DATA TABLES -->
-        <div class="space-y-4">
+        <!-- MAIN CONTENT (3 KOLOM KE SAMPING) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
 
-            <!-- 1. DATA KLIEN TABLE -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="bg-navy-900 text-white px-4 py-2.5 flex items-center justify-between">
-                    <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-2">
-                        <i class="fa-solid fa-table-list text-gold-400"></i> DATA KLIEN PEMASYARAKATAN
-                    </h3>
-                    <span class="text-[10px] bg-navy-800 text-slate-300 px-2 py-0.5 rounded-full border border-slate-700">Otomatis Terhitung</span>
-                </div>
-                <div class="p-3 overflow-x-auto">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b">
-                            <tr>
-                                <th class="p-2">JENIS BIMBINGAN</th>
-                                <th class="p-2 text-center bg-blue-50/50 text-blue-900">DEWASA</th>
-                                <th class="p-2 text-center bg-emerald-50/50 text-emerald-900">ANAK</th>
-                                <th class="p-2 text-center bg-amber-50/50 text-amber-900">TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr>
-                                <td class="p-2 font-bold">PB (Pembebasan Bersyarat)</td>
-                                <td class="p-1 text-center"><input type="number" id="dk-pb-d" value="116" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="dk-pb-a" value="31" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="dk-pb-tot">147</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold">CB (Cuti Bersyarat)</td>
-                                <td class="p-1 text-center"><input type="number" id="dk-cb-d" value="35" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="dk-cb-a" value="62" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="dk-cb-tot">97</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold">CMB (Cuti Menjelang Bebas)</td>
-                                <td class="p-1 text-center"><input type="number" id="dk-cmb-d" value="3" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="dk-cmb-a" value="0" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="dk-cmb-tot">3</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold">Latihan Kerja</td>
-                                <td class="p-1 text-center"><input type="number" id="dk-lk-d" value="5" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="dk-lk-a" value="0" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="dk-lk-tot">5</td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="bg-slate-100 font-extrabold border-t-2 border-slate-300">
-                            <tr>
-                                <td class="p-2 text-navy-900 uppercase">JUMLAH</td>
-                                <td class="p-2 text-center text-blue-900" id="dk-total-d">159</td>
-                                <td class="p-2 text-center text-emerald-900" id="dk-total-a">93</td>
-                                <td class="p-2 text-center text-gold-600 bg-gold-50 font-bold" id="dk-grand-total">252</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 2. JENIS PERKARA TABLE -->
-            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                <div class="bg-navy-900 text-white px-4 py-2.5 flex items-center justify-between">
-                    <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-2">
-                        <i class="fa-solid fa-scale-balanced text-gold-400"></i> JENIS PERKARA
-                    </h3>
-                    <span class="text-[10px] text-slate-300">Statistik Tindak Pidana</span>
-                </div>
-                <div class="p-3 overflow-x-auto">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b">
-                            <tr>
-                                <th class="p-2">KATEGORI TINDAK PIDANA</th>
-                                <th class="p-2 text-center bg-blue-50/50 text-blue-900">DEWASA</th>
-                                <th class="p-2 text-center bg-emerald-50/50 text-emerald-900">ANAK</th>
-                                <th class="p-2 text-center bg-amber-50/50 text-amber-900">TOTAL</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
-                            <tr>
-                                <td class="p-2 font-bold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-capsules text-rose-500"></i> Narkotika
-                                </td>
-                                <td class="p-1 text-center"><input type="number" id="jp-nar-d" value="58" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="jp-nar-a" value="21" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="jp-nar-tot">79</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-triangle-exclamation text-amber-500"></i> Terorisme
-                                </td>
-                                <td class="p-1 text-center"><input type="number" id="jp-ter-d" value="3" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="jp-ter-a" value="0" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="jp-ter-tot">3</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> Korupsi
-                                </td>
-                                <td class="p-1 text-center"><input type="number" id="jp-kor-d" value="2" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="jp-kor-a" value="0" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="jp-kor-tot">2</td>
-                            </tr>
-                            <tr>
-                                <td class="p-2 font-bold flex items-center gap-1.5">
-                                    <i class="fa-solid fa-folder-open text-slate-500"></i> Lain – Lain
-                                </td>
-                                <td class="p-1 text-center"><input type="number" id="jp-lai-d" value="69" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-1 text-center"><input type="number" id="jp-lai-a" value="51" oninput="calculateAll()" class="editable-input w-14 text-center font-semibold rounded py-0.5"></td>
-                                <td class="p-2 text-center font-bold text-navy-900" id="jp-lai-tot">120</td>
-                            </tr>
-                        </tbody>
-                        <tfoot class="bg-slate-100 font-extrabold border-t-2 border-slate-300">
-                            <tr>
-                                <td class="p-2 text-navy-900 uppercase">JUMLAH PERKARA</td>
-                                <td class="p-2 text-center text-blue-900" id="jp-total-d">132</td>
-                                <td class="p-2 text-center text-emerald-900" id="jp-total-a">72</td>
-                                <td class="p-2 text-center text-gold-600 bg-gold-50 font-bold" id="jp-grand-total">204</td>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-
-            <!-- 3. LITMAS GRID -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <!-- Litmas Dewasa -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="bg-navy-900 text-white px-3.5 py-2 flex items-center justify-between">
+            <!-- KOLOM 1: DATA KLIEN TABLE -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden h-full flex flex-col justify-between">
+                <div>
+                    <div class="bg-navy-900 text-white px-3 py-2 flex items-center justify-between">
                         <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-clipboard-check text-gold-400"></i> LITMAS DEWASA
+                            <i class="fa-solid fa-table-list text-gold-400"></i> DATA KLIEN
                         </h3>
-                        <span id="litmas-dewasa-total" class="text-[10px] bg-gold-500 text-navy-950 font-black px-2 py-0.5 rounded-full">340 Total</span>
+                        <span class="text-[9px] bg-navy-800 text-slate-300 px-1.5 py-0.5 rounded-full border border-slate-700">Otomatis</span>
                     </div>
-                    <div class="p-2.5 grid grid-cols-2 gap-1.5 text-xs">
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Asimilasi</span>
-                            <input type="number" id="lit-d-asim" value="3" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">CB</span>
-                            <input type="number" id="lit-d-cb" value="122" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">PB</span>
-                            <input type="number" id="lit-d-pb" value="317" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Pemb. Awal</span>
-                            <input type="number" id="lit-d-pa" value="5" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Pemindahan</span>
-                            <input type="number" id="lit-d-pem" value="87" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">CMB</span>
-                            <input type="number" id="lit-d-cmb" value="0" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Litmas Anak -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                    <div class="bg-navy-900 text-white px-3.5 py-2 flex items-center justify-between">
-                        <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-1.5">
-                            <i class="fa-solid fa-child-reaching text-gold-400"></i> LITMAS & PEND. ANAK
-                        </h3>
-                        <span id="litmas-anak-total" class="text-[10px] bg-gold-500 text-navy-950 font-black px-2 py-0.5 rounded-full">64 Total</span>
-                    </div>
-                    <div class="p-2.5 grid grid-cols-2 gap-1.5 text-xs">
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Diversi</span>
-                            <input type="number" id="lit-a-div" value="12" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Peradilan</span>
-                            <input type="number" id="lit-a-per" value="48" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">PB</span>
-                            <input type="number" id="lit-a-pb" value="3" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">CB</span>
-                            <input type="number" id="lit-a-cb" value="0" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Saksi</span>
-                            <input type="number" id="lit-a-sak" value="1" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
-                        <div class="bg-slate-50 p-1.5 rounded border flex justify-between items-center">
-                            <span class="text-slate-600 font-semibold text-[11px]">Pemb. Awal</span>
-                            <input type="number" id="lit-a-pa" value="0" oninput="calculateLitmas()" class="editable-input w-10 text-center font-bold text-navy-900 rounded">
-                        </div>
+                    <div class="p-2 overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b">
+                                <tr>
+                                    <th class="p-1.5">BIMBINGAN</th>
+                                    <th class="p-1.5 text-center bg-blue-50/50 text-blue-900">DWS</th>
+                                    <th class="p-1.5 text-center bg-emerald-50/50 text-emerald-900">ANK</th>
+                                    <th class="p-1.5 text-center bg-amber-50/50 text-amber-900">TOT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                                <tr>
+                                    <td class="p-1.5 font-bold">PB</td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-pb-d" value="116" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-pb-a" value="31" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="dk-pb-tot">147</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold">CB</td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-cb-d" value="35" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-cb-a" value="62" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="dk-cb-tot">97</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold">CMB</td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-cmb-d" value="3" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-cmb-a" value="0" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="dk-cmb-tot">3</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold">Latihan Kerja</td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-lk-d" value="5" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="dk-lk-a" value="0" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="dk-lk-tot">5</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-slate-100 font-extrabold border-t-2 border-slate-300">
+                                <tr>
+                                    <td class="p-1.5 text-navy-900 uppercase">JUMLAH</td>
+                                    <td class="p-1.5 text-center text-blue-900" id="dk-total-d">159</td>
+                                    <td class="p-1.5 text-center text-emerald-900" id="dk-total-a">93</td>
+                                    <td class="p-1.5 text-center text-gold-600 bg-gold-50 font-bold" id="dk-grand-total">252</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
             </div>
 
-            <!-- 4. REALISASI ANGGARAN & DOKUMENTASI -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                
-                <!-- Anggaran -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
-                    <div class="bg-navy-900 text-white px-4 py-2.5 flex items-center justify-between">
-                        <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-file-invoice-dollar text-gold-400"></i> REALISASI ANGGARAN
+            <!-- KOLOM 2: JENIS PERKARA TABLE -->
+            <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden h-full flex flex-col justify-between">
+                <div>
+                    <div class="bg-navy-900 text-white px-3 py-2 flex items-center justify-between">
+                        <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-scale-balanced text-gold-400"></i> JENIS PERKARA
+                        </h3>
+                        <span class="text-[9px] text-slate-300">Statistik</span>
+                    </div>
+                    <div class="p-2 overflow-x-auto">
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b">
+                                <tr>
+                                    <th class="p-1.5">PERKARA</th>
+                                    <th class="p-1.5 text-center bg-blue-50/50 text-blue-900">DWS</th>
+                                    <th class="p-1.5 text-center bg-emerald-50/50 text-emerald-900">ANK</th>
+                                    <th class="p-1.5 text-center bg-amber-50/50 text-amber-900">TOT</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                                <tr>
+                                    <td class="p-1.5 font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-capsules text-rose-500 text-[10px]"></i> Narkotika
+                                    </td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-nar-d" value="58" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-nar-a" value="21" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="jp-nar-tot">79</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-triangle-exclamation text-amber-500 text-[10px]"></i> Terorisme
+                                    </td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-ter-d" value="3" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-ter-a" value="0" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="jp-ter-tot">3</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-hand-holding-dollar text-emerald-600 text-[10px]"></i> Korupsi
+                                    </td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-kor-d" value="2" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-kor-a" value="0" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="jp-kor-tot">2</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-1.5 font-bold flex items-center gap-1">
+                                        <i class="fa-solid fa-folder-open text-slate-500 text-[10px]"></i> Lain–Lain
+                                    </td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-lai-d" value="69" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1 text-center"><input type="number" id="jp-lai-a" value="51" oninput="calculateAll()" class="editable-input w-12 text-center font-semibold rounded py-0.5"></td>
+                                    <td class="p-1.5 text-center font-bold text-navy-900" id="jp-lai-tot">120</td>
+                                </tr>
+                            </tbody>
+                            <tfoot class="bg-slate-100 font-extrabold border-t-2 border-slate-300">
+                                <tr>
+                                    <td class="p-1.5 text-navy-900 uppercase">JUMLAH</td>
+                                    <td class="p-1.5 text-center text-blue-900" id="jp-total-d">132</td>
+                                    <td class="p-1.5 text-center text-emerald-900" id="jp-total-a">72</td>
+                                    <td class="p-1.5 text-center text-gold-600 bg-gold-50 font-bold" id="jp-grand-total">204</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOLOM 3: LITMAS & ANGGARAN/DOKUMENTASI -->
+            <div class="space-y-4">
+                <!-- Litmas Dewasa & Anak -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+                    <div class="bg-navy-900 text-white px-3 py-2 flex items-center justify-between">
+                        <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-check text-gold-400"></i> REKAP LITMAS
                         </h3>
                     </div>
-                    <div class="p-3.5 space-y-3">
-                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block">ALOKASI (RP)</label>
-                            <div class="flex items-center text-slate-800 font-black text-sm">
-                                <span>Rp</span>
-                                <input type="text" id="budget-allocation" value="4.927.664.000" oninput="formatAndCalculateBudget()" class="editable-input w-full font-black text-sm text-slate-800 ml-1 px-1 rounded">
-                            </div>
-                        </div>
-                        <div class="bg-slate-50 p-2.5 rounded-lg border border-slate-200">
-                            <label class="text-[10px] font-bold text-slate-500 uppercase block">PENYERAPAN (RP)</label>
-                            <div class="flex items-center text-emerald-700 font-black text-sm">
-                                <span>Rp</span>
-                                <input type="text" id="budget-spent" value="3.576.958.795" oninput="formatAndCalculateBudget()" class="editable-input w-full font-black text-sm text-emerald-700 ml-1 px-1 rounded">
-                            </div>
-                        </div>
+                    <div class="p-2 space-y-2">
+                        <!-- Dewasa -->
                         <div>
-                            <div class="flex justify-between items-center text-[10px] font-bold mb-1">
-                                <span class="text-slate-600">PERSENTASE</span>
-                                <span id="budget-pct-text" class="text-navy-900 font-extrabold text-xs">72.59%</span>
+                            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                                <span>LITMAS DEWASA</span>
+                                <span id="litmas-dewasa-total" class="bg-gold-500 text-navy-950 font-black px-1.5 py-0.5 rounded-full text-[9px]">340 Total</span>
                             </div>
-                            <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden p-0.5 border border-slate-300">
-                                <div id="budget-progress-bar" class="bg-gradient-to-r from-gold-500 to-amber-600 h-full rounded-full transition-all duration-300" style="width: 72.59%;"></div>
+                            <div class="grid grid-cols-3 gap-1 text-[10px]">
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Asim</span>
+                                    <input type="number" id="lit-d-asim" value="3" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>CB</span>
+                                    <input type="number" id="lit-d-cb" value="122" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>PB</span>
+                                    <input type="number" id="lit-d-pb" value="317" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Awal</span>
+                                    <input type="number" id="lit-d-pa" value="5" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Pindah</span>
+                                    <input type="number" id="lit-d-pem" value="87" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>CMB</span>
+                                    <input type="number" id="lit-d-cmb" value="0" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Anak -->
+                        <div class="border-t pt-2">
+                            <div class="flex justify-between items-center text-[10px] font-bold text-slate-600 mb-1">
+                                <span>LITMAS & PEND. ANAK</span>
+                                <span id="litmas-anak-total" class="bg-gold-500 text-navy-950 font-black px-1.5 py-0.5 rounded-full text-[9px]">64 Total</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1 text-[10px]">
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Diversi</span>
+                                    <input type="number" id="lit-a-div" value="12" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>PNS</span>
+                                    <input type="number" id="lit-a-per" value="48" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>PB</span>
+                                    <input type="number" id="lit-a-pb" value="3" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>CB</span>
+                                    <input type="number" id="lit-a-cb" value="0" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Saksi</span>
+                                    <input type="number" id="lit-a-sak" value="1" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
+                                <div class="bg-slate-50 p-1 rounded border flex justify-between items-center">
+                                    <span>Awal</span>
+                                    <input type="number" id="lit-a-pa" value="0" oninput="calculateLitmas()" class="editable-input w-7 text-center font-bold text-navy-900 rounded">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Petugas & Dokumentasi -->
-                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col justify-between">
-                    <div class="bg-navy-900 text-white px-4 py-2.5 flex items-center justify-between">
-                        <h3 class="font-bold text-xs tracking-wide uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-user-shield text-gold-400"></i> PETUGAS & DOKUMENTASI
-                        </h3>
+                <!-- Anggaran & Dokumentasi Singkat -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden p-2.5 space-y-2">
+                    <div class="bg-slate-50 p-2 rounded border border-slate-200">
+                        <label class="text-[9px] font-bold text-slate-500 uppercase block">ALOKASI / PENYERAPAN ANGGARAN</label>
+                        <div class="flex items-center text-slate-800 font-black text-xs">
+                            <span>Rp</span>
+                            <input type="text" id="budget-spent" value="3.576.958.795" oninput="formatAndCalculateBudget()" class="editable-input w-full font-black text-xs text-emerald-700 ml-1 px-1 rounded">
+                        </div>
+                        <input type="hidden" id="budget-allocation" value="4.927.664.000">
+                        <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden mt-1">
+                            <div id="budget-progress-bar" class="bg-gradient-to-r from-gold-500 to-amber-600 h-full rounded-full" style="width: 72.59%;"></div>
+                        </div>
                     </div>
-                    <div class="p-3.5 space-y-2.5">
-                        <div class="relative group rounded-lg overflow-hidden border border-slate-200 bg-slate-100 h-32 flex justify-center items-center">
-                            <img id="officer-photo" 
-                                 src="https://placehold.co/600x400/0f2042/ffffff?text=Dokumentasi+Petugas+Piket" 
-                                 alt="Petugas Piket BAPAS" 
-                                 class="w-full h-full object-cover rounded-lg">
-                            
-                            <label for="photo-upload" class="admin-only absolute inset-0 bg-navy-950/60 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer p-2 text-center">
-                                <i class="fa-solid fa-camera text-xl mb-1 text-gold-400"></i>
-                                <span class="text-[10px] font-bold">Ganti Foto Dokumen</span>
-                            </label>
-                            <input type="file" id="photo-upload" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)">
-                        </div>
 
-                        <div class="bg-slate-50 p-2 rounded-lg border border-slate-200 text-center">
-                            <span class="text-[9px] font-bold text-slate-400 uppercase tracking-widest block">PETUGAS PIKET HARIAN</span>
-                            <div class="flex items-center justify-center gap-1.5 mt-0.5">
-                                <i class="fa-solid fa-id-badge text-gold-600 text-xs"></i>
-                                <input type="text" id="officer-names" value="FIKRI & FAOZI" class="editable-input text-center font-black text-navy-900 tracking-wider uppercase text-xs w-full">
-                            </div>
-                        </div>
+                    <div class="bg-slate-50 p-2 rounded border border-slate-200 text-center">
+                        <span class="text-[8px] font-bold text-slate-400 uppercase tracking-widest block">PETUGAS PIKET</span>
+                        <input type="text" id="officer-names" value="FIKRI & FAOZI" class="editable-input text-center font-black text-navy-900 tracking-wider uppercase text-xs w-full">
                     </div>
                 </div>
 
@@ -640,21 +600,9 @@
             }
 
             const pctString = `${pct}%`;
-            document.getElementById('budget-pct-text').innerText = pctString;
             document.getElementById('stat-anggaran-pct').innerText = pctString;
             document.getElementById('stat-anggaran-bar').style.width = `${Math.min(pct, 100)}%`;
             document.getElementById('budget-progress-bar').style.width = `${Math.min(pct, 100)}%`;
-        }
-
-        function handlePhotoUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('officer-photo').src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
         }
 
         function resetData() {
