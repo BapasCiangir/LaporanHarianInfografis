@@ -4,19 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
-    <!-- Tailwind CSS -->
+    <!-- Tailwind CSS for Layout -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf untuk Export PDF -->
+    <!-- html2pdf for PDF Download -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- html2canvas untuk Export Gambar -->
+    <!-- html2canvas for PNG/JPG Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- SDK Firebase App & Realtime Database (v9 Modular Compat) -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
         
@@ -53,6 +49,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
+        /* --- STYLES KHUSUS EKSPOR (MENGHILANGKAN SEMUA WARNA KUNING ELEMEN EDITABLE) --- */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -64,6 +61,7 @@
             outline: none !important;
         }
 
+        /* Mengubah teks gradasi emas menjadi warna emas padat/netral agar tidak menghasilkan latar kuning di canvas */
         .exporting .gold-gradient-text {
             background: none !important;
             -webkit-background-clip: unset !important;
@@ -71,44 +69,70 @@
             color: #f39c12 !important;
         }
 
+        /* Portrait A4 Print Adjustments */
         @media print {
-            .no-print { display: none !important; }
-            body { background: #0f2027 !important; padding: 0 !important; }
-            .report-container { width: 100% !important; max-width: 100% !important; margin: 0 !important; padding: 15px !important; box-shadow: none !important; border: none !important; }
-            .date-badge, .editable, .gold-gradient-text { background: none !important; -webkit-text-fill-color: #f39c12 !important; border: none !important; }
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: #0f2027 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                padding: 0 !important;
+            }
+            .report-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 15px !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .date-badge, .editable, .gold-gradient-text {
+                background: none !important;
+                -webkit-text-fill-color: #f39c12 !important;
+                border: none !important;
+            }
         }
     </style>
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center">
 
-    <!-- Panel Admin & Kontrol -->
+    <!-- Control Panel / Actions -->
     <div class="no-print w-full max-w-[210mm] mb-4 flex flex-wrap justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 gap-3">
         <div class="flex items-center space-x-2 text-amber-400 font-semibold text-xs md:text-sm">
-            <i class="fa-solid fa-cloud-arrow-up" id="syncIcon"></i>
+            <i class="fa-solid fa-user-shield"></i>
             <span id="editStatusText">Mode Terkunci (Login Admin untuk Edit)</span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
+            <!-- Button Login Admin -->
             <button id="btnLogin" onclick="handleAdminLogin()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-key"></i> Login Admin
             </button>
 
-            <div id="adminPanel" class="hidden flex flex-wrap items-center gap-2">
+            <!-- Admin Panel Tools -->
+            <div id="adminPanel" class="hidden flex items-center gap-2">
                 <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kiri
                 </button>
-                <input type="file" id="logoKiriInput" accept="image/*" class="hidden" onchange="uploadImageCloud(event, 'logoKiri')">
+                <input type="file" id="logoKiriInput" accept="image/*" class="hidden" onchange="loadLogoKiri(event)">
 
                 <button onclick="document.getElementById('logoKananInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kanan
                 </button>
-                <input type="file" id="logoKananInput" accept="image/*" class="hidden" onchange="uploadImageCloud(event, 'logoKanan')">
+                <input type="file" id="logoKananInput" accept="image/*" class="hidden" onchange="loadLogoKanan(event)">
 
                 <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-user-gear"></i> Foto Piket
                 </button>
-                <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="uploadImageCloud(event, 'previewFoto')">
+                <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
+
+                <button onclick="resetDataStorage()" class="bg-red-700 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-red-500">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Data
+                </button>
             </div>
             
+            <!-- Export Group Buttons -->
             <div class="flex items-center gap-1">
                 <button onclick="downloadPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition shadow-lg shadow-emerald-600/20">
                     <i class="fa-solid fa-file-pdf"></i> PDF
@@ -116,28 +140,36 @@
                 <button onclick="downloadImage('png')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition shadow-lg shadow-blue-600/20">
                     <i class="fa-solid fa-file-image"></i> PNG
                 </button>
+                <button onclick="downloadImage('jpg')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition shadow-lg shadow-purple-600/20">
+                    <i class="fa-solid fa-file-image"></i> JPG
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- Container Laporan Utam -->
+    <!-- Template Laporan Area (A4 Portrait Ratio Container) -->
     <div id="reportArea" class="report-container w-full max-w-[210mm] min-h-[297mm] glass-card rounded-xl p-5 text-slate-100 relative overflow-hidden flex flex-col justify-between">
         
+        <!-- Background Ornaments -->
         <div class="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div>
             <!-- Header -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
+                <!-- Logo Kemenimipas (Kiri) -->
                 <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
                 
+                <!-- Header Titles -->
                 <div class="text-center flex-1 px-1">
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
                     <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
                     <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
+                    <!-- Balai Pemasyarakatan ukuran disamakan persis dengan Kementerian -->
                     <h1 data-key="header-l4" class="text-xs font-bold tracking-wider gold-gradient-text uppercase leading-snug editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
                     <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-1 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
+                    <!-- Status Realtime Waktu & Hari Tanggal -->
                     <div class="date-badge inline-flex items-center gap-2 mt-1 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
                         <span id="realtimeDate" class="font-semibold text-amber-300">Memuat tanggal...</span>
                         <span class="text-amber-500">•</span>
@@ -145,10 +177,11 @@
                     </div>
                 </div>
 
+                <!-- Logo Pemasyarakatan (Kanan) -->
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
-            <!-- Section 1: Kehadiran -->
+            <!-- Section Kehadiran Pegawai -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-id-card"></i> Jumlah Pegawai Hari Ini
@@ -175,8 +208,10 @@
                 </div>
             </div>
 
-            <!-- Section 2: Data Klien Pemasyarakatan -->
+            <!-- Main Content Layout -->
             <div class="space-y-4">
+                
+                <!-- Section Data Klien -->
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <i class="fa-solid fa-users"></i> Data Klien Pemasyarakatan
@@ -239,8 +274,10 @@
                     </div>
                 </div>
 
-                <!-- Section 3: Ringkasan 3 Kolom -->
+                <!-- TATA LETAK 3 KOLOM MENYAMPING -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    
+                    <!-- Kolom 1: Jenis Perkara -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <i class="fa-solid fa-gavel"></i> Jenis Perkara Klien
@@ -265,6 +302,7 @@
                         </div>
                     </div>
 
+                    <!-- Kolom 2: Rekap Litmas -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <i class="fa-solid fa-file-contract"></i> Rekapitulasi Litmas
@@ -289,7 +327,9 @@
                         </div>
                     </div>
 
+                    <!-- Kolom 3: Realisasi Anggaran & Petugas Piket -->
                     <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between space-y-2">
+                        <!-- Sub-Anggaran -->
                         <div>
                             <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1">
                                 <i class="fa-solid fa-wallet"></i> Realisasi Anggaran
@@ -306,6 +346,7 @@
                             </div>
                         </div>
 
+                        <!-- Sub-Petugas Piket -->
                         <div class="pt-1.5 border-t border-slate-800 flex items-center gap-2">
                             <div class="w-10 h-12 bg-slate-800 rounded border border-amber-500/40 overflow-hidden flex-shrink-0">
                                 <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
@@ -317,107 +358,27 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+
             </div>
         </div>
 
         <!-- Footer -->
         <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-[9px] text-slate-400">
-            <span>Sistem Laporan Otomatis Realtime Cloud - Bapas Kelas II Ciangir</span>
+            <span>Sistem Laporan Otomatis Realtime - Bapas Kelas II Ciangir</span>
             <span>Kemenimipas RI</span>
         </div>
+
     </div>
 
-    <!-- SCRIPT LOGIKA KONEKSI DATABASE CLOUD REALTIME -->
+    <!-- SCRIPT INTEGRATION -->
     <script>
-        // 1. KONFIGURASI FIREBASE (GANTI DENGAN KUNCI PROJECT FIREBASE ANDA)
-        const firebaseConfig = {
-            apiKey: "AIzaSyXXXXXXXXXXXXXX_YOUR_API_KEY",
-            authDomain: "bapas-infografis.firebaseapp.com",
-            databaseURL: "https://bapas-infografis-default-rtdb.firebaseio.com",
-            projectId: "bapas-infografis",
-            storageBucket: "bapas-infografis.appspot.com",
-            messagingSenderId: "123456789012",
-            appId: "1:123456789012:web:abcdef1234567890"
-        };
-
-        // Inisialisasi Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-        const reportRef = database.ref('reportData');
-
         let isAdminLoggedIn = false;
+        const STORAGE_KEY_TEXT = 'bapas_report_texts';
+        const STORAGE_KEY_IMAGES = 'bapas_report_images';
 
-        // 2. LISTEN KEPERUBAHAN DATA CLOUD REALTIME
-        reportRef.on('value', (snapshot) => {
-            const data = snapshot.val();
-            if (data) {
-                // Update Teks
-                if (data.texts) {
-                    Object.keys(data.texts).forEach(key => {
-                        const el = document.querySelector(`[data-key="${key}"]`);
-                        if (el && document.activeElement !== el) {
-                            el.innerText = data.texts[key];
-                        }
-                    });
-                }
-                // Update Gambar
-                if (data.images) {
-                    if (data.images.logoKiri) document.getElementById('logoKiri').src = data.images.logoKiri;
-                    if (data.images.logoKanan) document.getElementById('logoKanan').src = data.images.logoKanan;
-                    if (data.images.previewFoto) document.getElementById('previewFoto').src = data.images.previewFoto;
-                }
-                
-                calculatePegawai();
-                calculateKlienTable();
-            }
-        });
-
-        // 3. KIRIM PERUBAHAN TEKS KE CLOUD
-        function syncTextToCloud() {
-            if (!isAdminLoggedIn) return;
-            const textData = {};
-            document.querySelectorAll('[data-key]').forEach(el => {
-                textData[el.getAttribute('data-key')] = el.innerText;
-            });
-            reportRef.child('texts').update(textData);
-        }
-
-        // 4. UPLOAD GAMBAR KE CLOUD
-        function uploadImageCloud(event, imageElementId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const img = new Image();
-                    img.onload = function() {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
-                        const maxDimension = 350;
-
-                        if (width > height) {
-                            if (width > maxDimension) { height *= maxDimension / width; width = maxDimension; }
-                        } else {
-                            if (height > maxDimension) { width *= maxDimension / height; height = maxDimension; }
-                        }
-
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-                        const base64 = canvas.toDataURL('image/jpeg', 0.8);
-                        
-                        // Simpan langsung ke cloud database
-                        reportRef.child('images').child(imageElementId).set(base64);
-                    };
-                    img.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // 5. UPDATE WAKTU REALTIME
+        // 1. UPDATE WAKTU REALTIME
         function updateRealtimeDateTime() {
             const now = new Date();
             const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -426,12 +387,16 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds} WIB`;
 
-            document.getElementById('realtimeDate').innerText = formattedDate;
-            document.getElementById('realtimeClock').innerText = `${hours}:${minutes}:${seconds} WIB`;
+            const dateElement = document.getElementById('realtimeDate');
+            const clockElement = document.getElementById('realtimeClock');
+
+            if (dateElement) dateElement.innerText = formattedDate;
+            if (clockElement) clockElement.innerText = timeString;
         }
 
-        // 6. LOGIN ADMIN
+        // 2. SISTEM LOGIN ADMIN
         function handleAdminLogin() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
@@ -439,101 +404,257 @@
             const editables = document.querySelectorAll('.editable');
 
             if (!isAdminLoggedIn) {
-                const password = prompt("Masukkan Password Admin:");
+                const password = prompt("Masukkan Password Admin untuk mengedit data:");
                 if (password === "bapas123") {
                     isAdminLoggedIn = true;
+                    
                     editables.forEach(el => {
                         el.contentEditable = "true";
                         el.classList.add('border-b', 'border-amber-400/50');
                     });
-                    adminPanel.classList.remove('hidden');
-                    editStatusText.innerText = "Mode Edit Cloud AKTIF";
-                    btnLogin.innerHTML = '<i class="fa-solid fa-lock"></i> Logout Admin';
-                    btnLogin.classList.replace('bg-amber-600', 'bg-red-600');
+
+                    if (adminPanel) adminPanel.classList.remove('hidden');
+                    if (editStatusText) editStatusText.innerText = "Mode Edit AKTIF (Logged in as Admin)";
+                    if (btnLogin) {
+                        btnLogin.innerHTML = '<i class="fa-solid fa-lock"></i> Logout Admin';
+                        btnLogin.classList.replace('bg-amber-600', 'bg-red-600');
+                        btnLogin.classList.replace('hover:bg-amber-500', 'hover:bg-red-500');
+                    }
+
+                    alert("Login Berhasil! Anda sekarang dapat mengedit isi laporan.");
                 } else if (password !== null) {
-                    alert("Password Salah!");
+                    alert("Password Salah! Akses ditolak.");
                 }
             } else {
                 isAdminLoggedIn = false;
+
                 editables.forEach(el => {
                     el.contentEditable = "false";
                     el.classList.remove('border-b', 'border-amber-400/50');
                 });
-                adminPanel.classList.add('hidden');
-                editStatusText.innerText = "Mode Terkunci (Login Admin untuk Edit)";
-                btnLogin.innerHTML = '<i class="fa-solid fa-key"></i> Login Admin';
-                btnLogin.classList.replace('bg-red-600', 'bg-amber-600');
+
+                if (adminPanel) adminPanel.classList.add('hidden');
+                if (editStatusText) editStatusText.innerText = "Mode Terkunci (Login Admin untuk Edit)";
+                if (btnLogin) {
+                    btnLogin.innerHTML = '<i class="fa-solid fa-key"></i> Login Admin';
+                    btnLogin.classList.replace('bg-red-600', 'bg-amber-600');
+                    btnLogin.classList.replace('hover:bg-red-500', 'hover:bg-amber-500');
+                }
+
+                alert("Anda telah Logout. Mode edit ditutup.");
             }
         }
 
-        // 7. PERHITUNGAN FORMULA OTOMATIS
+        // 3. PERSISTENSI DATA (LOCALSTORAGE)
+        function saveDataToStorage() {
+            const textData = {};
+            document.querySelectorAll('[data-key]').forEach(el => {
+                textData[el.getAttribute('data-key')] = el.innerText;
+            });
+            localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(textData));
+        }
+
+        function loadDataFromStorage() {
+            // Load Teks
+            const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
+            if (savedText) {
+                const textData = JSON.parse(savedText);
+                Object.keys(textData).forEach(key => {
+                    const el = document.querySelector(`[data-key="${key}"]`);
+                    if (el) el.innerText = textData[key];
+                });
+            }
+
+            // Load Gambars/Logo (Termasuk Logo Kementerian)
+            const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
+            if (savedImages) {
+                const imageData = JSON.parse(savedImages);
+                if (imageData.logoKiri) document.getElementById('logoKiri').src = imageData.logoKiri;
+                if (imageData.logoKanan) document.getElementById('logoKanan').src = imageData.logoKanan;
+                if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
+            }
+        }
+
+        function saveImageToStorage(imgId, base64) {
+            let savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
+            savedImages = savedImages ? JSON.parse(savedImages) : {};
+            savedImages[imgId] = base64;
+            localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(savedImages));
+        }
+
+        function resetDataStorage() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data dan logo ke standar awal?")) {
+                localStorage.removeItem(STORAGE_KEY_TEXT);
+                localStorage.removeItem(STORAGE_KEY_IMAGES);
+                location.reload();
+            }
+        }
+
+        // 4. FUNGSI UPLOAD LOGO & FOTO
+        function loadLogoKiri(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoKiri').src = e.target.result;
+                    saveImageToStorage('logoKiri', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadLogoKanan(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoKanan').src = e.target.result;
+                    saveImageToStorage('logoKanan', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadFoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewFoto').src = e.target.result;
+                    saveImageToStorage('previewFoto', e.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 5. HITUNG OTOMATIS PEGAWAI
         function calculatePegawai() {
-            const parseVal = (id) => parseInt(document.getElementById(id)?.innerText.replace(/[^0-9]/g, '') || 0);
-            const total = parseVal('pegawaiHadir') + parseVal('pegawaiCuti') + parseVal('pegawaiDL');
+            const parseVal = (id) => {
+                const el = document.getElementById(id);
+                if (!el) return 0;
+                const num = parseInt(el.innerText.replace(/[^0-9]/g, ''));
+                return isNaN(num) ? 0 : num;
+            };
+
+            const hadir = parseVal('pegawaiHadir');
+            const cuti = parseVal('pegawaiCuti');
+            const dinasLuar = parseVal('pegawaiDL');
+            const total = hadir + cuti + dinasLuar;
+
             const totalEl = document.getElementById('pegawaiTotal');
             if (totalEl) totalEl.innerText = total;
         }
 
+        // 6. HITUNG OTOMATIS TABEL KLIEN
         function calculateKlienTable() {
-            const parseCell = (cell) => parseInt(cell?.innerText.trim().replace(/[^0-9]/g, '') || 0);
+            const parseCell = (cell) => {
+                if (!cell) return 0;
+                const val = cell.innerText.trim();
+                if (val === '-' || val === '') return 0;
+                const num = parseInt(val.replace(/[^0-9]/g, ''));
+                return isNaN(num) ? 0 : num;
+            };
+
             const rows = document.querySelectorAll('.row-klien');
-            let gDL = 0, gDP = 0, gAL = 0, gAP = 0;
+            let grandDewasaL = 0, grandDewasaP = 0, grandAnakL = 0, grandAnakP = 0;
 
             rows.forEach(row => {
                 const cells = row.querySelectorAll('.klien-val');
                 if (cells.length >= 4) {
-                    const dL = parseCell(cells[0]), dP = parseCell(cells[1]), aL = parseCell(cells[2]), aP = parseCell(cells[3]);
-                    row.querySelector('.row-total').innerText = dL + dP + aL + aP;
-                    gDL += dL; gDP += dP; gAL += aL; gAP += aP;
+                    const dL = parseCell(cells[0]);
+                    const dP = parseCell(cells[1]);
+                    const aL = parseCell(cells[2]);
+                    const aP = parseCell(cells[3]);
+
+                    const rowTotal = dL + dP + aL + aP;
+                    const rowTotalCell = row.querySelector('.row-total');
+                    if (rowTotalCell) rowTotalCell.innerText = rowTotal;
+
+                    grandDewasaL += dL;
+                    grandDewasaP += dP;
+                    grandAnakL += aL;
+                    grandAnakP += aP;
                 }
             });
 
-            document.getElementById('totDewasaL').innerText = gDL;
-            document.getElementById('totDewasaP').innerText = gDP;
-            document.getElementById('totAnakL').innerText = gAL;
-            document.getElementById('totAnakP').innerText = gAP;
-            document.getElementById('grandTotalKlien').innerText = gDL + gDP + gAL + gAP;
+            const totalDL = document.getElementById('totDewasaL');
+            const totalDP = document.getElementById('totDewasaP');
+            const totalAL = document.getElementById('totAnakL');
+            const totalAP = document.getElementById('totAnakP');
+            const grandTotalEl = document.getElementById('grandTotalKlien');
+
+            if (totalDL) totalDL.innerText = grandDewasaL;
+            if (totalDP) totalDP.innerText = grandDewasaP;
+            if (totalAL) totalAL.innerText = grandAnakL;
+            if (totalAP) totalAP.innerText = grandAnakP;
+
+            const grandTotal = grandDewasaL + grandDewasaP + grandAnakL + grandAnakP;
+            if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 8. EKSPOR PDF & PNG
+        // 7. DOWNLOAD PDF
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
-            html2pdf().set({
-                margin: [0.1, 0.1, 0.1, 0.1],
-                filename: `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            }).from(element).save().then(() => element.classList.remove('exporting'));
+            
+            const opt = {
+                margin:       [0.1, 0.1, 0.1, 0.1],
+                filename:     `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.remove('exporting');
+            });
         }
 
+        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI EFEK KUNING)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
+
+            // Timeout kecil untuk memastikan CSS .exporting sudah ter-apply sempurna
             setTimeout(() => {
-                html2canvas(element, { scale: 2, useCORS: true, backgroundColor: '#0f2027' }).then(canvas => {
+                html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#0f2027'
+                }).then(canvas => {
                     const link = document.createElement('a');
-                    link.download = `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.${format}`;
-                    link.href = canvas.toDataURL(`image/${format === 'png' ? 'png' : 'jpeg'}`, 0.95);
+                    const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+                    const extension = format === 'png' ? 'png' : 'jpg';
+
+                    link.download = `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.${extension}`;
+                    link.href = canvas.toDataURL(mimeType, 0.95);
                     link.click();
+
                     element.classList.remove('exporting');
                 });
             }, 50);
         }
 
-        // 9. EVENT LISTENERS
+        // 9. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
+            loadDataFromStorage();
+
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
 
-            document.addEventListener('keyup', (e) => {
-                if (e.target.classList.contains('editable')) syncTextToCloud();
-            });
+            calculatePegawai();
+            calculateKlienTable();
 
             document.addEventListener('input', (e) => {
-                if (e.target.classList.contains('pegawai-input')) calculatePegawai();
-                if (e.target.classList.contains('klien-val')) calculateKlienTable();
+                if (e.target.classList.contains('pegawai-input')) {
+                    calculatePegawai();
+                }
+                if (e.target.classList.contains('klien-val')) {
+                    calculateKlienTable();
+                }
+                if (e.target.classList.contains('editable')) {
+                    saveDataToStorage();
+                }
             });
         });
     </script>
