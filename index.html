@@ -155,8 +155,8 @@
         <div>
             <!-- Header -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
-                <!-- LOGO KEMENIMIPAS SAMA DENGAN LAMPIRAN -->
-                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/ thumb/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png/800px-Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
+                <!-- LOGO KEMENIMIPAS -->
+                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png/800px-Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
                 
                 <div class="text-center flex-1 px-1">
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
@@ -172,11 +172,11 @@
                     </div>
                 </div>
 
-                <!-- LOGO PEMASYARAKATAN SAMA DENGAN LAMPIRAN -->
+                <!-- LOGO PEMASYARAKATAN -->
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
-            <!-- SECTION 1: JUMLAH PEGAWAI (DIKEMBALIKAN MENJADI FORMAT KOLOM DENGAN ANGKA) -->
+            <!-- SECTION 1: JUMLAH PEGAWAI -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-users-gear"></i> Rekapitulasi Pegawai
@@ -201,7 +201,7 @@
                 </div>
             </div>
 
-            <!-- SECTION 2: DATA KLIEN (2 KOLOM LAKI-LAKI & PEREMPUAN) -->
+            <!-- SECTION 2: DATA KLIEN -->
             <div class="space-y-4">
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -322,7 +322,7 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Realisasi Anggaran (STATIC - TIDAK BISA DIEDIT) -->
+                    <!-- Kolom 3: Realisasi Anggaran (STATIC) -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between select-none">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
@@ -336,12 +336,11 @@
                         </div>
                     </div>
 
-                    <!-- SECTION 3: PETUGAS PIKET (FOTO PEGAWAI BESAR) -->
+                    <!-- SECTION 3: PETUGAS PIKET -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 w-full justify-start">
                             <i class="fa-solid fa-user-shield"></i> Petugas Piket
                         </h3>
-                        <!-- Ukuran Foto Tetap Besar -->
                         <div class="w-28 h-32 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md mb-2">
                             <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
                         </div>
@@ -371,7 +370,6 @@
         const STORAGE_KEY_IMAGES = 'bapas_report_images';
         let anggaranChartInstance = null;
 
-        // GRAFIK ANGGARAN (LOCKED / STATIC)
         function renderAnggaranChart() {
             const ctx = document.getElementById('anggaranChart').getContext('2d');
             
