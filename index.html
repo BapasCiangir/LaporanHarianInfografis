@@ -49,6 +49,12 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
+        /* Hilangkan warna background kuning saat ekspor */
+        .exporting .date-badge {
+            background-color: transparent !important;
+            border-color: rgba(212, 175, 55, 0.3) !important;
+        }
+
         /* Portrait A4 Print Adjustments */
         @media print {
             .no-print {
@@ -67,6 +73,9 @@
                 padding: 15px !important;
                 box-shadow: none !important;
                 border: none !important;
+            }
+            .date-badge {
+                background-color: transparent !important;
             }
         }
     </style>
@@ -87,8 +96,21 @@
 
             <!-- Admin Panel Tools -->
             <div id="adminPanel" class="hidden flex items-center gap-2">
-                <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition border border-slate-500">
-                    <i class="fa-solid fa-image"></i> Ganti Foto
+                <!-- Edit Logo Kiri -->
+                <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
+                    <i class="fa-solid fa-image"></i> Logo Kiri
+                </button>
+                <input type="file" id="logoKiriInput" accept="image/*" class="hidden" onchange="loadLogoKiri(event)">
+
+                <!-- Edit Logo Kanan -->
+                <button onclick="document.getElementById('logoKananInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
+                    <i class="fa-solid fa-image"></i> Logo Kanan
+                </button>
+                <input type="file" id="logoKananInput" accept="image/*" class="hidden" onchange="loadLogoKanan(event)">
+
+                <!-- Edit Foto Petugas -->
+                <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
+                    <i class="fa-solid fa-user-gear"></i> Foto Piket
                 </button>
                 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
             </div>
@@ -117,26 +139,27 @@
 
         <div>
             <!-- Header -->
-            <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-4 mb-4 gap-2">
-                <!-- Logo Kemenimipas -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-16 w-auto object-contain">
+            <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
+                <!-- Logo Kemenimipas (Kiri) -->
+                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-16 w-auto object-contain">
                 
-                <!-- Header Titles -->
+                <!-- Header Titles (Sesuai Permintaan) -->
                 <div class="text-center flex-1 px-1">
-                    <h2 class="text-[11px] md:text-xs font-bold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
-                    <h1 class="text-xl md:text-2xl font-extrabold gold-gradient-text tracking-wide mt-0.5">LAPORAN HARIAN INFOGRAFIS</h1>
-                    <p class="text-sm font-bold text-slate-200 mt-0.5 editable" contenteditable="false">BAPAS KELAS II CIANGIR</p>
+                    <h2 class="text-[11px] font-bold tracking-wider text-amber-400 uppercase leading-tight editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
+                    <h3 class="text-[10px] font-semibold text-slate-300 uppercase leading-tight editable" contenteditable="false">Direktorat Jendral Pemasyarakatan</h3>
+                    <h3 class="text-[10px] font-semibold text-slate-300 uppercase leading-tight editable" contenteditable="false">Kantor Wilayah Banten</h3>
+                    <h1 class="text-base md:text-lg font-extrabold gold-gradient-text tracking-wide uppercase mt-0.5 editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
                     
-                    <!-- Status Realtime Waktu Tanpa Shift -->
-                    <div class="inline-flex items-center gap-2 mt-1.5 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
+                    <!-- Status Realtime Waktu & Hari Tanggal -->
+                    <div class="date-badge inline-flex items-center gap-2 mt-1.5 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
                         <span id="realtimeDate" class="font-semibold text-amber-300">Memuat tanggal...</span>
                         <span class="text-amber-500">•</span>
                         <span id="realtimeClock" class="font-mono font-bold text-amber-200">00:00:00 WIB</span>
                     </div>
                 </div>
 
-                <!-- Logo Pemasyarakatan -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-16 w-auto object-contain">
+                <!-- Logo Pemasyarakatan (Kanan) -->
+                <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-16 w-auto object-contain">
             </div>
 
             <!-- Section Kehadiran Pegawai -->
@@ -166,7 +189,7 @@
                 </div>
             </div>
 
-            <!-- Main Content Layout (Vertical Stack + 3 Columns System) -->
+            <!-- Main Content Layout -->
             <div class="space-y-4">
                 
                 <!-- Section Data Klien -->
@@ -335,11 +358,10 @@
         // Global State Admin Status
         let isAdminLoggedIn = false;
 
-        // 1. UPDATE WAKTU REALTIME TANPA SHIFT
+        // 1. UPDATE WAKTU REALTIME
         function updateRealtimeDateTime() {
             const now = new Date();
 
-            // Format Tanggal Bahasa Indonesia
             const optionsDate = { 
                 weekday: 'long', 
                 day: 'numeric', 
@@ -348,13 +370,11 @@
             };
             const formattedDate = now.toLocaleDateString('id-ID', optionsDate);
 
-            // Format Jam, Menit, Detik
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             const timeString = `${hours}:${minutes}:${seconds} WIB`;
 
-            // Render ke DOM
             const dateElement = document.getElementById('realtimeDate');
             const clockElement = document.getElementById('realtimeClock');
 
@@ -362,7 +382,7 @@
             if (clockElement) clockElement.innerText = timeString;
         }
 
-        // 2. SISTEM LOGIN & AUTENTIKASI ADMIN
+        // 2. SISTEM LOGIN ADMIN
         function handleAdminLogin() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
@@ -370,20 +390,15 @@
             const editables = document.querySelectorAll('.editable');
 
             if (!isAdminLoggedIn) {
-                // Prompt Input Password
                 const password = prompt("Masukkan Password Admin untuk mengedit data:");
-                
-                // Default Password: bapas123
                 if (password === "bapas123") {
                     isAdminLoggedIn = true;
                     
-                    // Enable Content Editable
                     editables.forEach(el => {
                         el.contentEditable = "true";
                         el.classList.add('border-b', 'border-amber-400/50');
                     });
 
-                    // Update UI State Admin
                     if (adminPanel) adminPanel.classList.remove('hidden');
                     if (editStatusText) editStatusText.innerText = "Mode Edit AKTIF (Logged in as Admin)";
                     if (btnLogin) {
@@ -397,16 +412,13 @@
                     alert("Password Salah! Akses ditolak.");
                 }
             } else {
-                // Logout Admin
                 isAdminLoggedIn = false;
 
-                // Disable Content Editable
                 editables.forEach(el => {
                     el.contentEditable = "false";
                     el.classList.remove('border-b', 'border-amber-400/50');
                 });
 
-                // Reset UI State
                 if (adminPanel) adminPanel.classList.add('hidden');
                 if (editStatusText) editStatusText.innerText = "Mode Terkunci (Login Admin untuk Edit)";
                 if (btnLogin) {
@@ -419,7 +431,41 @@
             }
         }
 
-        // 3. HITUNG OTOMATIS JUMLAH PEGAWAI
+        // 3. FUNGSI UPLOAD LOGO & FOTO
+        function loadLogoKiri(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoKiri').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadLogoKanan(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('logoKanan').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function loadFoto(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewFoto').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // 4. HITUNG OTOMATIS PEGAWAI
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -431,14 +477,13 @@
             const hadir = parseVal('pegawaiHadir');
             const cuti = parseVal('pegawaiCuti');
             const dinasLuar = parseVal('pegawaiDL');
-
             const total = hadir + cuti + dinasLuar;
 
             const totalEl = document.getElementById('pegawaiTotal');
             if (totalEl) totalEl.innerText = total;
         }
 
-        // 4. HITUNG OTOMATIS TABEL KLIEN PEMASYARAKATAN
+        // 5. HITUNG OTOMATIS TABEL KLIEN
         function calculateKlienTable() {
             const parseCell = (cell) => {
                 if (!cell) return 0;
@@ -451,7 +496,6 @@
             const rows = document.querySelectorAll('.row-klien');
             let grandDewasaL = 0, grandDewasaP = 0, grandAnakL = 0, grandAnakP = 0;
 
-            // Hitung Per Baris
             rows.forEach(row => {
                 const cells = row.querySelectorAll('.klien-val');
                 if (cells.length >= 4) {
@@ -471,7 +515,6 @@
                 }
             });
 
-            // Total Kolom & Total Keseluruhan
             const totalDL = document.getElementById('totDewasaL');
             const totalDP = document.getElementById('totDewasaP');
             const totalAL = document.getElementById('totAnakL');
@@ -487,22 +530,10 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 5. PREVIEW UPLOAD FOTO PETUGAS PIKET
-        function loadFoto(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const output = document.getElementById('previewFoto');
-                    if (output) output.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // 6. DOWNLOAD / EXPORT A4 PORTRAIT PDF
+        // 6. DOWNLOAD PDF
         function downloadPDF() {
             const element = document.getElementById('reportArea');
+            element.classList.add('exporting');
             
             const opt = {
                 margin:       [0.1, 0.1, 0.1, 0.1],
@@ -512,12 +543,15 @@
                 jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            html2pdf().set(opt).from(element).save();
+            html2pdf().set(opt).from(element).save().then(() => {
+                element.classList.remove('exporting');
+            });
         }
 
         // 7. DOWNLOAD GAMBAR (PNG / JPG)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
+            element.classList.add('exporting');
 
             html2canvas(element, {
                 scale: 2,
@@ -531,20 +565,19 @@
                 link.download = `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.${extension}`;
                 link.href = canvas.toDataURL(mimeType, 0.95);
                 link.click();
+
+                element.classList.remove('exporting');
             });
         }
 
         // 8. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
-            // Jalankan Waktu Realtime tiap detik
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
 
-            // Hitung Awal
             calculatePegawai();
             calculateKlienTable();
 
-            // Event Listener Input untuk kalkulasi instan saat diedit
             document.addEventListener('input', (e) => {
                 if (e.target.classList.contains('pegawai-input')) {
                     calculatePegawai();
