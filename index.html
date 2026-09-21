@@ -53,7 +53,6 @@
             outline: none;
         }
         
-        /* Non-admin view styles (Default Off) */
         body.view-mode .editable-input {
             border-color: transparent !important;
             background-color: transparent !important;
@@ -64,10 +63,9 @@
             display: none !important;
         }
 
-        /* Strict Portrait Dimensions */
         .portrait-card {
             width: 100%;
-            max-width: 850px; /* Ukuran pas untuk aspek rasio Portrait A4 */
+            max-width: 850px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -96,7 +94,7 @@
 </head>
 <body class="text-slate-800 antialiased min-h-screen py-4 px-2 sm:px-4 view-mode">
 
-    <!-- TOOLBAR & ADMIN MODE CONTROLLER -->
+    <!-- PANEL KONTROL -->
     <div class="portrait-card mb-3 flex flex-wrap items-center justify-between gap-2 no-print bg-white p-3 rounded-xl shadow-md border border-slate-200">
         <div class="flex items-center space-x-2">
             <span class="inline-flex items-center justify-center p-2 bg-navy-900 text-gold-400 rounded-lg font-bold">
@@ -106,7 +104,6 @@
         </div>
         
         <div class="flex flex-wrap items-center gap-1.5">
-            <!-- Mode Admin Toggle -->
             <button id="admin-toggle-btn" onclick="toggleAdminMode()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-800 text-white font-bold rounded-lg text-xs transition flex items-center gap-1.5 shadow-sm">
                 <i class="fa-solid fa-lock"></i> Mode Admin: <span id="admin-status-text">OFF</span>
             </button>
@@ -122,16 +119,14 @@
         </div>
     </div>
 
-    <!-- MAIN INFOGRAPHIC CARD (PORTRAIT FORMAT) -->
+    <!-- KARTU INFOGRAFIS (PORTRAIT) -->
     <div id="report-card" class="print-container portrait-card bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden p-4 sm:p-5 space-y-3">
 
-        <!-- HEADER SECTION WITH KOP SURAT (RINGKAS) -->
+        <!-- HEADER / KOP SURAT -->
         <header class="border-b-2 border-gold-500 pb-3">
             <div class="flex items-center justify-between gap-2">
                 
-                <!-- Editable Logos -->
                 <div class="flex items-center space-x-2">
-                    <!-- Logo 1 (Kemenimipas) -->
                     <div class="relative group">
                         <img id="logo-1" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" 
                              alt="Logo Kemenimipas" 
@@ -143,7 +138,6 @@
                         <input type="file" id="upload-logo-1" accept="image/*" class="hidden" onchange="handleLogoUpload(event, 'logo-1')">
                     </div>
 
-                    <!-- Logo 2 (Pemasyarakatan) -->
                     <div class="relative group">
                         <img id="logo-2" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Pemasyarakatan.png" 
                              alt="Logo Pemasyarakatan" 
@@ -156,7 +150,6 @@
                     </div>
                 </div>
 
-                <!-- Title & Kop Surat Instansi -->
                 <div class="text-center flex-1">
                     <p class="text-[8px] font-bold tracking-wider text-slate-500 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</p>
                     <p class="text-[9px] font-extrabold text-navy-900 uppercase">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
@@ -165,18 +158,18 @@
                     <p class="text-[9px] font-bold text-gold-600 tracking-wider uppercase">LAPORAN HARIAN INFOGRAFIS</p>
                 </div>
 
-                <!-- Date & Badge Real Time -->
+                <!-- KOTAK TANGGAL (Warna Teks dibuat Kontras Kuning-Emas) -->
                 <div class="flex flex-col items-center justify-center">
-                    <div class="bg-navy-900 text-white rounded-lg p-2 text-center w-32 shadow-sm border border-gold-500/30">
+                    <div class="bg-navy-900 text-white rounded-lg p-2 text-center w-36 shadow-sm border border-gold-500/30">
                         <span class="text-[8px] uppercase font-bold tracking-wider text-gold-400 block">TANGGAL</span>
                         <input type="text" id="report-date" value="" 
-                               class="editable-input w-full text-center font-extrabold text-[10px] text-white focus:text-slate-900 rounded py-0.5">
+                               class="editable-input w-full text-center font-extrabold text-[10px] text-gold-400 focus:text-slate-900 rounded py-0.5">
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- TOP STATS CARDS (4 ITEM - REKAP SINGKAT) -->
+        <!-- TOP STATS CARDS -->
         <div class="grid grid-cols-4 gap-2">
             <div class="bg-gradient-to-br from-navy-900 to-navy-800 text-white p-2 rounded-lg border-l-2 border-gold-500 shadow-sm">
                 <p class="text-[8px] text-slate-300 font-semibold uppercase">TOTAL KLIEN</p>
@@ -199,10 +192,10 @@
             </div>
         </div>
 
-        <!-- MAIN CONTENT (TETAP 3 KOLOM KE SAMPING DALAM FORMAT PORTRAIT) -->
+        <!-- MAIN CONTENT 3 KOLOM -->
         <div class="grid grid-cols-3 gap-2.5 items-start">
 
-            <!-- KOLOM 1: DATA KLIEN TABLE -->
+            <!-- KOLOM 1: DATA KLIEN -->
             <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden text-[10px]">
                 <div class="bg-navy-900 text-white px-2 py-1.5 flex items-center justify-between">
                     <h3 class="font-bold text-[10px] tracking-wide uppercase flex items-center gap-1">
@@ -257,7 +250,7 @@
                 </div>
             </div>
 
-            <!-- KOLOM 2: JENIS PERKARA TABLE -->
+            <!-- KOLOM 2: JENIS PERKARA -->
             <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden text-[10px]">
                 <div class="bg-navy-900 text-white px-2 py-1.5 flex items-center justify-between">
                     <h3 class="font-bold text-[10px] tracking-wide uppercase flex items-center gap-1">
@@ -312,9 +305,8 @@
                 </div>
             </div>
 
-            <!-- KOLOM 3: REKAP LITMAS & Rincian LAIN -->
+            <!-- KOLOM 3: LITMAS & LAIN-LAIN -->
             <div class="space-y-2 text-[10px]">
-                <!-- Litmas Dewasa & Anak -->
                 <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                     <div class="bg-navy-900 text-white px-2 py-1.5 flex items-center justify-between">
                         <h3 class="font-bold text-[10px] tracking-wide uppercase flex items-center gap-1">
@@ -322,7 +314,6 @@
                         </h3>
                     </div>
                     <div class="p-1.5 space-y-1.5">
-                        <!-- Dewasa -->
                         <div>
                             <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-0.5">
                                 <span>DEWASA</span>
@@ -347,7 +338,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Anak -->
+
                         <div class="border-t pt-1">
                             <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-0.5">
                                 <span>ANAK</span>
@@ -375,7 +366,6 @@
                     </div>
                 </div>
 
-                <!-- Anggaran & Piket -->
                 <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-1.5 space-y-1.5">
                     <div class="bg-slate-50 p-1.5 rounded border border-slate-200">
                         <label class="text-[8px] font-bold text-slate-500 uppercase block">PENYERAPAN ANGGARAN</label>
@@ -399,7 +389,6 @@
 
         </div>
 
-        <!-- FOOTER BRANDING RINGKAS -->
         <footer class="pt-2 border-t border-slate-200 text-center flex justify-between items-center text-[8px] text-slate-500">
             <p class="font-medium">© 2026 BAPAS Kelas II Ciangir</p>
             <p class="font-semibold text-navy-900 flex items-center gap-1">
@@ -434,6 +423,7 @@
             }
         }
 
+        // TANGGAL OTOMATIS SESUAI REALTIME
         function setRealtimeDate() {
             const now = new Date();
             const options = { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' };
@@ -462,15 +452,10 @@
             const lkd = parseFloat(document.getElementById('dk-lk-d').value) || 0;
             const lka = parseFloat(document.getElementById('dk-lk-a').value) || 0;
 
-            const pbtot = pbd + pba;
-            const cbtot = cbd + cba;
-            const cmbtot = cmbd + cmba;
-            const lktot = lkd + lka;
-
-            document.getElementById('dk-pb-tot').innerText = pbtot;
-            document.getElementById('dk-cb-tot').innerText = cbtot;
-            document.getElementById('dk-cmb-tot').innerText = cmbtot;
-            document.getElementById('dk-lk-tot').innerText = lktot;
+            document.getElementById('dk-pb-tot').innerText = pbd + pba;
+            document.getElementById('dk-cb-tot').innerText = cbd + cba;
+            document.getElementById('dk-cmb-tot').innerText = cmbd + cmba;
+            document.getElementById('dk-lk-tot').innerText = lkd + lka;
 
             const totalD = pbd + cbd + cmbd + lkd;
             const totalA = pba + cba + cmba + lka;
@@ -510,17 +495,13 @@
             const cb = parseFloat(document.getElementById('lit-d-cb').value) || 0;
             const pb = parseFloat(document.getElementById('lit-d-pb').value) || 0;
             const pa = parseFloat(document.getElementById('lit-d-pa').value) || 0;
-
-            const totDewasa = asim + cb + pb + pa;
-            document.getElementById('litmas-dewasa-total').innerText = `${totDewasa} Tot`;
+            document.getElementById('litmas-dewasa-total').innerText = `${asim + cb + pb + pa} Tot`;
 
             const div = parseFloat(document.getElementById('lit-a-div').value) || 0;
             const per = parseFloat(document.getElementById('lit-a-per').value) || 0;
             const apb = parseFloat(document.getElementById('lit-a-pb').value) || 0;
             const sak = parseFloat(document.getElementById('lit-a-sak').value) || 0;
-
-            const totAnak = div + per + apb + sak;
-            document.getElementById('litmas-anak-total').innerText = `${totAnak} Tot`;
+            document.getElementById('litmas-anak-total').innerText = `${div + per + apb + sak} Tot`;
         }
 
         function parseCurrency(val) {
@@ -529,19 +510,13 @@
         }
 
         function formatAndCalculateBudget() {
-            const allocInput = document.getElementById('budget-allocation');
-            const spentInput = document.getElementById('budget-spent');
-
-            const alloc = parseCurrency(allocInput.value);
-            const spent = parseCurrency(spentInput.value);
+            const alloc = parseCurrency(document.getElementById('budget-allocation').value);
+            const spent = parseCurrency(document.getElementById('budget-spent').value);
 
             let pct = 0;
-            if (alloc > 0) {
-                pct = ((spent / alloc) * 100).toFixed(2);
-            }
+            if (alloc > 0) pct = ((spent / alloc) * 100).toFixed(2);
 
-            const pctString = `${pct}%`;
-            document.getElementById('stat-anggaran-pct').innerText = pctString;
+            document.getElementById('stat-anggaran-pct').innerText = `${pct}%`;
             document.getElementById('budget-progress-bar').style.width = `${Math.min(pct, 100)}%`;
         }
 
@@ -575,76 +550,84 @@
             formatAndCalculateBudget();
         }
 
-       async function exportAsImage() {
-    const btn = document.getElementById('btn-export');
-    const originalText = btn.innerHTML;
-    
-    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunduh...';
-    btn.disabled = true;
+        // EKSPORT PNG DENGAN PERBAIKAN WARNA TANGGAL & TEKS
+        async function exportAsImage() {
+            const btn = document.getElementById('btn-export');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Mengunduh...';
+            btn.disabled = true;
 
-    try {
-        // 1. Pastikan seluruh font bawaan/external sudah ter-load sempurna
-        await document.fonts.ready;
+            try {
+                await document.fonts.ready;
 
-        const reportNode = document.getElementById('report-card');
+                const reportNode = document.getElementById('report-card');
 
-        // 2. Terapkan sync atribut value pada dokumen asli terlebih dahulu
-        const inputs = reportNode.querySelectorAll('input');
-        inputs.forEach(input => {
-            input.setAttribute('value', input.value);
-        });
+                // Sinkronkan atribut value
+                const inputs = reportNode.querySelectorAll('input');
+                inputs.forEach(input => {
+                    input.setAttribute('value', input.value);
+                });
 
-        // 3. Eksekusi html2canvas dengan manipulasi DOM clones
-        const canvas = await html2canvas(reportNode, {
-            scale: 3,             // Menjaga resolusi tinggi & teks tajam
-            useCORS: true,        // Memastikan logo/gambar eksternal terunduh
-            allowTaint: true,
-            backgroundColor: "#ffffff",
-            logging: false,
-            onclone: (clonedDoc) => {
-                const clonedReport = clonedDoc.getElementById('report-card');
-                const clonedInputs = clonedReport.querySelectorAll('input');
+                const canvas = await html2canvas(reportNode, {
+                    scale: 3,
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: "#ffffff",
+                    logging: false,
+                    onclone: (clonedDoc) => {
+                        const clonedReport = clonedDoc.getElementById('report-card');
+                        const clonedInputs = clonedReport.querySelectorAll('input');
 
-                // Konversi elemen <input> menjadi elemen <span> agar teks pasti terdeteksi oleh html2canvas
-                clonedInputs.forEach(input => {
-                    const val = input.value || input.getAttribute('value') || '';
-                    const span = clonedDoc.createElement('span');
-                    
-                    // Salin teks dan gaya visual dari input ke span
-                    span.textContent = val;
-                    span.className = input.className;
-                    
-                    // Sesuaikan styling span agar presisi dengan tata letak asli
-                    span.style.display = 'inline-block';
-                    span.style.width = input.style.width || getComputedStyle(input).width;
-                    span.style.textAlign = getComputedStyle(input).textAlign;
-                    span.style.fontWeight = 'bold';
-                    span.style.color = '#0f2042'; // Warna teks navy gelap agar jelas
-                    span.style.border = 'none';
-                    span.style.background = 'transparent';
+                        // Ubah seluruh elemen input menjadi <span> agar pasti terbaca jelas oleh html2canvas
+                        clonedInputs.forEach(input => {
+                            const val = input.value || input.getAttribute('value') || '';
+                            const span = clonedDoc.createElement('span');
+                            span.textContent = val;
+                            span.className = input.className;
+                            
+                            span.style.display = 'inline-block';
+                            span.style.width = input.style.width || getComputedStyle(input).width;
+                            span.style.textAlign = getComputedStyle(input).textAlign;
+                            span.style.fontWeight = 'bold';
+                            
+                            // Penanganan warna khusus untuk input tanggal
+                            if (input.id === 'report-date') {
+                                span.style.color = '#f1c40f'; // Warna kuning-emas menyala di atas background navy
+                            } else {
+                                span.style.color = '#0f2042'; // Warna navy pekat untuk angka/teks lain
+                            }
+                            
+                            span.style.border = 'none';
+                            span.style.background = 'transparent';
 
-                    // Gantikan input dengan span khusus rendering PNG
-                    if (input.parentNode) {
-                        input.parentNode.replaceChild(span, input);
+                            if (input.parentNode) {
+                                input.parentNode.replaceChild(span, input);
+                            }
+                        });
                     }
                 });
+
+                const link = document.createElement('a');
+                link.download = `Laporan_Portrait_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
+                link.href = canvas.toDataURL('image/png', 1.0);
+                link.click();
+
+            } catch (err) {
+                alert("Gagal mengunduh gambar. Silakan coba lagi.");
+                console.error("Export PNG Error:", err);
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
-        });
+        }
 
-        // 4. Proses unduh file PNG
-        const link = document.createElement('a');
-        link.download = `Laporan_Portrait_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
-
-    } catch (err) {
-        alert("Gagal mengunduh gambar. Silakan coba lagi.");
-        console.error("Export PNG Error:", err);
-    } finally {
-        btn.innerHTML = originalText;
-        btn.disabled = false;
-    }
-}
+        window.onload = function() {
+            setRealtimeDate();
+            calculateAll();
+            calculateLitmas();
+            formatAndCalculateBudget();
+        };
     </script>
 </body>
 </html>
