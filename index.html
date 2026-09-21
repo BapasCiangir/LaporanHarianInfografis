@@ -17,21 +17,22 @@
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #eef2f3, #8e9eab);
-            color: #1e293b;
+            /* Latar belakang biru menyala / electric blue gradient sesuai foto */
+            background: linear-gradient(135deg, #0052D4, #4364F7, #6FB1FC);
+            color: #0f172a;
             min-height: 100vh;
         }
 
-        .gold-text {
-            color: #b45309;
-            text-shadow: 0 1px 2px rgba(180, 83, 9, 0.15);
+        .blue-title-text {
+            color: #1e3a8a;
+            text-shadow: 0 1px 2px rgba(30, 58, 138, 0.15);
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.92);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(217, 119, 6, 0.3);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            box-shadow: 0 15px 35px rgba(0, 51, 153, 0.25);
         }
 
         .editable-active[contenteditable="true"] {
@@ -39,14 +40,14 @@
             transition: all 0.2s ease;
             border-radius: 4px;
             padding: 1px 3px;
-            background-color: rgba(245, 158, 11, 0.2);
-            box-shadow: 0 0 0 1px #d97706;
+            background-color: rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 1px #2563eb;
         }
 
         .editable-active[contenteditable="true"]:hover, 
         .editable-active[contenteditable="true"]:focus {
-            background-color: rgba(245, 158, 11, 0.35);
-            box-shadow: 0 0 0 2px #b45309;
+            background-color: rgba(59, 130, 246, 0.35);
+            box-shadow: 0 0 0 2px #1d4ed8;
         }
 
         @media print {
@@ -58,10 +59,10 @@
 <body class="p-4 md:p-8 flex flex-col items-center">
 
     <!-- Top Action Bar -->
-    <div class="no-print w-full max-w-2xl mb-6 flex flex-wrap justify-between items-center bg-white p-4 rounded-xl border border-slate-200 gap-4 shadow-md">
+    <div class="no-print w-full max-w-2xl mb-6 flex flex-wrap justify-between items-center bg-white/90 backdrop-blur p-4 rounded-xl border border-blue-200 gap-4 shadow-lg">
         
         <div class="flex items-center gap-3">
-            <span id="adminBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-300">
+            <span id="adminBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300">
                 Mode Publik (Read-Only)
             </span>
             <span id="statusInfo" class="text-xs text-slate-500 hidden sm:inline">
@@ -94,12 +95,12 @@
             </button>
 
             <!-- Download PDF Button -->
-            <button id="btnPdf" onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow">
+            <button id="btnPdf" onclick="downloadPDF()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow">
                 <i class="fa-solid fa-file-pdf"></i> <span id="txtPdf">Download PDF</span>
             </button>
 
             <!-- Toggle Admin Mode Button -->
-            <button id="btnToggleAdmin" onclick="toggleAdminMode()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow">
+            <button id="btnToggleAdmin" onclick="toggleAdminMode()" class="bg-slate-900 hover:bg-black text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow">
                 <i class="fa-solid fa-lock" id="lockIcon"></i> <span id="btnAdminText">Masuk Mode Admin</span>
             </button>
         </div>
@@ -109,35 +110,35 @@
     <div id="reportArea" class="report-container w-full max-w-2xl glass-card rounded-2xl p-6 md:p-8 text-slate-800 relative overflow-hidden">
         
         <!-- Header -->
-        <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-5 mb-6 gap-3">
+        <div class="flex items-center justify-between border-b-2 border-blue-500/30 pb-5 mb-6 gap-3">
             
             <!-- LOGO KIRI -->
             <div id="logoKemenimipasContainer" class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center flex-shrink-0">
-                <svg class="w-full h-full text-amber-600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="#b45309" stroke-width="3" fill="#fffbeb"/>
-                    <path d="M50 12 L82 30 L82 70 L50 88 L18 70 L18 30 Z" stroke="#d97706" stroke-width="2" fill="none"/>
-                    <path d="M50 22 L72 35 L72 65 L50 78 L28 65 L28 35 Z" fill="#fef3c7" opacity="0.8"/>
-                    <circle cx="50" cy="50" r="16" fill="#b45309"/>
+                <svg class="w-full h-full text-blue-600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="#1d4ed8" stroke-width="3" fill="#eff6ff"/>
+                    <path d="M50 12 L82 30 L82 70 L50 88 L18 70 L18 30 Z" stroke="#2563eb" stroke-width="2" fill="none"/>
+                    <path d="M50 22 L72 35 L72 65 L50 78 L28 65 L28 35 Z" fill="#dbeafe" opacity="0.8"/>
+                    <circle cx="50" cy="50" r="16" fill="#1d4ed8"/>
                     <path d="M50 38 L54 46 L63 47 L56 53 L58 62 L50 57 L42 62 L44 53 L37 47 L46 46 Z" fill="#ffffff"/>
                 </svg>
             </div>
             
             <div class="text-center flex-1 px-1">
-                <h2 class="text-[10px] sm:text-xs font-bold tracking-wider text-amber-700 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
-                <h1 class="text-xl sm:text-2xl font-extrabold gold-text tracking-wide mt-0.5">LAPORAN HARIAN INFOGRAFIS</h1>
+                <h2 class="text-[10px] sm:text-xs font-bold tracking-wider text-blue-700 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
+                <h1 class="text-xl sm:text-2xl font-extrabold blue-title-text tracking-wide mt-0.5">LAPORAN HARIAN INFOGRAFIS</h1>
                 <p class="text-sm sm:text-base font-bold text-slate-700 mt-0.5 editable-field">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
-                <div class="inline-block mt-2 px-3 py-0.5 bg-amber-100 border border-amber-300 rounded-full">
-                    <span id="realtimeDate" class="text-xs font-semibold text-amber-800 editable-field">PAGI - Memuat Tanggal...</span>
+                <div class="inline-block mt-2 px-3 py-0.5 bg-blue-100 border border-blue-300 rounded-full">
+                    <span id="realtimeDate" class="text-xs font-semibold text-blue-900 editable-field">PAGI - Memuat Tanggal...</span>
                 </div>
             </div>
 
             <!-- LOGO KANAN -->
             <div id="logoPemasyarakatanContainer" class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center flex-shrink-0">
-                <svg class="w-full h-full text-amber-600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="#b45309" stroke-width="3" fill="#fffbeb"/>
-                    <path d="M50 20 C32 20 25 35 25 48 C25 60 35 66 42 68 L42 80 L58 80 L58 68 C65 66 75 60 75 48 C75 35 68 20 50 20 Z" fill="#d97706"/>
-                    <path d="M50 25 C38 25 32 36 32 46 C32 55 40 60 45 62 L45 76 L55 76 L55 62 C60 60 68 55 68 46 C68 36 62 25 50 25 Z" fill="#fef3c7"/>
-                    <path d="M22 50 C22 70 38 82 50 82 C62 82 78 70 78 50" stroke="#b45309" stroke-width="3" stroke-dasharray="4 2"/>
+                <svg class="w-full h-full text-blue-600" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="#1d4ed8" stroke-width="3" fill="#eff6ff"/>
+                    <path d="M50 20 C32 20 25 35 25 48 C25 60 35 66 42 68 L42 80 L58 80 L58 68 C65 66 75 60 75 48 C75 35 68 20 50 20 Z" fill="#2563eb"/>
+                    <path d="M50 25 C38 25 32 36 32 46 C32 55 40 60 45 62 L45 76 L55 76 L55 62 C60 60 68 55 68 46 C68 36 62 25 50 25 Z" fill="#dbeafe"/>
+                    <path d="M22 50 C22 70 38 82 50 82 C62 82 78 70 78 50" stroke="#1d4ed8" stroke-width="3" stroke-dasharray="4 2"/>
                 </svg>
             </div>
         </div>
@@ -146,20 +147,20 @@
         <div class="flex flex-col gap-5">
 
             <!-- Data Klien Table -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-2.5 flex items-center gap-2">
-                    <i class="fa-solid fa-users text-amber-600"></i> Data Klien Pemasyarakatan
+            <div class="bg-slate-50/80 p-4 rounded-xl border border-blue-100 shadow-sm">
+                <h3 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2.5 flex items-center gap-2">
+                    <i class="fa-solid fa-users text-blue-600"></i> Data Klien Pemasyarakatan
                 </h3>
                 <div class="overflow-x-auto">
                     <table class="w-full text-xs text-left border-collapse">
                         <thead>
-                            <tr class="bg-amber-100/70 text-amber-900 border-b border-amber-200">
+                            <tr class="bg-blue-100/80 text-blue-950 border-b border-blue-200">
                                 <th class="p-2">JENIS BIMBINGAN</th>
                                 <th class="p-2 text-center">DEWASA (L)</th>
                                 <th class="p-2 text-center">DEWASA (P)</th>
                                 <th class="p-2 text-center">ANAK (L)</th>
                                 <th class="p-2 text-center">ANAK (P)</th>
-                                <th class="p-2 text-center font-bold text-amber-900">TOTAL</th>
+                                <th class="p-2 text-center font-bold text-blue-950">TOTAL</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-slate-200 text-slate-700">
@@ -169,7 +170,7 @@
                                 <td class="p-2 text-center editable-field">53</td>
                                 <td class="p-2 text-center editable-field">14</td>
                                 <td class="p-2 text-center editable-field">0</td>
-                                <td class="p-2 text-center font-bold text-amber-800">1230</td>
+                                <td class="p-2 text-center font-bold text-blue-800">1230</td>
                             </tr>
                             <tr>
                                 <td class="p-2 font-medium">CB</td>
@@ -177,7 +178,7 @@
                                 <td class="p-2 text-center editable-field">3</td>
                                 <td class="p-2 text-center editable-field">1</td>
                                 <td class="p-2 text-center editable-field">0</td>
-                                <td class="p-2 text-center font-bold text-amber-800">66</td>
+                                <td class="p-2 text-center font-bold text-blue-800">66</td>
                             </tr>
                             <tr>
                                 <td class="p-2 font-medium">CMB</td>
@@ -185,7 +186,7 @@
                                 <td class="p-2 text-center editable-field">-</td>
                                 <td class="p-2 text-center editable-field">-</td>
                                 <td class="p-2 text-center editable-field">-</td>
-                                <td class="p-2 text-center font-bold text-amber-800">0</td>
+                                <td class="p-2 text-center font-bold text-blue-800">0</td>
                             </tr>
                             <tr>
                                 <td class="p-2 font-medium">Latihan Kerja</td>
@@ -193,15 +194,15 @@
                                 <td class="p-2 text-center editable-field">-</td>
                                 <td class="p-2 text-center editable-field">5</td>
                                 <td class="p-2 text-center editable-field">-</td>
-                                <td class="p-2 text-center font-bold text-amber-800">5</td>
+                                <td class="p-2 text-center font-bold text-blue-800">5</td>
                             </tr>
-                            <tr class="bg-amber-50 font-bold text-slate-800">
+                            <tr class="bg-blue-50/70 font-bold text-slate-800">
                                 <td class="p-2">TOTAL KLIEN</td>
                                 <td class="p-2 text-center">1225</td>
                                 <td class="p-2 text-center">56</td>
                                 <td class="p-2 text-center">20</td>
                                 <td class="p-2 text-center">0</td>
-                                <td class="p-2 text-center text-sm font-extrabold text-amber-700">1301</td>
+                                <td class="p-2 text-center text-sm font-extrabold text-blue-700">1301</td>
                             </tr>
                         </tbody>
                     </table>
@@ -212,9 +213,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <!-- Perkara -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col justify-between">
-                    <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-gavel text-amber-600"></i> Jenis Perkara Klien
+                <div class="bg-slate-50/80 p-4 rounded-xl border border-blue-100 shadow-sm flex flex-col justify-between">
+                    <h3 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-gavel text-blue-600"></i> Jenis Perkara Klien
                     </h3>
                     <div class="space-y-2 text-xs">
                         <div class="flex justify-between border-b border-slate-200 pb-1">
@@ -237,13 +238,13 @@
                 </div>
 
                 <!-- Litmas -->
-                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm">
-                    <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                        <i class="fa-solid fa-file-lines text-amber-600"></i> Rekapitulasi Litmas
+                <div class="bg-slate-50/80 p-4 rounded-xl border border-blue-100 shadow-sm">
+                    <h3 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-file-lines text-blue-600"></i> Rekapitulasi Litmas
                     </h3>
                     <div class="grid grid-cols-2 gap-2 text-xs">
-                        <div class="bg-white p-2 rounded border border-slate-200 shadow-2xs">
-                            <div class="text-amber-800 font-bold mb-1 border-b border-slate-100 pb-0.5">Dewasa</div>
+                        <div class="bg-white p-2 rounded border border-blue-100 shadow-2xs">
+                            <div class="text-blue-900 font-bold mb-1 border-b border-slate-100 pb-0.5">Dewasa</div>
                             <div class="text-[10px] space-y-0.5 text-slate-600">
                                 <div>Asimilasi: <b class="text-slate-800 editable-field">3</b></div>
                                 <div>CB: <b class="text-slate-800 editable-field">122</b></div>
@@ -251,8 +252,8 @@
                                 <div>Pembinaan Awal: <b class="text-slate-800 editable-field">5</b></div>
                             </div>
                         </div>
-                        <div class="bg-white p-2 rounded border border-slate-200 shadow-2xs">
-                            <div class="text-amber-800 font-bold mb-1 border-b border-slate-100 pb-0.5">Anak</div>
+                        <div class="bg-white p-2 rounded border border-blue-100 shadow-2xs">
+                            <div class="text-blue-900 font-bold mb-1 border-b border-slate-100 pb-0.5">Anak</div>
                             <div class="text-[10px] space-y-0.5 text-slate-600">
                                 <div>Diversi: <b class="text-slate-800 editable-field">12</b></div>
                                 <div>Peradilan: <b class="text-slate-800 editable-field">48</b></div>
@@ -266,9 +267,9 @@
             </div>
 
             <!-- Anggaran -->
-            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 shadow-sm flex flex-wrap justify-between items-center gap-2 text-xs">
+            <div class="bg-slate-50/80 p-3.5 rounded-xl border border-blue-100 shadow-sm flex flex-wrap justify-between items-center gap-2 text-xs">
                 <div class="flex items-center gap-1">
-                    <i class="fa-solid fa-wallet text-amber-600 mr-1"></i>
+                    <i class="fa-solid fa-wallet text-blue-600 mr-1"></i>
                     <span class="text-slate-600 font-medium">Alokasi Anggaran:</span>
                     <span class="font-bold text-slate-800 editable-field ml-1">Rp. 4.927.664.000,-</span>
                 </div>
@@ -280,12 +281,12 @@
             </div>
 
             <!-- Petugas Piket (Compact Horizontal Banner for Portrait Mode) -->
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row items-center gap-4">
-                <div class="w-28 h-36 bg-slate-200 rounded-lg overflow-hidden border-2 border-amber-500/50 shadow flex-shrink-0">
+            <div class="bg-slate-50/80 p-4 rounded-xl border border-blue-100 shadow-sm flex flex-col sm:flex-row items-center gap-4">
+                <div class="w-28 h-36 bg-slate-200 rounded-lg overflow-hidden border-2 border-blue-400 shadow flex-shrink-0">
                     <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" crossorigin="anonymous" class="w-full h-full object-cover">
                 </div>
                 <div class="flex-1 text-center sm:text-left">
-                    <h3 class="text-xs font-bold text-amber-800 uppercase tracking-wider mb-1">PETUGAS PIKET HARIAN</h3>
+                    <h3 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1">PETUGAS PIKET HARIAN</h3>
                     <p class="text-sm font-bold text-slate-800 tracking-wide editable-field">FIKRI & FAOZI</p>
                     <p class="text-[11px] text-slate-500 uppercase mt-0.5">Balai Pemasyarakatan Kelas II Ciangir</p>
                     <div class="mt-2 text-[10px] text-slate-400 italic">
@@ -377,7 +378,7 @@
                     el.classList.add('editable-active');
                 });
             } else {
-                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-700 border border-blue-300";
+                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-100 text-blue-800 border border-blue-300";
                 adminBadge.innerText = "Mode Publik (Read-Only)";
                 statusInfo.innerText = "Halaman ini dapat dilihat oleh publik.";
 
@@ -493,7 +494,7 @@
                     logging: false,
                     scrollX: 0,
                     scrollY: 0,
-                    backgroundColor: '#eef2f3'
+                    backgroundColor: '#0052D4'
                 });
 
                 const link = document.createElement('a');
