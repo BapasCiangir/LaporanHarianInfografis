@@ -6,44 +6,63 @@ async function exportAsImage() {
     btn.disabled = true;
 
     try {
-        // 1. Pastikan semua font telah selesai dimuatkan
+        // 1. Pastikan seluruh font bawaan/external sudah ter-load sempurna
         await document.fonts.ready;
 
         const reportNode = document.getElementById('report-card');
 
-        // 2. KEMAS KINI ATRIBUT VALUE PADA SEMUA INPUT (PENTING!)
-        // Ini memastikan html2canvas mendeteksi angka/teks yang diinputkan
+        // 2. Terapkan sync atribut value pada dokumen asli terlebih dahulu
         const inputs = reportNode.querySelectorAll('input');
         inputs.forEach(input => {
             input.setAttribute('value', input.value);
         });
 
-        // 3. Jalankan html2canvas dengan konfigurasi yang betul
+        // 3. Eksekusi html2canvas dengan manipulasi DOM clones
         const canvas = await html2canvas(reportNode, {
-            scale: 3,             // Resolusi tinggi
-            useCORS: true,        // Benarkan muat turun logo/gambar luaran
+            scale: 3,             // Menjaga resolusi tinggi & teks tajam
+            useCORS: true,        // Memastikan logo/gambar eksternal terunduh
             allowTaint: true,
             backgroundColor: "#ffffff",
             logging: false,
             onclone: (clonedDoc) => {
-                // Pastikan elemen dalam salinan dikemas kini nilainya
-                const clonedInputs = clonedDoc.querySelectorAll('input');
+                const clonedReport = clonedDoc.getElementById('report-card');
+                const clonedInputs = clonedReport.querySelectorAll('input');
+
+                // Konversi elemen <input> menjadi elemen <span> agar teks pasti terdeteksi oleh html2canvas
                 clonedInputs.forEach(input => {
-                    input.setAttribute('value', input.value);
-                    // Pastikan warna teks kelihatan jelas semasa dieksport
-                    input.style.color = "#0f2042"; 
+                    const val = input.value || input.getAttribute('value') || '';
+                    const span = clonedDoc.createElement('span');
+                    
+                    // Salin teks dan gaya visual dari input ke span
+                    span.textContent = val;
+                    span.className = input.className;
+                    
+                    // Sesuaikan styling span agar presisi dengan tata letak asli
+                    span.style.display = 'inline-block';
+                    span.style.width = input.style.width || getComputedStyle(input).width;
+                    span.style.textAlign = getComputedStyle(input).textAlign;
+                    span.style.fontWeight = 'bold';
+                    span.style.color = '#0f2042'; // Warna teks navy gelap agar jelas
+                    span.style.border = 'none';
+                    span.style.background = 'transparent';
+
+                    // Gantikan input dengan span khusus rendering PNG
+                    if (input.parentNode) {
+                        input.parentNode.replaceChild(span, input);
+                    }
                 });
             }
         });
 
-        // 4. Muat turun imej PNG
+        // 4. Proses unduh file PNG
         const link = document.createElement('a');
         link.download = `Laporan_Portrait_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
         link.href = canvas.toDataURL('image/png', 1.0);
         link.click();
+
     } catch (err) {
         alert("Gagal mengunduh gambar. Silakan coba lagi.");
-        console.error(err);
+        console.error("Export PNG Error:", err);
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
