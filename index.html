@@ -49,17 +49,24 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* Hapus semua latar/border kuning & garis edit saat proses ekspor berlangsung */
-        .exporting .date-badge {
+        /* --- STYLES KHUSUS EKSPOR (MENGHILANGKAN SEMUA WARNA KUNING ELEMEN EDITABLE) --- */
+        .exporting .date-badge,
+        .exporting .editable,
+        .exporting [contenteditable="true"],
+        .exporting [contenteditable="false"] {
             background-color: transparent !important;
+            background: none !important;
             border: none !important;
             box-shadow: none !important;
+            outline: none !important;
         }
 
-        .exporting .editable {
-            background-color: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
+        /* Mengubah teks gradasi emas menjadi warna emas padat/netral agar tidak menghasilkan latar kuning di canvas */
+        .exporting .gold-gradient-text {
+            background: none !important;
+            -webkit-background-clip: unset !important;
+            -webkit-text-fill-color: #f39c12 !important;
+            color: #f39c12 !important;
         }
 
         /* Portrait A4 Print Adjustments */
@@ -81,8 +88,9 @@
                 box-shadow: none !important;
                 border: none !important;
             }
-            .date-badge, .editable {
-                background-color: transparent !important;
+            .date-badge, .editable, .gold-gradient-text {
+                background: none !important;
+                -webkit-text-fill-color: #f39c12 !important;
                 border: none !important;
             }
         }
@@ -157,7 +165,7 @@
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
                     <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
                     <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
-                    <!-- Ukuran disamakan persis dengan Kementerian (text-xs font-bold) -->
+                    <!-- Balai Pemasyarakatan ukuran disamakan persis dengan Kementerian -->
                     <h1 data-key="header-l4" class="text-xs font-bold tracking-wider gold-gradient-text uppercase leading-snug editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
                     <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-1 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
@@ -584,7 +592,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 7. DOWNLOAD PDF (BERSIH DARI BORDER & KUNING)
+        // 7. DOWNLOAD PDF
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -602,26 +610,29 @@
             });
         }
 
-        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI BORDER & KUNING)
+        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI EFEK KUNING)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
 
-            html2canvas(element, {
-                scale: 2,
-                useCORS: true,
-                backgroundColor: '#0f2027'
-            }).then(canvas => {
-                const link = document.createElement('a');
-                const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
-                const extension = format === 'png' ? 'png' : 'jpg';
+            // Timeout kecil untuk memastikan CSS .exporting sudah ter-apply sempurna
+            setTimeout(() => {
+                html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#0f2027'
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    const mimeType = format === 'png' ? 'image/png' : 'image/jpeg';
+                    const extension = format === 'png' ? 'png' : 'jpg';
 
-                link.download = `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.${extension}`;
-                link.href = canvas.toDataURL(mimeType, 0.95);
-                link.click();
+                    link.download = `Laporan_Harian_Bapas_Ciangir_${new Date().toISOString().slice(0,10)}.${extension}`;
+                    link.href = canvas.toDataURL(mimeType, 0.95);
+                    link.click();
 
-                element.classList.remove('exporting');
-            });
+                    element.classList.remove('exporting');
+                });
+            }, 50);
         }
 
         // 9. INITIALIZATION
