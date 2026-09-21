@@ -96,17 +96,19 @@
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center">
 
-    <!-- Control Panel -->
+    <!-- Control Panel / Actions -->
     <div class="no-print w-full max-w-[210mm] mb-4 flex flex-wrap justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 gap-3">
         <div class="flex items-center space-x-2 text-amber-400 font-semibold text-xs md:text-sm">
             <i class="fa-solid fa-user-shield"></i>
             <span id="editStatusText">Mode Terkunci (Login Admin untuk Edit)</span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
+            <!-- Button Login Admin -->
             <button id="btnLogin" onclick="handleAdminLogin()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-key"></i> Login Admin
             </button>
 
+            <!-- Admin Panel Tools -->
             <div id="adminPanel" class="hidden flex items-center gap-2">
                 <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kiri
@@ -128,6 +130,7 @@
                 </button>
             </div>
             
+            <!-- Export Group Buttons -->
             <div class="flex items-center gap-1">
                 <button onclick="downloadPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition shadow-lg shadow-emerald-600/20">
                     <i class="fa-solid fa-file-pdf"></i> PDF
@@ -142,9 +145,10 @@
         </div>
     </div>
 
-    <!-- Container Laporan -->
+    <!-- Template Laporan Area -->
     <div id="reportArea" class="report-container w-full max-w-[210mm] min-h-[297mm] glass-card rounded-xl p-5 text-slate-100 relative overflow-hidden flex flex-col justify-between">
         
+        <!-- Background Ornaments -->
         <div class="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -170,100 +174,100 @@
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
-            <!-- Kehadiran Pegawai -->
+            <!-- SECTION 1: JUMLAH PEGAWAI (DIBUAT KOLOM CHART GRAFIS) -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
-                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <i class="fa-solid fa-id-card"></i> Jumlah Pegawai Hari Ini
-                </h3>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-800/80 text-amber-300 border-b border-slate-700">
-                                <th class="p-1.5 text-center">HADIR</th>
-                                <th class="p-1.5 text-center">CUTI</th>
-                                <th class="p-1.5 text-center">DINAS LUAR (DL)</th>
-                                <th class="p-1.5 text-center font-bold text-amber-400 bg-amber-500/10">TOTAL PEGAWAI</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="border-b border-slate-800">
-                                <td id="pegawaiHadir" data-key="pegawaiHadir" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">25</td>
-                                <td id="pegawaiCuti" data-key="pegawaiCuti" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">2</td>
-                                <td id="pegawaiDL" data-key="pegawaiDL" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">3</td>
-                                <td id="pegawaiTotal" class="p-1.5 text-center font-extrabold text-amber-400 bg-amber-500/10">30</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-id-card"></i> Grafik Kehadiran Pegawai Hari Ini
+                    </h3>
+                    <div class="text-[11px] text-slate-300">
+                        Total Pegawai: <span id="pegawaiTotal" class="font-extrabold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">30</span>
+                    </div>
+                </div>
+                
+                <!-- Input Data Tersembunyi/Editable untuk Admin -->
+                <div class="grid grid-cols-3 gap-2 mb-2 text-xs bg-slate-800/40 p-1.5 rounded border border-slate-700/50">
+                    <div class="text-center">Hadir: <span id="pegawaiHadir" data-key="pegawaiHadir" class="editable font-bold text-emerald-400" contenteditable="false">25</span></div>
+                    <div class="text-center">Cuti: <span id="pegawaiCuti" data-key="pegawaiCuti" class="editable font-bold text-amber-400" contenteditable="false">2</span></div>
+                    <div class="text-center">Dinas Luar (DL): <span id="pegawaiDL" data-key="pegawaiDL" class="editable font-bold text-blue-400" contenteditable="false">3</span></div>
+                </div>
+
+                <!-- Canvas Kolom Chart Pegawai -->
+                <div class="relative w-full h-32">
+                    <canvas id="pegawaiChart"></canvas>
                 </div>
             </div>
 
-            <!-- Main Content Layout -->
+            <!-- SECTION 2: DATA KLIEN (JENIS BIMBINGAN DIPISAHKAN MENJADI 2 KOLOM LAKI-LAKI & PEREMPUAN) -->
             <div class="space-y-4">
-                
-                <!-- Data Klien -->
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <i class="fa-solid fa-users"></i> Data Klien Pemasyarakatan
                     </h3>
                     <div class="overflow-x-auto">
-                        <table class="w-full text-[11px] text-left border-collapse">
+                        <table class="w-full text-[11px] text-left border-collapse border border-slate-700">
                             <thead>
-                                <tr class="bg-slate-800/80 text-amber-300 border-b border-slate-700">
-                                    <th class="p-1.5">JENIS BIMBINGAN</th>
-                                    <th class="p-1.5 text-center">DEWASA (L)</th>
-                                    <th class="p-1.5 text-center">DEWASA (P)</th>
-                                    <th class="p-1.5 text-center">ANAK (L)</th>
-                                    <th class="p-1.5 text-center">ANAK (P)</th>
-                                    <th class="p-1.5 text-center font-bold text-amber-400 bg-slate-800">TOTAL</th>
+                                <!-- Multi-Header untuk Memisahkan Laki-Laki & Perempuan -->
+                                <tr class="bg-slate-800 text-amber-300 text-center border-b border-slate-700">
+                                    <th rowspan="2" class="p-2 border-r border-slate-700 text-left">JENIS BIMBINGAN</th>
+                                    <th colspan="2" class="p-1 border-r border-slate-700 bg-blue-900/30 text-blue-300">KLIEN LAKI-LAKI</th>
+                                    <th colspan="2" class="p-1 border-r border-slate-700 bg-pink-900/30 text-pink-300">KLIEN PEREMPUAN</th>
+                                    <th rowspan="2" class="p-2 bg-amber-500/20 text-amber-300 font-bold">TOTAL</th>
+                                </tr>
+                                <tr class="bg-slate-800/90 text-slate-300 text-center border-b border-slate-700">
+                                    <th class="p-1 border-r border-slate-700 bg-blue-900/20 w-20">Dewasa (L)</th>
+                                    <th class="p-1 border-r border-slate-700 bg-blue-900/20 w-20">Anak (L)</th>
+                                    <th class="p-1 border-r border-slate-700 bg-pink-900/20 w-20">Dewasa (P)</th>
+                                    <th class="p-1 border-r border-slate-700 bg-pink-900/20 w-20">Anak (P)</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-slate-800">
                                 <tr class="row-klien">
-                                    <td class="p-1.5 font-medium">PB (Pembebasan Bersyarat)</td>
-                                    <td data-key="klien-pb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">1163</td>
-                                    <td data-key="klien-pb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">53</td>
-                                    <td data-key="klien-pb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">14</td>
-                                    <td data-key="klien-pb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">1230</td>
+                                    <td class="p-1.5 font-medium border-r border-slate-800">PB (Pembebasan Bersyarat)</td>
+                                    <td data-key="klien-pb-dl" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">1163</td>
+                                    <td data-key="klien-pb-al" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">14</td>
+                                    <td data-key="klien-pb-dp" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">53</td>
+                                    <td data-key="klien-pb-ap" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/40">1230</td>
                                 </tr>
                                 <tr class="row-klien">
-                                    <td class="p-1.5 font-medium">CB (Cuti Bersyarat)</td>
-                                    <td data-key="klien-cb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">62</td>
-                                    <td data-key="klien-cb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">3</td>
-                                    <td data-key="klien-cb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">1</td>
-                                    <td data-key="klien-cb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">66</td>
+                                    <td class="p-1.5 font-medium border-r border-slate-800">CB (Cuti Bersyarat)</td>
+                                    <td data-key="klien-cb-dl" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">62</td>
+                                    <td data-key="klien-cb-al" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">1</td>
+                                    <td data-key="klien-cb-dp" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">3</td>
+                                    <td data-key="klien-cb-ap" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/40">66</td>
                                 </tr>
                                 <tr class="row-klien">
-                                    <td class="p-1.5 font-medium">CMB (Cuti Menjelang Bebas)</td>
-                                    <td data-key="klien-cmb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td data-key="klien-cmb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td data-key="klien-cmb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td data-key="klien-cmb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">0</td>
+                                    <td class="p-1.5 font-medium border-r border-slate-800">CMB (Cuti Menjelang Bebas)</td>
+                                    <td data-key="klien-cmb-dl" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-al" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-dp" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-ap" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/40">0</td>
                                 </tr>
                                 <tr class="row-klien">
-                                    <td class="p-1.5 font-medium">Latihan Kerja / Asimilasi</td>
-                                    <td data-key="klien-asi-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td data-key="klien-asi-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td data-key="klien-asi-al" class="p-1.5 text-center editable klien-val" contenteditable="false">5</td>
-                                    <td data-key="klien-asi-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">5</td>
+                                    <td class="p-1.5 font-medium border-r border-slate-800">Latihan Kerja / Asimilasi</td>
+                                    <td data-key="klien-asi-dl" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">0</td>
+                                    <td data-key="klien-asi-al" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-blue-950/10" contenteditable="false">5</td>
+                                    <td data-key="klien-asi-dp" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td data-key="klien-asi-ap" class="p-1.5 text-center editable klien-val border-r border-slate-800 bg-pink-950/10" contenteditable="false">0</td>
+                                    <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/40">5</td>
                                 </tr>
                                 <tr class="bg-amber-500/10 font-bold text-amber-200">
-                                    <td class="p-1.5">TOTAL KLIEN</td>
-                                    <td id="totDewasaL" class="p-1.5 text-center">1225</td>
-                                    <td id="totDewasaP" class="p-1.5 text-center">56</td>
-                                    <td id="totAnakL" class="p-1.5 text-center">20</td>
-                                    <td id="totAnakP" class="p-1.5 text-center">0</td>
-                                    <td id="grandTotalKlien" class="p-1.5 text-center text-xs font-extrabold text-amber-400 bg-amber-500/20">1301</td>
+                                    <td class="p-1.5 border-r border-slate-800">TOTAL KLIEN</td>
+                                    <td id="totDewasaL" class="p-1.5 text-center border-r border-slate-800 bg-blue-900/20">1225</td>
+                                    <td id="totAnakL" class="p-1.5 text-center border-r border-slate-800 bg-blue-900/20">20</td>
+                                    <td id="totDewasaP" class="p-1.5 text-center border-r border-slate-800 bg-pink-900/20">56</td>
+                                    <td id="totAnakP" class="p-1.5 text-center border-r border-slate-800 bg-pink-900/20">0</td>
+                                    <td id="grandTotalKlien" class="p-1.5 text-center text-xs font-extrabold text-amber-400 bg-amber-500/30">1301</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <!-- TATA LETAK GRID TERPISAH (4 KOLOM) -->
+                <!-- TATA LETAK GRID 4 KOLOM -->
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                     
                     <!-- Kolom 1: Jenis Perkara -->
@@ -316,7 +320,7 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Realisasi Anggaran (Diagram Grafik) -->
+                    <!-- Kolom 3: Realisasi Anggaran (Chart Grafik Donut) -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
@@ -330,20 +334,18 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 4: Petugas Piket (Terapisah Masuk Kolom Sendiri) -->
-                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
-                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <!-- SECTION 3: PETUGAS PIKET (FOTO PEGAWAI DIBUAT BESAR) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 w-full justify-start">
                             <i class="fa-solid fa-user-shield"></i> Petugas Piket
                         </h3>
-                        <div class="flex items-center gap-2">
-                            <div class="w-12 h-14 bg-slate-800 rounded border border-amber-500/40 overflow-hidden flex-shrink-0">
-                                <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-1 text-left">
-                                <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider block">PIKET HARIAN</span>
-                                <p data-key="petugas-nama" class="text-xs font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
-                                <p class="text-[9px] text-slate-400 uppercase">Dinas Piket</p>
-                            </div>
+                        <!-- Ukuran Foto Diperbesar (w-28 h-32) -->
+                        <div class="w-28 h-32 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md mb-2">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <p data-key="petugas-nama" class="text-xs font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
+                            <p class="text-[9px] text-slate-400 uppercase font-semibold">Petugas Piket Harian</p>
                         </div>
                     </div>
 
@@ -365,9 +367,63 @@
         let isAdminLoggedIn = false;
         const STORAGE_KEY_TEXT = 'bapas_report_texts';
         const STORAGE_KEY_IMAGES = 'bapas_report_images';
+        let pegawaiChartInstance = null;
         let anggaranChartInstance = null;
 
-        // Render Grafik Anggaran
+        // 1. RENDER GRAFIK PEGAWAI (BAR CHART)
+        function renderPegawaiChart() {
+            const ctx = document.getElementById('pegawaiChart').getContext('2d');
+            
+            const parseVal = (id) => {
+                const el = document.getElementById(id);
+                if (!el) return 0;
+                const num = parseInt(el.innerText.replace(/[^0-9]/g, ''));
+                return isNaN(num) ? 0 : num;
+            };
+
+            const hadir = parseVal('pegawaiHadir');
+            const cuti = parseVal('pegawaiCuti');
+            const dl = parseVal('pegawaiDL');
+
+            if (pegawaiChartInstance) {
+                pegawaiChartInstance.destroy();
+            }
+
+            pegawaiChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Hadir', 'Cuti', 'Dinas Luar'],
+                    datasets: [{
+                        label: 'Jumlah Pegawai',
+                        data: [hadir, cuti, dl],
+                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6'],
+                        borderColor: ['#059669', '#d97706', '#2563eb'],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#cbd5e1', stepSize: 5 },
+                            grid: { color: '#334155' }
+                        },
+                        x: {
+                            ticks: { color: '#cbd5e1', font: { size: 10 } },
+                            grid: { display: false }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 2. RENDER GRAFIK ANGGARAN (DONUT CHART)
         function renderAnggaranChart() {
             const ctx = document.getElementById('anggaranChart').getContext('2d');
             
@@ -389,11 +445,7 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     cutout: '70%'
                 }
             });
@@ -557,6 +609,8 @@
 
             const totalEl = document.getElementById('pegawaiTotal');
             if (totalEl) totalEl.innerText = total;
+
+            renderPegawaiChart();
         }
 
         function calculateKlienTable() {
@@ -575,17 +629,17 @@
                 const cells = row.querySelectorAll('.klien-val');
                 if (cells.length >= 4) {
                     const dL = parseCell(cells[0]);
-                    const dP = parseCell(cells[1]);
-                    const aL = parseCell(cells[2]);
+                    const aL = parseCell(cells[1]);
+                    const dP = parseCell(cells[2]);
                     const aP = parseCell(cells[3]);
 
-                    const rowTotal = dL + dP + aL + aP;
+                    const rowTotal = dL + aL + dP + aP;
                     const rowTotalCell = row.querySelector('.row-total');
                     if (rowTotalCell) rowTotalCell.innerText = rowTotal;
 
                     grandDewasaL += dL;
-                    grandDewasaP += dP;
                     grandAnakL += aL;
+                    grandDewasaP += dP;
                     grandAnakP += aP;
                 }
             });
@@ -656,7 +710,7 @@
             renderAnggaranChart();
 
             document.addEventListener('input', (e) => {
-                if (e.target.classList.contains('pegawai-input')) {
+                if (e.target.classList.contains('pegawai-input') || e.target.id.startsWith('pegawai')) {
                     calculatePegawai();
                 }
                 if (e.target.classList.contains('klien-val')) {
