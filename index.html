@@ -1,14 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+    <!-- 
+    ==================================================================================
+    PETUNJUK PENYIAPAN GOOGLE SHEETS (TANPA FIREBASE)
+    ==================================================================================
+    1. Buka https://sheets.new di browser Anda untuk membuat Google Spreadsheet baru.
+    2. Beri nama spreadsheet, misalnya: "Database Laporan Bapas Ciangir".
+    3. Pada Sheet1, buat header pada Baris 1:
+       - Kolom A1: key
+       - Kolom B1: value
+    4. Buka menu Ekstensi > Apps Script.
+    5. Hapus seluruh isi kode bawaan, lalu salin (copy) dan tempel (paste) kode berikut:
+
+        function doGet(e) {
+          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+          var data = sheet.getDataRange().getValues();
+          var result = {};
+          for (var i = 1; i < data.length; i++) {
+            if (data[i][0]) {
+              result[data[i][0]] = data[i][1];
+            }
+          }
+          return ContentService.createTextOutput(JSON.stringify(result))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+
+        function doPost(e) {
+          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+          var body = JSON.parse(e.postData.contents);
+          
+          for (var key in body) {
+            var data = sheet.getDataRange().getValues();
+            var found = false;
+            for (var i = 1; i < data.length; i++) {
+              if (data[i][0] == key) {
+                sheet.getRange(i + 1, 2).setValue(body[key]);
+                found = true;
+                break;
+              }
+            }
+            if (!found) {
+              sheet.appendRow([key, body[key]]);
+            }
+          }
+          return ContentService.createTextOutput(JSON.stringify({status: "success"}))
+            .setMimeType(ContentService.MimeType.JSON);
+        }
+
+    6. Klik ikon Disket (Simpan).
+    7. Klik Terapkan (Deploy) > Penerapan baru (New deployment).
+    8. Klik ikon roda gigi (Select type) > pilih Aplikasi web (Web app).
+    9. Isikan detail:
+       - Deskripsi: API Laporan Bapas
+       - Jalankan sebagai (Execute as): Me (Email anda)
+       - Siapa yang memiliki akses (Who has access): Anyone (Siapa saja)
+    10. Klik Terapkan (Deploy), lalu setujui Izin Akses (Grant Access) bila diminta.
+    11. Salin (Copy) URL Aplikasi Web (Web App URL) yang diberikan.
+    12. Tempelkan (Paste) URL tersebut pada variabel `GOOGLE_SCRIPT_URL` di script HTML di bawah ini!
+    ==================================================================================
+    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
-    <!-- Tailwind CSS for Layout -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf for PDF Download -->
+    <!-- html2pdf for PDF Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <!-- html2canvas for PNG/JPG Export -->
+    <!-- html2canvas for Image Export -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,7 +110,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* --- STYLES KHUSUS EKSPOR --- */
+        /* Mode Ekspor */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -352,38 +411,24 @@
 
         <!-- Footer -->
         <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-[9px] text-slate-400">
-            <span>Sistem Laporan Otomatis Realtime - Bapas Kelas II Ciangir</span>
+            <span>Sistem Laporan Otomatis Realtime - Bapas Kelas II Ciangir (Google Sheets Engine)</span>
             <span>Kemenimipas RI</span>
         </div>
 
     </div>
 
-    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <script>
+        // =========================================================================
+        // TEMPELKAN URL WEBB APP GOOGLE APPS SCRIPT ANDA DI BAWAH INI:
+        // =========================================================================
+        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby_SAMPLE_GOOGLE_SHEETS_SCRIPT_URL/exec";
 
-        // Firebase Configuration & Initialization
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bapas-ciangir-app';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' 
-            ? JSON.parse(__firebase_config) 
-            : { apiKey: "demo-api-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project" };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Document Reference for Shared Public Data
-        const reportDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'report_data', 'main');
-
-        let currentUser = null;
         let isAdminLoggedIn = false;
         let anggaranChartInstance = null;
-        let isReceivingSnapshot = false;
-        let debounceTimer = null;
+        let saveDebounceTimer = null;
+        let isUserEditing = false;
 
-        // UI Helpers for Sync Status
+        // Sync Status Indicator Helper
         function updateSyncStatus(status, text) {
             const syncEl = document.getElementById('syncStatus');
             if (!syncEl) return;
@@ -394,104 +439,98 @@
             } else if (status === 'saving') {
                 syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30';
                 syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span><span>' + text + '</span>';
+            } else if (status === 'error') {
+                syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/20 text-red-300 border border-red-500/30';
+                syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-red-400"></span><span>' + text + '</span>';
             } else {
                 syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
                 syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>' + text + '</span>';
             }
         }
 
-        // Initialize Firebase Authentication & Realtime Firestore Listener
-        async function initFirebase() {
+        // Fetch Data from Google Sheets API
+        async function loadDataFromSheets() {
+            if (isUserEditing) return; // Skip polling sync while user is actively typing
+
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("SAMPLE_GOOGLE_SHEETS_SCRIPT_URL")) {
+                updateSyncStatus('error', 'URL Script Belum Diisi');
+                return;
+            }
+
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
-                currentUser = auth.currentUser;
+                const response = await fetch(GOOGLE_SCRIPT_URL);
+                if (!response.ok) throw new Error("Network response was not ok");
+                
+                const data = await response.json();
 
-                // Subscribe to Realtime Updates
-                onSnapshot(reportDocRef, (docSnap) => {
-                    updateSyncStatus('connected', 'Terhubung - Realtime');
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        applyCloudDataToUI(data);
-                    }
-                }, (error) => {
-                    console.error("Firestore Listener Error:", error);
-                    updateSyncStatus('connecting', 'Gagal Sinkron');
-                });
-
-            } catch (err) {
-                console.error("Auth / Init Error:", err);
-                updateSyncStatus('connecting', 'Mode Luring');
-            }
-        }
-
-        // Apply Realtime Firestore Data to UI
-        function applyCloudDataToUI(data) {
-            isReceivingSnapshot = true;
-            
-            if (data.texts) {
-                Object.keys(data.texts).forEach(key => {
+                Object.keys(data).forEach(key => {
                     const el = document.querySelector(`[data-key="${key}"]`);
-                    if (el && el.innerText !== data.texts[key]) {
-                        el.innerText = data.texts[key];
+                    if (el && el.innerText !== data[key]) {
+                        el.innerText = data[key];
                     }
                 });
-            }
 
-            if (data.previewFoto) {
-                const imgEl = document.getElementById('previewFoto');
-                if (imgEl && imgEl.src !== data.previewFoto) {
-                    imgEl.src = data.previewFoto;
+                if (data.previewFoto) {
+                    const imgEl = document.getElementById('previewFoto');
+                    if (imgEl && imgEl.src !== data.previewFoto) {
+                        imgEl.src = data.previewFoto;
+                    }
                 }
-            }
 
-            calculatePegawai();
-            calculateKlienTable();
-            isReceivingSnapshot = false;
+                calculatePegawai();
+                calculateKlienTable();
+                updateSyncStatus('connected', 'Terhubung - Realtime');
+
+            } catch (error) {
+                console.error("Error loading data from Google Sheets:", error);
+                updateSyncStatus('error', 'Gagal Sinkron');
+            }
         }
 
-        // Save Current UI Data to Cloud Storage (Firebase Firestore)
-        async function saveAllDataToCloud() {
-            if (!currentUser) return;
-            
+        // Save All / Specific Data to Google Sheets API
+        async function saveDataToSheets(payload) {
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("SAMPLE_GOOGLE_SHEETS_SCRIPT_URL")) {
+                alert("Harap konfigurasi GOOGLE_SCRIPT_URL terlebih dahulu!");
+                return;
+            }
+
             updateSyncStatus('saving', 'Menyimpan...');
 
-            const textData = {};
-            document.querySelectorAll('[data-key]').forEach(el => {
-                textData[el.getAttribute('data-key')] = el.innerText;
-            });
-
-            const fotoSrc = document.getElementById('previewFoto')?.src || '';
-
             try {
-                await setDoc(reportDocRef, {
-                    texts: textData,
-                    previewFoto: fotoSrc,
-                    lastUpdated: new Date().toISOString(),
-                    updatedBy: currentUser.uid
-                }, { merge: true });
+                await fetch(GOOGLE_SCRIPT_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
 
-                updateSyncStatus('connected', 'Tersimpan ke Cloud');
-            } catch (err) {
-                console.error("Error saving data:", err);
-                updateSyncStatus('connecting', 'Gagal Menyimpan');
+                updateSyncStatus('connected', 'Tersimpan ke Sheets');
+                isUserEditing = false;
+            } catch (error) {
+                console.error("Error saving data to Google Sheets:", error);
+                updateSyncStatus('error', 'Gagal Menyimpan');
+                isUserEditing = false;
             }
         }
 
-        // Debounce helper for live content changes
-        function triggerDebouncedSave() {
-            if (isReceivingSnapshot) return;
-            clearTimeout(debounceTimer);
+        // Debounce helper for content editing
+        function triggerAutoSave() {
+            isUserEditing = true;
             updateSyncStatus('saving', 'Ketik...');
-            debounceTimer = setTimeout(() => {
-                saveAllDataToCloud();
-            }, 600);
+            clearTimeout(saveDebounceTimer);
+            
+            saveDebounceTimer = setTimeout(() => {
+                const textData = {};
+                document.querySelectorAll('[data-key]').forEach(el => {
+                    textData[el.getAttribute('data-key')] = el.innerText;
+                });
+                textData['previewFoto'] = document.getElementById('previewFoto')?.src || '';
+                
+                saveDataToSheets(textData);
+            }, 800);
         }
 
-        // Admin Authentication Logic
+        // Admin Authentication
         window.handleAdminLogin = function() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
@@ -499,7 +538,7 @@
             const editables = document.querySelectorAll('.editable');
 
             if (!isAdminLoggedIn) {
-                const password = prompt("Masukkan Password Admin untuk mengedit data:");
+                const password = prompt("Masukkan Password Admin:");
                 if (password === "bapas123") {
                     isAdminLoggedIn = true;
                     
@@ -509,7 +548,7 @@
                     });
 
                     if (adminPanel) adminPanel.classList.remove('hidden');
-                    if (editStatusText) editStatusText.innerText = "Mode Edit AKTIF (Logged in as Admin)";
+                    if (editStatusText) editStatusText.innerText = "Mode Edit AKTIF (Logged in Admin)";
                     if (btnLogin) {
                         btnLogin.innerHTML = '<i class="fa-solid fa-lock"></i> Logout Admin';
                         btnLogin.classList.replace('bg-amber-600', 'bg-red-600');
@@ -536,9 +575,9 @@
             }
         };
 
-        // Reset All Report Data
-        window.resetDataStorage = async function() {
-            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data dan foto ke standar awal? Data cloud juga akan direset.")) {
+        // Reset Data
+        window.resetDataStorage = function() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke standar awal?")) {
                 const defaultTexts = {
                     "header-l1": "Kementerian Imigrasi Dan Pemasyarakatan",
                     "header-l2": "Direktorat Jenderal Pemasyarakatan",
@@ -558,13 +597,20 @@
                     "perkara-pidum": "695(D) / 18(A)",
                     "litmas-d-asi": "3", "litmas-d-cb": "439", "litmas-d-pindah": "87",
                     "litmas-a-div": "12", "litmas-a-peradil": "48", "litmas-a-pb": "3",
-                    "petugas-nama": "FIKRI & FAOZI"
+                    "petugas-nama": "FIKRI & FAOZI",
+                    "previewFoto": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
                 };
 
-                const defaultFoto = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";
+                Object.keys(defaultTexts).forEach(key => {
+                    const el = document.querySelector(`[data-key="${key}"]`);
+                    if (el) el.innerText = defaultTexts[key];
+                });
+                
+                document.getElementById('previewFoto').src = defaultTexts.previewFoto;
 
-                applyCloudDataToUI({ texts: defaultTexts, previewFoto: defaultFoto });
-                await saveAllDataToCloud();
+                calculatePegawai();
+                calculateKlienTable();
+                saveDataToSheets(defaultTexts);
             }
         };
 
@@ -577,14 +623,14 @@
                     const previewEl = document.getElementById('previewFoto');
                     if (previewEl) {
                         previewEl.src = e.target.result;
-                        saveAllDataToCloud();
+                        saveDataToSheets({ "previewFoto": e.target.result });
                     }
                 };
                 reader.readAsDataURL(file);
             }
         };
 
-        // Render Realtime Clock and Date
+        // Realtime Clock and Date
         function updateRealtimeDateTime() {
             const now = new Date();
             const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -602,7 +648,7 @@
             if (clockElement) clockElement.innerText = timeString;
         }
 
-        // Dynamic Calculations
+        // Calculations
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -696,7 +742,7 @@
             });
         }
 
-        // Export Actions
+        // Exports
         window.downloadPDF = function() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -737,7 +783,7 @@
             }, 50);
         };
 
-        // Event Listener Initialization
+        // DOM Initialization
         document.addEventListener('DOMContentLoaded', () => {
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
@@ -746,7 +792,7 @@
             calculateKlienTable();
             renderAnggaranChart();
 
-            // Setup input listener for live updates
+            // Event Listeners for Live Edit
             document.addEventListener('input', (e) => {
                 if (e.target.id === 'pegawaiHadir' || e.target.id === 'pegawaiCuti' || e.target.id === 'pegawaiDL') {
                     calculatePegawai();
@@ -755,12 +801,13 @@
                     calculateKlienTable();
                 }
                 if (e.target.classList.contains('editable')) {
-                    triggerDebouncedSave();
+                    triggerAutoSave();
                 }
             });
 
-            // Start Firebase Auth & Realtime Sync
-            initFirebase();
+            // Initial load & Start Polling Sync (every 3 seconds)
+            loadDataFromSheets();
+            setInterval(loadDataFromSheets, 3000);
         });
     </script>
 </body>
