@@ -67,7 +67,7 @@
         /* Portrait Container Page Ratio */
         .portrait-card {
             width: 100%;
-            max-width: 794px; /* standard A4 width in pixels at standard display PPI */
+            max-width: 794px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -128,7 +128,7 @@
     <!-- MAIN PORTRAIT INFOGRAPHIC CARD -->
     <div id="report-card" class="print-container portrait-card bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden p-6 sm:p-8 space-y-5">
 
-        <!-- HEADER SECTION WITH EDITABLE LOGOS -->
+        <!-- HEADER SECTION WITH UPDATED KOP SURAT -->
         <header class="border-b-4 border-gold-500 pb-5">
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 
@@ -159,12 +159,13 @@
                     </div>
                 </div>
 
-                <!-- Title & Agency -->
+                <!-- Title & Kop Surat Instansi -->
                 <div class="text-center flex-1">
-                    <p class="text-[10px] font-bold tracking-widest text-slate-500 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN RI</p>
-                    <p class="text-xs font-extrabold text-navy-900 uppercase tracking-wide">DIREKTORAT JENDERAL PEMASYARAKATAN</p>
-                    <h2 class="text-xl sm:text-2xl font-black text-navy-900 tracking-tight mt-0.5 uppercase">LAPORAN HARIAN INFOGRAFIS</h2>
-                    <p class="text-sm font-bold text-gold-600 tracking-wider uppercase">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
+                    <p class="text-[10px] font-bold tracking-widest text-slate-500 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</p>
+                    <p class="text-xs font-extrabold text-navy-900 uppercase tracking-wide">DIREKTORAT JENDRAL PEMASYARAKATAN</p>
+                    <p class="text-xs font-bold text-slate-700 uppercase tracking-wide">KANTOR WILAYAH BANTEN</p>
+                    <h2 class="text-base font-black text-navy-900 tracking-tight mt-1 uppercase">BALAI PEMASYARAKATAN KELAS II CIANGIR</h2>
+                    <p class="text-xs font-bold text-gold-600 tracking-wider uppercase mt-0.5">LAPORAN HARIAN INFOGRAFIS</p>
                 </div>
 
                 <!-- Date & Badge -->
@@ -230,7 +231,7 @@
             </div>
         </div>
 
-        <!-- MAIN DATA TABLES (VERTICAL STACK FOR PORTRAIT FIT) -->
+        <!-- MAIN DATA TABLES -->
         <div class="space-y-4">
 
             <!-- 1. DATA KLIEN TABLE -->
@@ -353,7 +354,7 @@
                 </div>
             </div>
 
-            <!-- 3. LITMAS SIDE-BY-SIDE GRID -->
+            <!-- 3. LITMAS GRID -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <!-- Litmas Dewasa -->
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
@@ -428,7 +429,7 @@
                 </div>
             </div>
 
-            <!-- 4. REALISASI ANGGARAN & DOKUMENTASI (2 COLS) -->
+            <!-- 4. REALISASI ANGGARAN & DOKUMENTASI -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 
                 <!-- Anggaran -->
@@ -517,7 +518,6 @@
         function toggleAdminMode() {
             isAdminMode = !isAdminMode;
             const btn = document.getElementById('admin-toggle-btn');
-            const statusText = document.getElementById('admin-status-text');
 
             if (isAdminMode) {
                 document.body.classList.remove('view-mode');
@@ -692,7 +692,7 @@
                 backgroundColor: "#ffffff"
             }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = `Laporan_Harian_Portrait_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
+                link.download = `Laporan_Harian_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
                 link.href = canvas.toDataURL('image/png');
                 link.click();
             });
