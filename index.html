@@ -645,26 +645,6 @@
         btn.disabled = false;
     }
 }
-
-                const link = document.createElement('a');
-                link.download = `Laporan_Portrait_BAPAS_Ciangir_${new Date().toISOString().slice(0, 10)}.png`;
-                link.href = canvas.toDataURL('image/png', 1.0);
-                link.click();
-            } catch (err) {
-                alert("Gagal mengunduh gambar. Silakan coba lagi.");
-                console.error(err);
-            } finally {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-            }
-        }
-
-        window.onload = function() {
-            setRealtimeDate();
-            calculateAll();
-            calculateLitmas();
-            formatAndCalculateBudget();
-        };
     </script>
 </body>
 </html>
