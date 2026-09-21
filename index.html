@@ -366,7 +366,7 @@
                     </div>
                 </div>
 
-                <!-- ANGGARAN & PETUGAS PIKET DENGAN FOTO -->
+                <!-- ANGGARAN & PETUGAS PIKET DENGAN FOTO KOTAK -->
                 <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-1.5 space-y-1.5">
                     <div class="bg-slate-50 p-1.5 rounded border border-slate-200">
                         <label class="text-[8px] font-bold text-slate-500 uppercase block">PENYERAPAN ANGGARAN</label>
@@ -380,17 +380,17 @@
                         </div>
                     </div>
 
-                    <!-- KOTAK PETUGAS PIKET LENGKAP DENGAN FOTO -->
+                    <!-- KOTAK PETUGAS PIKET DENGAN FOTO KOTAK -->
                     <div class="bg-slate-50 p-1.5 rounded border border-slate-200 text-center space-y-1">
                         <span class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">PETUGAS PIKET</span>
                         
-                        <!-- Area Foto Petugas Piket -->
-                        <div class="relative group w-14 h-14 mx-auto rounded-full overflow-hidden border-2 border-gold-500 shadow-sm bg-slate-200">
+                        <!-- Area Foto Petugas Piket (Bentuk Kotak Presisi) -->
+                        <div class="relative group w-16 h-16 mx-auto rounded-md overflow-hidden border-2 border-gold-500 shadow-sm bg-slate-200">
                             <img id="officer-photo" 
-                                 src="https://placehold.co/100x100/0f2042/ffffff?text=PETUGAS" 
+                                 src="https://placehold.co/120x120/0f2042/ffffff?text=PETUGAS" 
                                  alt="Foto Petugas Piket" 
                                  class="w-full h-full object-cover">
-                            <label for="upload-officer-photo" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer rounded-full text-[7px] font-bold p-0.5">
+                            <label for="upload-officer-photo" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer text-[7px] font-bold p-0.5">
                                 <i class="fa-solid fa-camera text-[9px] text-gold-400"></i> Ganti
                             </label>
                             <input type="file" id="upload-officer-photo" accept="image/*" class="hidden" onchange="handleLogoUpload(event, 'officer-photo')">
@@ -538,7 +538,7 @@
         function resetData() {
             setRealtimeDate();
             document.getElementById('officer-names').value = "FIKRI & FAOZI";
-            document.getElementById('officer-photo').src = "https://placehold.co/100x100/0f2042/ffffff?text=PETUGAS";
+            document.getElementById('officer-photo').src = "https://placehold.co/120x120/0f2042/ffffff?text=PETUGAS";
             
             document.getElementById('dk-pb-d').value = 116;
             document.getElementById('dk-pb-a').value = 31;
