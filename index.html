@@ -132,7 +132,7 @@
                              alt="Logo Kemenimipas" 
                              class="h-12 w-auto object-contain"
                              onerror="this.src='https://placehold.co/60x60/0f2042/ffffff?text=KEMENIMIPAS'">
-                        <label for="upload-logo-1" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer rounded text-[8px] text-center font-bold p-0.5">
+                        <label for="upload-logo-1" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer rounded text-[8px] text-center font-bold p-0.5 z-10">
                             <i class="fa-solid fa-camera text-[10px] text-gold-400"></i> Ganti
                         </label>
                         <input type="file" id="upload-logo-1" accept="image/*" class="hidden" onchange="handleLogoUpload(event, 'logo-1')">
@@ -143,7 +143,7 @@
                              alt="Logo Pemasyarakatan" 
                              class="h-12 w-auto object-contain"
                              onerror="this.src='https://placehold.co/60x60/0f2042/ffffff?text=PAS'">
-                        <label for="upload-logo-2" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer rounded text-[8px] text-center font-bold p-0.5">
+                        <label for="upload-logo-2" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer rounded text-[8px] text-center font-bold p-0.5 z-10">
                             <i class="fa-solid fa-camera text-[10px] text-gold-400"></i> Ganti
                         </label>
                         <input type="file" id="upload-logo-2" accept="image/*" class="hidden" onchange="handleLogoUpload(event, 'logo-2')">
@@ -195,7 +195,7 @@
         <!-- MAIN CONTENT 3 KOLOM -->
         <div class="grid grid-cols-3 gap-2.5 items-start">
 
-            <!-- KOLOM 1: DATA KLIEN -->
+            <!-- KOLOM 1: DATA KLIEN (TIDAK DISINGKAT) -->
             <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden text-[10px]">
                 <div class="bg-navy-900 text-white px-2 py-1.5 flex items-center justify-between">
                     <h3 class="font-bold text-[10px] tracking-wide uppercase flex items-center gap-1">
@@ -206,33 +206,33 @@
                     <table class="w-full text-left">
                         <thead class="bg-slate-100 text-slate-700 uppercase font-bold border-b text-[9px]">
                             <tr>
-                                <th class="p-1">BIMB.</th>
+                                <th class="p-1">BIMBINGAN</th>
                                 <th class="p-1 text-center">DWS</th>
                                 <th class="p-1 text-center">ANK</th>
                                 <th class="p-1 text-center">TOT</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700">
+                        <tbody class="divide-y divide-slate-100 font-medium text-slate-700 text-[9px]">
                             <tr>
-                                <td class="p-1 font-bold">PB</td>
+                                <td class="p-1 font-bold">Pembebasan Bersyarat</td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-pb-d" value="116" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-pb-a" value="31" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-1 text-center font-bold text-navy-900" id="dk-pb-tot">147</td>
                             </tr>
                             <tr>
-                                <td class="p-1 font-bold">CB</td>
+                                <td class="p-1 font-bold">Cuti Bersyarat</td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-cb-d" value="35" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-cb-a" value="62" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-1 text-center font-bold text-navy-900" id="dk-cb-tot">97</td>
                             </tr>
                             <tr>
-                                <td class="p-1 font-bold">CMB</td>
+                                <td class="p-1 font-bold">Cuti Menjelang Bebas</td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-cmb-d" value="3" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-cmb-a" value="0" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-1 text-center font-bold text-navy-900" id="dk-cmb-tot">3</td>
                             </tr>
                             <tr>
-                                <td class="p-1 font-bold">LK</td>
+                                <td class="p-1 font-bold">Luar Klien</td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-lk-d" value="5" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-0.5 text-center"><input type="number" id="dk-lk-a" value="0" oninput="calculateAll()" class="editable-input w-8 text-center font-semibold rounded py-0.5"></td>
                                 <td class="p-1 text-center font-bold text-navy-900" id="dk-lk-tot">5</td>
@@ -305,7 +305,7 @@
                 </div>
             </div>
 
-            <!-- KOLOM 3: LITMAS, ANGGARAN & PETUGAS PIKET -->
+            <!-- KOLOM 3: LITMAS, ANGGARAN & PETUGAS PIKET (DIPISAH) -->
             <div class="space-y-2 text-[10px]">
                 <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden">
                     <div class="bg-navy-900 text-white px-2 py-1.5 flex items-center justify-between">
@@ -315,7 +315,7 @@
                     </div>
                     <div class="p-1.5 space-y-1.5">
                         
-                        <!-- LITMAS DEWASA (TULISAN TIDAK DISINGKAT) -->
+                        <!-- LITMAS DEWASA -->
                         <div>
                             <div class="flex justify-between items-center text-[9px] font-bold text-slate-600 mb-0.5">
                                 <span>DEWASA</span>
@@ -370,8 +370,8 @@
                     </div>
                 </div>
 
-                <!-- ANGGARAN & PETUGAS PIKET DENGAN FOTO KOTAK -->
-                <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-1.5 space-y-1.5">
+                <!-- KOTAK PENYERAPAN ANGGARAN (TERPISAH) -->
+                <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-1.5">
                     <div class="bg-slate-50 p-1.5 rounded border border-slate-200">
                         <label class="text-[8px] font-bold text-slate-500 uppercase block">PENYERAPAN ANGGARAN</label>
                         <div class="flex items-center text-slate-800 font-black text-[10px]">
@@ -383,8 +383,10 @@
                             <div id="budget-progress-bar" class="bg-gradient-to-r from-gold-500 to-amber-600 h-full rounded-full" style="width: 72.59%;"></div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- KOTAK PETUGAS PIKET DENGAN FOTO KOTAK -->
+                <!-- KOTAK PETUGAS PIKET (TERPISAH DENGAN FOTO KOTAK) -->
+                <div class="bg-white rounded-lg border border-slate-200 shadow-sm p-1.5">
                     <div class="bg-slate-50 p-1.5 rounded border border-slate-200 text-center space-y-1">
                         <span class="text-[8px] font-bold text-slate-400 uppercase tracking-wider block">PETUGAS PIKET</span>
                         
@@ -394,7 +396,7 @@
                                  src="https://placehold.co/120x120/0f2042/ffffff?text=PETUGAS" 
                                  alt="Foto Petugas Piket" 
                                  class="w-full h-full object-cover">
-                            <label for="upload-officer-photo" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer text-[7px] font-bold p-0.5">
+                            <label for="upload-officer-photo" class="admin-only absolute inset-0 bg-navy-950/70 text-white opacity-0 group-hover:opacity-100 transition flex flex-col items-center justify-center cursor-pointer text-[7px] font-bold p-0.5 z-10">
                                 <i class="fa-solid fa-camera text-[9px] text-gold-400"></i> Ganti
                             </label>
                             <input type="file" id="upload-officer-photo" accept="image/*" class="hidden" onchange="handleLogoUpload(event, 'officer-photo')">
