@@ -155,7 +155,8 @@
         <div>
             <!-- Header -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
-                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
+                <!-- LOGO KEMENIMIPAS SAMA DENGAN LAMPIRAN -->
+                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/ thumb/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png/800px-Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
                 
                 <div class="text-center flex-1 px-1">
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
@@ -171,34 +172,36 @@
                     </div>
                 </div>
 
+                <!-- LOGO PEMASYARAKATAN SAMA DENGAN LAMPIRAN -->
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
-            <!-- SECTION 1: JUMLAH PEGAWAI (DIBUAT KOLOM CHART GRAFIS) -->
+            <!-- SECTION 1: JUMLAH PEGAWAI (DIKEMBALIKAN MENJADI FORMAT KOLOM DENGAN ANGKA) -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
-                <div class="flex justify-between items-center mb-2">
-                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1.5">
-                        <i class="fa-solid fa-id-card"></i> Grafik Kehadiran Pegawai Hari Ini
-                    </h3>
-                    <div class="text-[11px] text-slate-300">
-                        Total Pegawai: <span id="pegawaiTotal" class="font-extrabold text-amber-400 bg-amber-500/20 px-2 py-0.5 rounded border border-amber-500/30">30</span>
+                <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-users-gear"></i> Rekapitulasi Pegawai
+                </h3>
+                <div class="grid grid-cols-4 gap-2 text-center">
+                    <div class="bg-slate-800/80 p-2 rounded-lg border border-emerald-500/30">
+                        <div class="text-[10px] text-slate-400 uppercase font-semibold">Hadir</div>
+                        <div id="pegawaiHadir" data-key="pegawaiHadir" class="text-base font-extrabold text-emerald-400 editable" contenteditable="false">25</div>
                     </div>
-                </div>
-                
-                <!-- Input Data Tersembunyi/Editable untuk Admin -->
-                <div class="grid grid-cols-3 gap-2 mb-2 text-xs bg-slate-800/40 p-1.5 rounded border border-slate-700/50">
-                    <div class="text-center">Hadir: <span id="pegawaiHadir" data-key="pegawaiHadir" class="editable font-bold text-emerald-400" contenteditable="false">25</span></div>
-                    <div class="text-center">Cuti: <span id="pegawaiCuti" data-key="pegawaiCuti" class="editable font-bold text-amber-400" contenteditable="false">2</span></div>
-                    <div class="text-center">Dinas Luar (DL): <span id="pegawaiDL" data-key="pegawaiDL" class="editable font-bold text-blue-400" contenteditable="false">3</span></div>
-                </div>
-
-                <!-- Canvas Kolom Chart Pegawai -->
-                <div class="relative w-full h-32">
-                    <canvas id="pegawaiChart"></canvas>
+                    <div class="bg-slate-800/80 p-2 rounded-lg border border-amber-500/30">
+                        <div class="text-[10px] text-slate-400 uppercase font-semibold">Cuti</div>
+                        <div id="pegawaiCuti" data-key="pegawaiCuti" class="text-base font-extrabold text-amber-400 editable" contenteditable="false">2</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-2 rounded-lg border border-blue-500/30">
+                        <div class="text-[10px] text-slate-400 uppercase font-semibold">Dinas Luar (DL)</div>
+                        <div id="pegawaiDL" data-key="pegawaiDL" class="text-base font-extrabold text-blue-400 editable" contenteditable="false">3</div>
+                    </div>
+                    <div class="bg-amber-500/20 p-2 rounded-lg border border-amber-500/50">
+                        <div class="text-[10px] text-amber-300 uppercase font-bold">Total Pegawai</div>
+                        <div id="pegawaiTotal" class="text-base font-extrabold text-amber-300">30</div>
+                    </div>
                 </div>
             </div>
 
-            <!-- SECTION 2: DATA KLIEN (JENIS BIMBINGAN DIPISAHKAN MENJADI 2 KOLOM LAKI-LAKI & PEREMPUAN) -->
+            <!-- SECTION 2: DATA KLIEN (2 KOLOM LAKI-LAKI & PEREMPUAN) -->
             <div class="space-y-4">
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -207,7 +210,6 @@
                     <div class="overflow-x-auto">
                         <table class="w-full text-[11px] text-left border-collapse border border-slate-700">
                             <thead>
-                                <!-- Multi-Header untuk Memisahkan Laki-Laki & Perempuan -->
                                 <tr class="bg-slate-800 text-amber-300 text-center border-b border-slate-700">
                                     <th rowspan="2" class="p-2 border-r border-slate-700 text-left">JENIS BIMBINGAN</th>
                                     <th colspan="2" class="p-1 border-r border-slate-700 bg-blue-900/30 text-blue-300">KLIEN LAKI-LAKI</th>
@@ -320,8 +322,8 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Realisasi Anggaran (Chart Grafik Donut) -->
-                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                    <!-- Kolom 3: Realisasi Anggaran (STATIC - TIDAK BISA DIEDIT) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between select-none">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
                         </h3>
@@ -334,12 +336,12 @@
                         </div>
                     </div>
 
-                    <!-- SECTION 3: PETUGAS PIKET (FOTO PEGAWAI DIBUAT BESAR) -->
+                    <!-- SECTION 3: PETUGAS PIKET (FOTO PEGAWAI BESAR) -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 w-full justify-start">
                             <i class="fa-solid fa-user-shield"></i> Petugas Piket
                         </h3>
-                        <!-- Ukuran Foto Diperbesar (w-28 h-32) -->
+                        <!-- Ukuran Foto Tetap Besar -->
                         <div class="w-28 h-32 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md mb-2">
                             <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
                         </div>
@@ -367,63 +369,9 @@
         let isAdminLoggedIn = false;
         const STORAGE_KEY_TEXT = 'bapas_report_texts';
         const STORAGE_KEY_IMAGES = 'bapas_report_images';
-        let pegawaiChartInstance = null;
         let anggaranChartInstance = null;
 
-        // 1. RENDER GRAFIK PEGAWAI (BAR CHART)
-        function renderPegawaiChart() {
-            const ctx = document.getElementById('pegawaiChart').getContext('2d');
-            
-            const parseVal = (id) => {
-                const el = document.getElementById(id);
-                if (!el) return 0;
-                const num = parseInt(el.innerText.replace(/[^0-9]/g, ''));
-                return isNaN(num) ? 0 : num;
-            };
-
-            const hadir = parseVal('pegawaiHadir');
-            const cuti = parseVal('pegawaiCuti');
-            const dl = parseVal('pegawaiDL');
-
-            if (pegawaiChartInstance) {
-                pegawaiChartInstance.destroy();
-            }
-
-            pegawaiChartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['Hadir', 'Cuti', 'Dinas Luar'],
-                    datasets: [{
-                        label: 'Jumlah Pegawai',
-                        data: [hadir, cuti, dl],
-                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6'],
-                        borderColor: ['#059669', '#d97706', '#2563eb'],
-                        borderWidth: 1,
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { color: '#cbd5e1', stepSize: 5 },
-                            grid: { color: '#334155' }
-                        },
-                        x: {
-                            ticks: { color: '#cbd5e1', font: { size: 10 } },
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 2. RENDER GRAFIK ANGGARAN (DONUT CHART)
+        // GRAFIK ANGGARAN (LOCKED / STATIC)
         function renderAnggaranChart() {
             const ctx = document.getElementById('anggaranChart').getContext('2d');
             
@@ -609,8 +557,6 @@
 
             const totalEl = document.getElementById('pegawaiTotal');
             if (totalEl) totalEl.innerText = total;
-
-            renderPegawaiChart();
         }
 
         function calculateKlienTable() {
@@ -710,7 +656,7 @@
             renderAnggaranChart();
 
             document.addEventListener('input', (e) => {
-                if (e.target.classList.contains('pegawai-input') || e.target.id.startsWith('pegawai')) {
+                if (e.target.id === 'pegawaiHadir' || e.target.id === 'pegawaiCuti' || e.target.id === 'pegawaiDL') {
                     calculatePegawai();
                 }
                 if (e.target.classList.contains('klien-val')) {
