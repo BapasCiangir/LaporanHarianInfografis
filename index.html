@@ -98,9 +98,14 @@
 
     <!-- Control Panel / Actions -->
     <div class="no-print w-full max-w-[210mm] mb-4 flex flex-wrap justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 gap-3">
-        <div class="flex items-center space-x-2 text-amber-400 font-semibold text-xs md:text-sm">
+        <div class="flex items-center space-x-3 text-amber-400 font-semibold text-xs md:text-sm">
             <i class="fa-solid fa-user-shield"></i>
             <span id="editStatusText">Mode Terkunci (Login Admin untuk Edit)</span>
+            <!-- Sync Indicator Status -->
+            <span id="syncStatus" class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                <span>Menghubungkan...</span>
+            </span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
             <!-- Button Login Admin -->
@@ -143,7 +148,7 @@
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div>
-            <!-- Header -->
+            <!-- Header Infografis -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
                 <!-- LOGO KEMENIMIPAS -->
                 <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png/800px-Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
@@ -312,7 +317,7 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Realisasi Anggaran (STATIC) -->
+                    <!-- Kolom 3: Realisasi Anggaran -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between select-none">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
@@ -353,58 +358,141 @@
 
     </div>
 
-    <!-- SCRIPT INTEGRATION -->
-    <script>
-        let isAdminLoggedIn = false;
-        const STORAGE_KEY_TEXT = 'bapas_report_texts';
-        const STORAGE_KEY_IMAGES = 'bapas_report_images';
-        let anggaranChartInstance = null;
+    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        function renderAnggaranChart() {
-            const ctx = document.getElementById('anggaranChart').getContext('2d');
+        // Firebase Configuration & Initialization
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'bapas-ciangir-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : { apiKey: "demo-api-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project" };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Document Reference for Shared Public Data
+        const reportDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'report_data', 'main');
+
+        let currentUser = null;
+        let isAdminLoggedIn = false;
+        let anggaranChartInstance = null;
+        let isReceivingSnapshot = false;
+        let debounceTimer = null;
+
+        // UI Helpers for Sync Status
+        function updateSyncStatus(status, text) {
+            const syncEl = document.getElementById('syncStatus');
+            if (!syncEl) return;
             
-            if (anggaranChartInstance) {
-                anggaranChartInstance.destroy();
+            if (status === 'connected') {
+                syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+                syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400"></span><span>' + text + '</span>';
+            } else if (status === 'saving') {
+                syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/30';
+                syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-blue-400 animate-ping"></span><span>' + text + '</span>';
+            } else {
+                syncEl.className = 'inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30';
+                syncEl.innerHTML = '<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>' + text + '</span>';
+            }
+        }
+
+        // Initialize Firebase Authentication & Realtime Firestore Listener
+        async function initFirebase() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+                currentUser = auth.currentUser;
+
+                // Subscribe to Realtime Updates
+                onSnapshot(reportDocRef, (docSnap) => {
+                    updateSyncStatus('connected', 'Terhubung - Realtime');
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        applyCloudDataToUI(data);
+                    }
+                }, (error) => {
+                    console.error("Firestore Listener Error:", error);
+                    updateSyncStatus('connecting', 'Gagal Sinkron');
+                });
+
+            } catch (err) {
+                console.error("Auth / Init Error:", err);
+                updateSyncStatus('connecting', 'Mode Luring');
+            }
+        }
+
+        // Apply Realtime Firestore Data to UI
+        function applyCloudDataToUI(data) {
+            isReceivingSnapshot = true;
+            
+            if (data.texts) {
+                Object.keys(data.texts).forEach(key => {
+                    const el = document.querySelector(`[data-key="${key}"]`);
+                    if (el && el.innerText !== data.texts[key]) {
+                        el.innerText = data.texts[key];
+                    }
+                });
             }
 
-            anggaranChartInstance = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Terserap (72.59%)', 'Sisa Pagu (27.41%)'],
-                    datasets: [{
-                        data: [3576958795, 1350705205],
-                        backgroundColor: ['#10b981', '#334155'],
-                        borderColor: ['#059669', '#1e293b'],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    cutout: '70%'
+            if (data.previewFoto) {
+                const imgEl = document.getElementById('previewFoto');
+                if (imgEl && imgEl.src !== data.previewFoto) {
+                    imgEl.src = data.previewFoto;
                 }
+            }
+
+            calculatePegawai();
+            calculateKlienTable();
+            isReceivingSnapshot = false;
+        }
+
+        // Save Current UI Data to Cloud Storage (Firebase Firestore)
+        async function saveAllDataToCloud() {
+            if (!currentUser) return;
+            
+            updateSyncStatus('saving', 'Menyimpan...');
+
+            const textData = {};
+            document.querySelectorAll('[data-key]').forEach(el => {
+                textData[el.getAttribute('data-key')] = el.innerText;
             });
+
+            const fotoSrc = document.getElementById('previewFoto')?.src || '';
+
+            try {
+                await setDoc(reportDocRef, {
+                    texts: textData,
+                    previewFoto: fotoSrc,
+                    lastUpdated: new Date().toISOString(),
+                    updatedBy: currentUser.uid
+                }, { merge: true });
+
+                updateSyncStatus('connected', 'Tersimpan ke Cloud');
+            } catch (err) {
+                console.error("Error saving data:", err);
+                updateSyncStatus('connecting', 'Gagal Menyimpan');
+            }
         }
 
-        function updateRealtimeDateTime() {
-            const now = new Date();
-            const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            const formattedDate = now.toLocaleDateString('id-ID', optionsDate);
-
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            const timeString = `${hours}:${minutes}:${seconds} WIB`;
-
-            const dateElement = document.getElementById('realtimeDate');
-            const clockElement = document.getElementById('realtimeClock');
-
-            if (dateElement) dateElement.innerText = formattedDate;
-            if (clockElement) clockElement.innerText = timeString;
+        // Debounce helper for live content changes
+        function triggerDebouncedSave() {
+            if (isReceivingSnapshot) return;
+            clearTimeout(debounceTimer);
+            updateSyncStatus('saving', 'Ketik...');
+            debounceTimer = setTimeout(() => {
+                saveAllDataToCloud();
+            }, 600);
         }
 
-        function handleAdminLogin() {
+        // Admin Authentication Logic
+        window.handleAdminLogin = function() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
             const btnLogin = document.getElementById('btnLogin');
@@ -427,8 +515,6 @@
                         btnLogin.classList.replace('bg-amber-600', 'bg-red-600');
                         btnLogin.classList.replace('hover:bg-amber-500', 'hover:bg-red-500');
                     }
-
-                    alert("Login Berhasil! Anda sekarang dapat mengedit isi laporan.");
                 } else if (password !== null) {
                     alert("Password Salah! Akses ditolak.");
                 }
@@ -447,63 +533,76 @@
                     btnLogin.classList.replace('bg-red-600', 'bg-amber-600');
                     btnLogin.classList.replace('hover:bg-red-500', 'hover:bg-amber-500');
                 }
-
-                alert("Anda telah Logout. Mode edit ditutup.");
             }
-        }
+        };
 
-        function saveDataToStorage() {
-            const textData = {};
-            document.querySelectorAll('[data-key]').forEach(el => {
-                textData[el.getAttribute('data-key')] = el.innerText;
-            });
-            localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(textData));
-        }
+        // Reset All Report Data
+        window.resetDataStorage = async function() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data dan foto ke standar awal? Data cloud juga akan direset.")) {
+                const defaultTexts = {
+                    "header-l1": "Kementerian Imigrasi Dan Pemasyarakatan",
+                    "header-l2": "Direktorat Jenderal Pemasyarakatan",
+                    "header-l3": "Kantor Wilayah Banten",
+                    "header-l4": "Balai Pemasyarakatan Kelas II Ciangir",
+                    "header-l5": "LAPORAN HARIAN INFOGRAFIS",
+                    "pegawaiHadir": "25",
+                    "pegawaiCuti": "2",
+                    "pegawaiDL": "3",
+                    "klien-pb-dl": "1163", "klien-pb-al": "14", "klien-pb-dp": "53", "klien-pb-ap": "0",
+                    "klien-cb-dl": "62", "klien-cb-al": "1", "klien-cb-dp": "3", "klien-cb-ap": "0",
+                    "klien-cmb-dl": "0", "klien-cmb-al": "0", "klien-cmb-dp": "0", "klien-cmb-ap": "0",
+                    "klien-asi-dl": "0", "klien-asi-al": "5", "klien-asi-dp": "0", "klien-asi-ap": "0",
+                    "perkara-narkotika": "582(D) / 1(A)",
+                    "perkara-terorisme": "3(D) / 0(A)",
+                    "perkara-korupsi": "20(D) / 0(A)",
+                    "perkara-pidum": "695(D) / 18(A)",
+                    "litmas-d-asi": "3", "litmas-d-cb": "439", "litmas-d-pindah": "87",
+                    "litmas-a-div": "12", "litmas-a-peradil": "48", "litmas-a-pb": "3",
+                    "petugas-nama": "FIKRI & FAOZI"
+                };
 
-        function loadDataFromStorage() {
-            const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
-            if (savedText) {
-                const textData = JSON.parse(savedText);
-                Object.keys(textData).forEach(key => {
-                    const el = document.querySelector(`[data-key="${key}"]`);
-                    if (el) el.innerText = textData[key];
-                });
+                const defaultFoto = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80";
+
+                applyCloudDataToUI({ texts: defaultTexts, previewFoto: defaultFoto });
+                await saveAllDataToCloud();
             }
+        };
 
-            const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
-            if (savedImages) {
-                const imageData = JSON.parse(savedImages);
-                if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
-            }
-        }
-
-        function saveImageToStorage(imgId, base64) {
-            let savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
-            savedImages = savedImages ? JSON.parse(savedImages) : {};
-            savedImages[imgId] = base64;
-            localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(savedImages));
-        }
-
-        function resetDataStorage() {
-            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data dan logo ke standar awal?")) {
-                localStorage.removeItem(STORAGE_KEY_TEXT);
-                localStorage.removeItem(STORAGE_KEY_IMAGES);
-                location.reload();
-            }
-        }
-
-        function loadFoto(event) {
+        // Load Foto Piket Image File
+        window.loadFoto = function(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('previewFoto').src = e.target.result;
-                    saveImageToStorage('previewFoto', e.target.result);
+                    const previewEl = document.getElementById('previewFoto');
+                    if (previewEl) {
+                        previewEl.src = e.target.result;
+                        saveAllDataToCloud();
+                    }
                 };
                 reader.readAsDataURL(file);
             }
+        };
+
+        // Render Realtime Clock and Date
+        function updateRealtimeDateTime() {
+            const now = new Date();
+            const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('id-ID', optionsDate);
+
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds} WIB`;
+
+            const dateElement = document.getElementById('realtimeDate');
+            const clockElement = document.getElementById('realtimeClock');
+
+            if (dateElement) dateElement.innerText = formattedDate;
+            if (clockElement) clockElement.innerText = timeString;
         }
 
+        // Dynamic Calculations
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -567,7 +666,38 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        function downloadPDF() {
+        // Render Chart.js
+        function renderAnggaranChart() {
+            const canvas = document.getElementById('anggaranChart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            if (anggaranChartInstance) {
+                anggaranChartInstance.destroy();
+            }
+
+            anggaranChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Terserap (72.59%)', 'Sisa Pagu (27.41%)'],
+                    datasets: [{
+                        data: [3576958795, 1350705205],
+                        backgroundColor: ['#10b981', '#334155'],
+                        borderColor: ['#059669', '#1e293b'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    cutout: '70%'
+                }
+            });
+        }
+
+        // Export Actions
+        window.downloadPDF = function() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
             
@@ -582,9 +712,9 @@
             html2pdf().set(opt).from(element).save().then(() => {
                 element.classList.remove('exporting');
             });
-        }
+        };
 
-        function downloadImage(format) {
+        window.downloadImage = function(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
 
@@ -605,11 +735,10 @@
                     element.classList.remove('exporting');
                 });
             }, 50);
-        }
+        };
 
+        // Event Listener Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            loadDataFromStorage();
-
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
 
@@ -617,6 +746,7 @@
             calculateKlienTable();
             renderAnggaranChart();
 
+            // Setup input listener for live updates
             document.addEventListener('input', (e) => {
                 if (e.target.id === 'pegawaiHadir' || e.target.id === 'pegawaiCuti' || e.target.id === 'pegawaiDL') {
                     calculatePegawai();
@@ -625,9 +755,12 @@
                     calculateKlienTable();
                 }
                 if (e.target.classList.contains('editable')) {
-                    saveDataToStorage();
+                    triggerDebouncedSave();
                 }
             });
+
+            // Start Firebase Auth & Realtime Sync
+            initFirebase();
         });
     </script>
 </body>
