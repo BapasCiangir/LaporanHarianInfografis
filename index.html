@@ -49,10 +49,11 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* Hilangkan warna background kuning saat ekspor */
+        /* Hilangkan warna background kuning & border saat ekspor */
         .exporting .date-badge {
             background-color: transparent !important;
-            border-color: rgba(212, 175, 55, 0.3) !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         /* Portrait A4 Print Adjustments */
@@ -76,6 +77,7 @@
             }
             .date-badge {
                 background-color: transparent !important;
+                border: none !important;
             }
         }
     </style>
@@ -96,23 +98,24 @@
 
             <!-- Admin Panel Tools -->
             <div id="adminPanel" class="hidden flex items-center gap-2">
-                <!-- Edit Logo Kiri -->
                 <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kiri
                 </button>
                 <input type="file" id="logoKiriInput" accept="image/*" class="hidden" onchange="loadLogoKiri(event)">
 
-                <!-- Edit Logo Kanan -->
                 <button onclick="document.getElementById('logoKananInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kanan
                 </button>
                 <input type="file" id="logoKananInput" accept="image/*" class="hidden" onchange="loadLogoKanan(event)">
 
-                <!-- Edit Foto Petugas -->
                 <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-user-gear"></i> Foto Piket
                 </button>
                 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
+
+                <button onclick="resetDataStorage()" class="bg-red-700 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-red-500">
+                    <i class="fa-solid fa-rotate-right"></i> Reset Data
+                </button>
             </div>
             
             <!-- Export Group Buttons -->
@@ -141,17 +144,18 @@
             <!-- Header -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
                 <!-- Logo Kemenimipas (Kiri) -->
-                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-16 w-auto object-contain">
+                <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
                 
-                <!-- Header Titles (Sesuai Permintaan) -->
+                <!-- Header Titles -->
                 <div class="text-center flex-1 px-1">
-                    <h2 class="text-[11px] font-bold tracking-wider text-amber-400 uppercase leading-tight editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
-                    <h3 class="text-[10px] font-semibold text-slate-300 uppercase leading-tight editable" contenteditable="false">Direktorat Jendral Pemasyarakatan</h3>
-                    <h3 class="text-[10px] font-semibold text-slate-300 uppercase leading-tight editable" contenteditable="false">Kantor Wilayah Banten</h3>
-                    <h1 class="text-base md:text-lg font-extrabold gold-gradient-text tracking-wide uppercase mt-0.5 editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
+                    <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
+                    <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
+                    <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
+                    <h1 data-key="header-l4" class="text-base md:text-lg font-extrabold gold-gradient-text tracking-wide uppercase mt-0.5 editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
+                    <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-0.5 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
                     <!-- Status Realtime Waktu & Hari Tanggal -->
-                    <div class="date-badge inline-flex items-center gap-2 mt-1.5 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
+                    <div class="date-badge inline-flex items-center gap-2 mt-1 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
                         <span id="realtimeDate" class="font-semibold text-amber-300">Memuat tanggal...</span>
                         <span class="text-amber-500">•</span>
                         <span id="realtimeClock" class="font-mono font-bold text-amber-200">00:00:00 WIB</span>
@@ -159,7 +163,7 @@
                 </div>
 
                 <!-- Logo Pemasyarakatan (Kanan) -->
-                <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-16 w-auto object-contain">
+                <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
             <!-- Section Kehadiran Pegawai -->
@@ -179,9 +183,9 @@
                         </thead>
                         <tbody>
                             <tr class="border-b border-slate-800">
-                                <td id="pegawaiHadir" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">25</td>
-                                <td id="pegawaiCuti" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">2</td>
-                                <td id="pegawaiDL" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">3</td>
+                                <td id="pegawaiHadir" data-key="pegawaiHadir" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">25</td>
+                                <td id="pegawaiCuti" data-key="pegawaiCuti" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">2</td>
+                                <td id="pegawaiDL" data-key="pegawaiDL" class="p-1.5 text-center editable pegawai-input font-semibold" contenteditable="false">3</td>
                                 <td id="pegawaiTotal" class="p-1.5 text-center font-extrabold text-amber-400 bg-amber-500/10">30</td>
                             </tr>
                         </tbody>
@@ -212,34 +216,34 @@
                             <tbody class="divide-y divide-slate-800">
                                 <tr class="row-klien">
                                     <td class="p-1.5 font-medium">PB (Pembebasan Bersyarat)</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">1163</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">53</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">14</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-pb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">1163</td>
+                                    <td data-key="klien-pb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">53</td>
+                                    <td data-key="klien-pb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">14</td>
+                                    <td data-key="klien-pb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
                                     <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">1230</td>
                                 </tr>
                                 <tr class="row-klien">
                                     <td class="p-1.5 font-medium">CB (Cuti Bersyarat)</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">62</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">3</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">1</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-cb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">62</td>
+                                    <td data-key="klien-cb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">3</td>
+                                    <td data-key="klien-cb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">1</td>
+                                    <td data-key="klien-cb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
                                     <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">66</td>
                                 </tr>
                                 <tr class="row-klien">
                                     <td class="p-1.5 font-medium">CMB (Cuti Menjelang Bebas)</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-al" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-cmb-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
                                     <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">0</td>
                                 </tr>
                                 <tr class="row-klien">
                                     <td class="p-1.5 font-medium">Latihan Kerja / Asimilasi</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">5</td>
-                                    <td class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-asi-dl" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-asi-dp" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
+                                    <td data-key="klien-asi-al" class="p-1.5 text-center editable klien-val" contenteditable="false">5</td>
+                                    <td data-key="klien-asi-ap" class="p-1.5 text-center editable klien-val" contenteditable="false">0</td>
                                     <td class="p-1.5 text-center font-bold text-amber-300 row-total bg-slate-800/30">5</td>
                                 </tr>
                                 <tr class="bg-amber-500/10 font-bold text-amber-200">
@@ -266,19 +270,19 @@
                         <div class="space-y-1.5 text-xs">
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Narkotika</span>
-                                <span class="font-semibold text-amber-200 editable" contenteditable="false">582 (D) / 1 (A)</span>
+                                <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582 (D) / 1 (A)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Terorisme</span>
-                                <span class="font-semibold text-amber-200 editable" contenteditable="false">3 (D) / 0 (A)</span>
+                                <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3 (D) / 0 (A)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Korupsi</span>
-                                <span class="font-semibold text-amber-200 editable" contenteditable="false">20 (D) / 0 (A)</span>
+                                <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20 (D) / 0 (A)</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-300">Pidum / Lainnya</span>
-                                <span class="font-semibold text-amber-200 editable" contenteditable="false">695 (D) / 18 (A)</span>
+                                <span data-key="perkara-pidum" class="font-semibold text-amber-200 editable" contenteditable="false">695 (D) / 18 (A)</span>
                             </div>
                         </div>
                     </div>
@@ -292,17 +296,17 @@
                             <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
                                 <div class="text-amber-300 font-semibold text-[10px] mb-0.5">Dewasa</div>
                                 <div class="text-[10px] space-y-0.5 text-slate-300">
-                                    <div>Asimilasi: <b class="editable text-white" contenteditable="false">3</b></div>
-                                    <div>CB/PB: <b class="editable text-white" contenteditable="false">439</b></div>
-                                    <div>Pindah: <b class="editable text-white" contenteditable="false">87</b></div>
+                                    <div>Asimilasi: <b data-key="litmas-d-asi" class="editable text-white" contenteditable="false">3</b></div>
+                                    <div>CB/PB: <b data-key="litmas-d-cb" class="editable text-white" contenteditable="false">439</b></div>
+                                    <div>Pindah: <b data-key="litmas-d-pindah" class="editable text-white" contenteditable="false">87</b></div>
                                 </div>
                             </div>
                             <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
                                 <div class="text-amber-300 font-semibold text-[10px] mb-0.5">Anak</div>
                                 <div class="text-[10px] space-y-0.5 text-slate-300">
-                                    <div>Diversi: <b class="editable text-white" contenteditable="false">12</b></div>
-                                    <div>Peradilan: <b class="editable text-white" contenteditable="false">48</b></div>
-                                    <div>PB/CB: <b class="editable text-white" contenteditable="false">3</b></div>
+                                    <div>Diversi: <b data-key="litmas-a-div" class="editable text-white" contenteditable="false">12</b></div>
+                                    <div>Peradilan: <b data-key="litmas-a-peradil" class="editable text-white" contenteditable="false">48</b></div>
+                                    <div>PB/CB: <b data-key="litmas-a-pb" class="editable text-white" contenteditable="false">3</b></div>
                                 </div>
                             </div>
                         </div>
@@ -318,11 +322,11 @@
                             <div class="text-[10px] space-y-1">
                                 <div class="flex justify-between items-center bg-slate-800/40 p-1 rounded">
                                     <span class="text-slate-300">Pagu:</span>
-                                    <span class="font-bold text-amber-300 editable" contenteditable="false">Rp. 4.927.664.000,-</span>
+                                    <span data-key="anggaran-pagu" class="font-bold text-amber-300 editable" contenteditable="false">Rp. 4.927.664.000,-</span>
                                 </div>
                                 <div class="flex justify-between items-center bg-slate-800/40 p-1 rounded">
                                     <span class="text-slate-300">Serap:</span>
-                                    <span class="font-bold text-emerald-400 editable" contenteditable="false">Rp. 3.576.958.795 (72.59%)</span>
+                                    <span data-key="anggaran-serap" class="font-bold text-emerald-400 editable" contenteditable="false">Rp. 3.576.958.795 (72.59%)</span>
                                 </div>
                             </div>
                         </div>
@@ -334,7 +338,7 @@
                             </div>
                             <div class="flex-1 text-left">
                                 <span class="text-[8px] text-amber-400 font-bold uppercase tracking-wider block">PETUGAS PIKET</span>
-                                <p class="text-[11px] font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
+                                <p data-key="petugas-nama" class="text-[11px] font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
                                 <p class="text-[9px] text-slate-400 uppercase">Dinas Piket Harian</p>
                             </div>
                         </div>
@@ -353,21 +357,16 @@
 
     </div>
 
-    <!-- SCRIPT COMPLETE INTEGRATION -->
+    <!-- SCRIPT INTEGRATION -->
     <script>
-        // Global State Admin Status
         let isAdminLoggedIn = false;
+        const STORAGE_KEY_TEXT = 'bapas_report_texts';
+        const STORAGE_KEY_IMAGES = 'bapas_report_images';
 
         // 1. UPDATE WAKTU REALTIME
         function updateRealtimeDateTime() {
             const now = new Date();
-
-            const optionsDate = { 
-                weekday: 'long', 
-                day: 'numeric', 
-                month: 'long', 
-                year: 'numeric' 
-            };
+            const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             const formattedDate = now.toLocaleDateString('id-ID', optionsDate);
 
             const hours = String(now.getHours()).padStart(2, '0');
@@ -431,13 +430,57 @@
             }
         }
 
-        // 3. FUNGSI UPLOAD LOGO & FOTO
+        // 3. PERSISTENSI DATA (LOCALSTORAGE)
+        function saveDataToStorage() {
+            const textData = {};
+            document.querySelectorAll('[data-key]').forEach(el => {
+                textData[el.getAttribute('data-key')] = el.innerText;
+            });
+            localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(textData));
+        }
+
+        function loadDataFromStorage() {
+            const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
+            if (savedText) {
+                const textData = JSON.parse(savedText);
+                Object.keys(textData).forEach(key => {
+                    const el = document.querySelector(`[data-key="${key}"]`);
+                    if (el) el.innerText = textData[key];
+                });
+            }
+
+            const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
+            if (savedImages) {
+                const imageData = JSON.parse(savedImages);
+                if (imageData.logoKiri) document.getElementById('logoKiri').src = imageData.logoKiri;
+                if (imageData.logoKanan) document.getElementById('logoKanan').src = imageData.logoKanan;
+                if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
+            }
+        }
+
+        function saveImageToStorage(imgId, base64) {
+            let savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
+            savedImages = savedImages ? JSON.parse(savedImages) : {};
+            savedImages[imgId] = base64;
+            localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(savedImages));
+        }
+
+        function resetDataStorage() {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke standar awal?")) {
+                localStorage.removeItem(STORAGE_KEY_TEXT);
+                localStorage.removeItem(STORAGE_KEY_IMAGES);
+                location.reload();
+            }
+        }
+
+        // 4. FUNGSI UPLOAD LOGO & FOTO
         function loadLogoKiri(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('logoKiri').src = e.target.result;
+                    saveImageToStorage('logoKiri', e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
@@ -449,6 +492,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('logoKanan').src = e.target.result;
+                    saveImageToStorage('logoKanan', e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
@@ -460,12 +504,13 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('previewFoto').src = e.target.result;
+                    saveImageToStorage('previewFoto', e.target.result);
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        // 4. HITUNG OTOMATIS PEGAWAI
+        // 5. HITUNG OTOMATIS PEGAWAI
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -483,7 +528,7 @@
             if (totalEl) totalEl.innerText = total;
         }
 
-        // 5. HITUNG OTOMATIS TABEL KLIEN
+        // 6. HITUNG OTOMATIS TABEL KLIEN
         function calculateKlienTable() {
             const parseCell = (cell) => {
                 if (!cell) return 0;
@@ -530,7 +575,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 6. DOWNLOAD PDF
+        // 7. DOWNLOAD PDF (TANPA BORDER/KOTAK KUNING)
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -548,7 +593,7 @@
             });
         }
 
-        // 7. DOWNLOAD GAMBAR (PNG / JPG)
+        // 8. DOWNLOAD GAMBAR PNG/JPG (TANPA BORDER/KOTAK KUNING)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -570,8 +615,10 @@
             });
         }
 
-        // 8. INITIALIZATION
+        // 9. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
+            loadDataFromStorage();
+
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
 
@@ -584,6 +631,9 @@
                 }
                 if (e.target.classList.contains('klien-val')) {
                     calculateKlienTable();
+                }
+                if (e.target.classList.contains('editable')) {
+                    saveDataToStorage();
                 }
             });
         });
