@@ -3,61 +3,10 @@
 <head>
     <!-- 
     ==================================================================================
-    PETUNJUK PENYIAPAN GOOGLE SHEETS (TANPA FIREBASE)
+    PETUNJUK PENYIAPAN GOOGLE SHEETS & APPS SCRIPT
     ==================================================================================
-    1. Buka https://sheets.new di browser Anda untuk membuat Google Spreadsheet baru.
-    2. Beri nama spreadsheet, misalnya: "Database Laporan Bapas Ciangir".
-    3. Pada Sheet1, buat header pada Baris 1:
-       - Kolom A1: key
-       - Kolom B1: value
-    4. Buka menu Ekstensi > Apps Script.
-    5. Hapus seluruh isi kode bawaan, lalu salin (copy) dan tempel (paste) kode berikut:
-
-        function doGet(e) {
-          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-          var data = sheet.getDataRange().getValues();
-          var result = {};
-          for (var i = 1; i < data.length; i++) {
-            if (data[i][0]) {
-              result[data[i][0]] = data[i][1];
-            }
-          }
-          return ContentService.createTextOutput(JSON.stringify(result))
-            .setMimeType(ContentService.MimeType.JSON);
-        }
-
-        function doPost(e) {
-          var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-          var body = JSON.parse(e.postData.contents);
-          
-          for (var key in body) {
-            var data = sheet.getDataRange().getValues();
-            var found = false;
-            for (var i = 1; i < data.length; i++) {
-              if (data[i][0] == key) {
-                sheet.getRange(i + 1, 2).setValue(body[key]);
-                found = true;
-                break;
-              }
-            }
-            if (!found) {
-              sheet.appendRow([key, body[key]]);
-            }
-          }
-          return ContentService.createTextOutput(JSON.stringify({status: "success"}))
-            .setMimeType(ContentService.MimeType.JSON);
-        }
-
-    6. Klik ikon Disket (Simpan).
-    7. Klik Terapkan (Deploy) > Penerapan baru (New deployment).
-    8. Klik ikon roda gigi (Select type) > pilih Aplikasi web (Web app).
-    9. Isikan detail:
-       - Deskripsi: API Laporan Bapas
-       - Jalankan sebagai (Execute as): Me (Email anda)
-       - Siapa yang memiliki akses (Who has access): Anyone (Siapa saja)
-    10. Klik Terapkan (Deploy), lalu setujui Izin Akses (Grant Access) bila diminta.
-    11. Salin (Copy) URL Aplikasi Web (Web App URL) yang diberikan.
-    12. Tempelkan (Paste) URL tersebut pada variabel `GOOGLE_SCRIPT_URL` di script HTML di bawah ini!
+    URL Web App Google Apps Script telah terpasang secara otomatis:
+    https://script.google.com/macros/s/AKfycbzZJs4qEqT3b6EoO_JSAB0qqGFOtFrgGIT84xhrDATV3WuZCaCPJiGBSBhqa-Ld_qNG/exec
     ==================================================================================
     -->
     <meta charset="UTF-8">
@@ -110,7 +59,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* Mode Ekspor */
+        /* Mode Ekspor Eksternal */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -419,7 +368,7 @@
 
     <script>
         // =========================================================================
-        // TEMPELKAN URL WEBB APP GOOGLE APPS SCRIPT ANDA DI BAWAH INI:
+        // URL WEB APP GOOGLE APPS SCRIPT SPREADSHEET (TERHUBUNG LANGSUNG)
         // =========================================================================
         const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzZJs4qEqT3b6EoO_JSAB0qqGFOtFrgGIT84xhrDATV3WuZCaCPJiGBSBhqa-Ld_qNG/exec";
 
@@ -450,9 +399,9 @@
 
         // Fetch Data from Google Sheets API
         async function loadDataFromSheets() {
-            if (isUserEditing) return; // Skip polling sync while user is actively typing
+            if (isUserEditing) return; // Mengabaikan update otomatis jika user sedang mengetik
 
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("SAMPLE_GOOGLE_SHEETS_SCRIPT_URL")) {
+            if (!GOOGLE_SCRIPT_URL) {
                 updateSyncStatus('error', 'URL Script Belum Diisi');
                 return;
             }
@@ -489,7 +438,7 @@
 
         // Save All / Specific Data to Google Sheets API
         async function saveDataToSheets(payload) {
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.includes("SAMPLE_GOOGLE_SHEETS_SCRIPT_URL")) {
+            if (!GOOGLE_SCRIPT_URL) {
                 alert("Harap konfigurasi GOOGLE_SCRIPT_URL terlebih dahulu!");
                 return;
             }
@@ -575,7 +524,7 @@
             }
         };
 
-        // Reset Data
+        // Reset Data ke Standar Awal
         window.resetDataStorage = function() {
             if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke standar awal?")) {
                 const defaultTexts = {
@@ -648,7 +597,7 @@
             if (clockElement) clockElement.innerText = timeString;
         }
 
-        // Calculations
+        // Calculations Pegawai
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -666,6 +615,7 @@
             if (totalEl) totalEl.innerText = total;
         }
 
+        // Calculations Tabel Klien
         function calculateKlienTable() {
             const parseCell = (cell) => {
                 if (!cell) return 0;
@@ -712,7 +662,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // Render Chart.js
+        // Render Chart.js untuk Grafik Anggaran
         function renderAnggaranChart() {
             const canvas = document.getElementById('anggaranChart');
             if (!canvas) return;
@@ -742,7 +692,7 @@
             });
         }
 
-        // Exports
+        // Download PDF
         window.downloadPDF = function() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -760,6 +710,7 @@
             });
         };
 
+        // Download Image (PNG/JPG)
         window.downloadImage = function(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -783,7 +734,7 @@
             }, 50);
         };
 
-        // DOM Initialization
+        // DOM Initialization & Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
@@ -792,7 +743,7 @@
             calculateKlienTable();
             renderAnggaranChart();
 
-            // Event Listeners for Live Edit
+            // Event Listeners untuk Live Edit
             document.addEventListener('input', (e) => {
                 if (e.target.id === 'pegawaiHadir' || e.target.id === 'pegawaiCuti' || e.target.id === 'pegawaiDL') {
                     calculatePegawai();
@@ -805,7 +756,7 @@
                 }
             });
 
-            // Initial load & Start Polling Sync (every 3 seconds)
+            // Initial load & Start Polling Sync (setiap 3 detik)
             loadDataFromSheets();
             setInterval(loadDataFromSheets, 3000);
         });
