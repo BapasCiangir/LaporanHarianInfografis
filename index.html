@@ -49,8 +49,14 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* Hilangkan warna background kuning & border saat ekspor */
+        /* Hapus semua latar/border kuning & garis edit saat proses ekspor berlangsung */
         .exporting .date-badge {
+            background-color: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .exporting .editable {
             background-color: transparent !important;
             border: none !important;
             box-shadow: none !important;
@@ -75,7 +81,7 @@
                 box-shadow: none !important;
                 border: none !important;
             }
-            .date-badge {
+            .date-badge, .editable {
                 background-color: transparent !important;
                 border: none !important;
             }
@@ -151,8 +157,9 @@
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
                     <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
                     <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
-                    <h1 data-key="header-l4" class="text-base md:text-lg font-extrabold gold-gradient-text tracking-wide uppercase mt-0.5 editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
-                    <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-0.5 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
+                    <!-- Ukuran disamakan persis dengan Kementerian (text-xs font-bold) -->
+                    <h1 data-key="header-l4" class="text-xs font-bold tracking-wider gold-gradient-text uppercase leading-snug editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
+                    <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-1 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
                     <!-- Status Realtime Waktu & Hari Tanggal -->
                     <div class="date-badge inline-flex items-center gap-2 mt-1 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
@@ -440,6 +447,7 @@
         }
 
         function loadDataFromStorage() {
+            // Load Teks
             const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
             if (savedText) {
                 const textData = JSON.parse(savedText);
@@ -449,6 +457,7 @@
                 });
             }
 
+            // Load Gambars/Logo (Termasuk Logo Kementerian)
             const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
             if (savedImages) {
                 const imageData = JSON.parse(savedImages);
@@ -466,7 +475,7 @@
         }
 
         function resetDataStorage() {
-            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data ke standar awal?")) {
+            if (confirm("Apakah Anda yakin ingin mengembalikan seluruh data dan logo ke standar awal?")) {
                 localStorage.removeItem(STORAGE_KEY_TEXT);
                 localStorage.removeItem(STORAGE_KEY_IMAGES);
                 location.reload();
@@ -575,7 +584,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 7. DOWNLOAD PDF (TANPA BORDER/KOTAK KUNING)
+        // 7. DOWNLOAD PDF (BERSIH DARI BORDER & KUNING)
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -593,7 +602,7 @@
             });
         }
 
-        // 8. DOWNLOAD GAMBAR PNG/JPG (TANPA BORDER/KOTAK KUNING)
+        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI BORDER & KUNING)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
