@@ -110,16 +110,6 @@
 
             <!-- Admin Panel Tools -->
             <div id="adminPanel" class="hidden flex items-center gap-2">
-                <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
-                    <i class="fa-solid fa-image"></i> Logo Kiri
-                </button>
-                <input type="file" id="logoKiriInput" accept="image/*" class="hidden" onchange="loadLogoKiri(event)">
-
-                <button onclick="document.getElementById('logoKananInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
-                    <i class="fa-solid fa-image"></i> Logo Kanan
-                </button>
-                <input type="file" id="logoKananInput" accept="image/*" class="hidden" onchange="loadLogoKanan(event)">
-
                 <button onclick="document.getElementById('imageInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-user-gear"></i> Foto Piket
                 </button>
@@ -483,8 +473,6 @@
             const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
             if (savedImages) {
                 const imageData = JSON.parse(savedImages);
-                if (imageData.logoKiri) document.getElementById('logoKiri').src = imageData.logoKiri;
-                if (imageData.logoKanan) document.getElementById('logoKanan').src = imageData.logoKanan;
                 if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
             }
         }
@@ -501,30 +489,6 @@
                 localStorage.removeItem(STORAGE_KEY_TEXT);
                 localStorage.removeItem(STORAGE_KEY_IMAGES);
                 location.reload();
-            }
-        }
-
-        function loadLogoKiri(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('logoKiri').src = e.target.result;
-                    saveImageToStorage('logoKiri', e.target.result);
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function loadLogoKanan(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('logoKanan').src = e.target.result;
-                    saveImageToStorage('logoKanan', e.target.result);
-                };
-                reader.readAsDataURL(file);
             }
         }
 
