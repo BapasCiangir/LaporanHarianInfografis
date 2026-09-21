@@ -1,513 +1,511 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- html2pdf & html2canvas for PDF and PNG Download -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Harian Infografis - Bapas Kelas II Ciangir</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- html2pdf & html2canvas for PDF and PNG Download -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: linear-gradient(135deg, #030712, #0f172a, #082f49);
-            color: #f8fafc;
-            min-height: 100vh;
-        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #ffffff;
+            min-height: 100vh;
+        }
 
-        .electric-text {
-            color: #38bdf8;
-            text-shadow: 0 0 12px rgba(56, 189, 248, 0.6), 0 0 20px rgba(14, 165, 233, 0.4);
-        }
+        .gold-text {
+            color: #fcf6ba;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
 
-        .electric-glow {
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
-        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
 
-        .glass-card {
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            box-shadow: 0 10px 30px -5px rgba(0, 229, 255, 0.1);
-        }
+        .editable-active[contenteditable="true"] {
+            outline: none;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            padding: 1px 3px;
+            background-color: rgba(212, 175, 55, 0.15);
+            box-shadow: 0 0 0 1px #d4af37;
+        }
 
-        .editable-active[contenteditable="true"] {
-            outline: none;
-            transition: all 0.2s ease;
-            border-radius: 4px;
-            padding: 1px 4px;
-            background-color: rgba(6, 182, 212, 0.2);
-            box-shadow: 0 0 0 1.5px #38bdf8;
-        }
+        .editable-active[contenteditable="true"]:hover, 
+        .editable-active[contenteditable="true"]:focus {
+            background-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 2px #fcf6ba;
+        }
 
-        .editable-active[contenteditable="true"]:hover, 
-        .editable-active[contenteditable="true"]:focus {
-            background-color: rgba(56, 189, 248, 0.35);
-            box-shadow: 0 0 0 2px #7dd3fc;
-        }
-
-        @media print {
-            .no-print { display: none !important; }
-            body { background: #030712 !important; }
-        }
-    </style>
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #0f2027 !important; }
+        }
+    </style>
 </head>
 <body class="p-4 md:p-8 flex flex-col items-center">
 
-    <!-- Top Action Bar -->
-    <div class="no-print w-full max-w-5xl mb-6 flex flex-wrap justify-between items-center bg-slate-900/90 p-4 rounded-xl border border-cyan-500/30 gap-4 shadow-xl backdrop-blur-md">
+    <!-- Top Action Bar -->
+    <div class="no-print w-full max-w-5xl mb-6 flex flex-wrap justify-between items-center bg-slate-900/90 p-4 rounded-xl border border-amber-500/30 gap-4 shadow-xl">
 
-        <div class="flex items-center gap-3">
-            <span id="adminBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
-                Mode Publik (Read-Only)
-            </span>
-            <span id="statusInfo" class="text-xs text-slate-400 hidden md:inline">
-                Halaman ini dapat dilihat oleh publik.
-            </span>
-        </div>
+        <div class="flex items-center gap-3">
+            <span id="adminBadge" class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40">
+                Mode Publik (Read-Only)
+            </span>
+            <span id="statusInfo" class="text-xs text-slate-300 hidden md:inline">
+                Halaman ini dapat dilihat oleh publik.
+            </span>
+        </div>
 
-        <div class="flex flex-wrap items-center gap-2">
-            <!-- Upload Manual Logo Kiri -->
-            <label id="btnGantiLogoKiri" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
-                <i class="fa-solid fa-upload text-cyan-400"></i> Logo Kiri
-                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoKemenimipasContainer', 'savedLogoKiri')">
-            </label>
+        <div class="flex flex-wrap items-center gap-2">
+            <!-- Upload Manual Logo Kiri -->
+            <label id="btnGantiLogoKiri" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-upload"></i> Logo Kiri
+                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoKemenimipasContainer', 'savedLogoKiri')">
+            </label>
 
-            <!-- Upload Manual Logo Kanan -->
-            <label id="btnGantiLogoKanan" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
-                <i class="fa-solid fa-upload text-cyan-400"></i> Logo Kanan
-                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoPemasyarakatanContainer', 'savedLogoKanan')">
-            </label>
+            <!-- Upload Manual Logo Kanan -->
+            <label id="btnGantiLogoKanan" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition cursor-pointer">
+                <i class="fa-solid fa-upload"></i> Logo Kanan
+                <input type="file" accept="image/*" class="hidden" onchange="loadLogo(event, 'logoPemasyarakatanContainer', 'savedLogoKanan')">
+            </label>
 
-            <!-- Edit Foto Piket -->
-            <button id="btnGantiFoto" onclick="document.getElementById('imageInput').click()" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition">
-                <i class="fa-solid fa-image text-cyan-400"></i> Ganti Foto Piket
-            </button>
-            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
+            <!-- Edit Foto Piket -->
+            <button id="btnGantiFoto" onclick="document.getElementById('imageInput').click()" class="hidden bg-slate-700 hover:bg-slate-600 text-white px-3 py-1.5 rounded-lg text-xs font-semibold items-center gap-1.5 transition">
+                <i class="fa-solid fa-image"></i> Ganti Foto Piket
+            </button>
+            <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
 
-            <!-- Download PNG Button -->
-            <button id="btnPng" onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
-                <i class="fa-solid fa-file-image"></i> <span id="txtPng">Download PNG</span>
-            </button>
+            <!-- Download PNG Button -->
+            <button id="btnPng" onclick="downloadPNG()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-image"></i> <span id="txtPng">Download PNG</span>
+            </button>
 
-            <!-- Download PDF Button -->
-            <button id="btnPdf" onclick="downloadPDF()" class="bg-sky-600 hover:bg-sky-500 text-white font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
-                <i class="fa-solid fa-file-pdf"></i> <span id="txtPdf">Download PDF</span>
-            </button>
+            <!-- Download PDF Button -->
+            <button id="btnPdf" onclick="downloadPDF()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-file-pdf"></i> <span id="txtPdf">Download PDF</span>
+            </button>
 
-            <!-- Toggle Admin Mode Button -->
-            <button id="btnToggleAdmin" onclick="toggleAdminMode()" class="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-extrabold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg electric-glow">
-                <i class="fa-solid fa-lock" id="lockIcon"></i> <span id="btnAdminText">Masuk Mode Admin</span>
-            </button>
-        </div>
-    </div>
+            <!-- Toggle Admin Mode Button -->
+            <button id="btnToggleAdmin" onclick="toggleAdminMode()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-4 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition shadow-lg">
+                <i class="fa-solid fa-lock" id="lockIcon"></i> <span id="btnAdminText">Masuk Mode Admin</span>
+            </button>
+        </div>
+    </div>
 
-    <!-- Template Laporan Infografis -->
-    <div id="reportArea" class="report-container w-full max-w-5xl glass-card rounded-2xl p-6 md:p-8 text-slate-100 relative overflow-hidden">
+    <!-- Template Laporan Infografis -->
+    <div id="reportArea" class="report-container w-full max-w-5xl glass-card rounded-2xl p-6 md:p-8 text-slate-100 relative overflow-hidden">
 
-        <!-- Header -->
-        <div class="flex items-center justify-between border-b-2 border-cyan-500/40 pb-6 mb-6 gap-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-6 mb-6 gap-4">
 
-            <!-- LOGO KIRI (KEMENIMIPAS EMBLEM SVG / CUSTOM) -->
-            <div id="logoKemenimipasContainer" class="w-20 h-20 flex items-center justify-center">
-                <svg class="w-full h-full text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="#38bdf8" stroke-width="3" fill="#0f172a"/>
-                    <path d="M50 12 L82 30 L82 70 L50 88 L18 70 L18 30 Z" stroke="#00f0ff" stroke-width="2" fill="none"/>
-                    <path d="M50 22 L72 35 L72 65 L50 78 L28 65 L28 35 Z" fill="#0284c7" opacity="0.4"/>
-                    <circle cx="50" cy="50" r="16" fill="#38bdf8"/>
-                    <path d="M50 38 L54 46 L63 47 L56 53 L58 62 L50 57 L42 62 L44 53 L37 47 L46 46 Z" fill="#030712"/>
-                </svg>
-            </div>
+            <!-- LOGO KIRI (KEMENIMIPAS EMBLEM SVG / CUSTOM) -->
+            <div id="logoKemenimipasContainer" class="w-20 h-20 flex items-center justify-center">
+                <svg class="w-full h-full text-amber-400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="3" fill="#0f172a"/>
+                    <path d="M50 12 L82 30 L82 70 L50 88 L18 70 L18 30 Z" stroke="#fcf6ba" stroke-width="2" fill="none"/>
+                    <path d="M50 22 L72 35 L72 65 L50 78 L28 65 L28 35 Z" fill="#b38728" opacity="0.4"/>
+                    <circle cx="50" cy="50" r="16" fill="#fcf6ba"/>
+                    <path d="M50 38 L54 46 L63 47 L56 53 L58 62 L50 57 L42 62 L44 53 L37 47 L46 46 Z" fill="#0f172a"/>
+                </svg>
+            </div>
 
-            <div class="text-center flex-1 px-2">
-                <h2 class="text-xs md:text-sm font-bold tracking-widest text-cyan-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
-                <h1 class="text-2xl md:text-3xl font-extrabold electric-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
-                <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
-                <div class="inline-block mt-2 px-4 py-1 bg-cyan-500/10 border border-cyan-400/40 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.15)]">
-                    <span id="realtimeDate" class="text-xs md:text-sm font-semibold text-cyan-300 editable-field">PAGI - Memuat Tanggal...</span>
-                </div>
-            </div>
+            <div class="text-center flex-1 px-2">
+                <h2 class="text-xs md:text-sm font-semibold tracking-widest text-amber-400 uppercase">KEMENTERIAN IMIGRASI DAN PEMASYARAKATAN</h2>
+                <h1 class="text-2xl md:text-3xl font-extrabold gold-text tracking-wide mt-1">LAPORAN HARIAN INFOGRAFIS</h1>
+                <p class="text-lg font-bold text-slate-200 mt-0.5 editable-field">BALAI PEMASYARAKATAN KELAS II CIANGIR</p>
+                <div class="inline-block mt-2 px-4 py-1 bg-amber-500/20 border border-amber-500/40 rounded-full">
+                    <span id="realtimeDate" class="text-xs md:text-sm font-semibold text-amber-300 editable-field">PAGI - Memuat Tanggal...</span>
+                </div>
+            </div>
 
-            <!-- LOGO KANAN (PEMASYARAKATAN EMBLEM SVG / CUSTOM) -->
-            <div id="logoPemasyarakatanContainer" class="w-20 h-20 flex items-center justify-center">
-                <svg class="w-full h-full text-cyan-400 drop-shadow-[0_0_8px_rgba(6,182,212,0.6)]" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="45" stroke="#38bdf8" stroke-width="3" fill="#0f172a"/>
-                    <path d="M50 20 C32 20 25 35 25 48 C25 60 35 66 42 68 L42 80 L58 80 L58 68 C65 66 75 60 75 48 C75 35 68 20 50 20 Z" fill="#0284c7"/>
-                    <path d="M50 25 C38 25 32 36 32 46 C32 55 40 60 45 62 L45 76 L55 76 L55 62 C60 60 68 55 68 46 C68 36 62 25 50 25 Z" fill="#38bdf8"/>
-                    <path d="M22 50 C22 70 38 82 50 82 C62 82 78 70 78 50" stroke="#00f0ff" stroke-width="3" stroke-dasharray="4 2"/>
-                </svg>
-            </div>
-        </div>
+            <!-- LOGO KANAN (PEMASYARAKATAN EMBLEM SVG / CUSTOM) -->
+            <div id="logoPemasyarakatanContainer" class="w-20 h-20 flex items-center justify-center">
+                <svg class="w-full h-full text-amber-400" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="45" stroke="#d4af37" stroke-width="3" fill="#0f172a"/>
+                    <path d="M50 20 C32 20 25 35 25 48 C25 60 35 66 42 68 L42 80 L58 80 L58 68 C65 66 75 60 75 48 C75 35 68 20 50 20 Z" fill="#d4af37"/>
+                    <path d="M50 25 C38 25 32 36 32 46 C32 55 40 60 45 62 L45 76 L55 76 L55 62 C60 60 68 55 68 46 C68 36 62 25 50 25 Z" fill="#fcf6ba"/>
+                    <path d="M22 50 C22 70 38 82 50 82 C62 82 78 70 78 50" stroke="#bf953f" stroke-width="3" stroke-dasharray="4 2"/>
+                </svg>
+            </div>
+        </div>
 
-        <!-- Main Grid Content -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        <!-- Main Grid Content -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
 
-            <!-- Left Side (8 Cols) -->
-            <div class="md:col-span-8 flex flex-col gap-6">
+            <!-- Left Side (8 Cols) -->
+            <div class="md:col-span-8 flex flex-col gap-6">
 
-                <!-- Data Klien Table -->
-                <div class="bg-slate-900/80 p-4 rounded-xl border border-cyan-500/30">
-                    <h3 class="text-sm font-bold text-cyan-400 uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <i class="fa-solid fa-users text-xs text-sky-400"></i> Data Klien Pemasyarakatan
-                    </h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-xs text-left border-collapse">
-                            <thead>
-                                <tr class="bg-slate-800/90 text-cyan-300 border-b border-cyan-500/40">
-                                    <th class="p-2">JENIS BIMBINGAN</th>
-                                    <th class="p-2 text-center">DEWASA (L)</th>
-                                    <th class="p-2 text-center">DEWASA (P)</th>
-                                    <th class="p-2 text-center">ANAK (L)</th>
-                                    <th class="p-2 text-center">ANAK (P)</th>
-                                    <th class="p-2 text-center font-bold text-cyan-300">TOTAL</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-slate-800">
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-2 font-medium text-slate-200">PB</td>
-                                    <td class="p-2 text-center editable-field">1163</td>
-                                    <td class="p-2 text-center editable-field">53</td>
-                                    <td class="p-2 text-center editable-field">14</td>
-                                    <td class="p-2 text-center editable-field">0</td>
-                                    <td class="p-2 text-center font-bold text-cyan-400">1230</td>
-                                </tr>
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-2 font-medium text-slate-200">CB</td>
-                                    <td class="p-2 text-center editable-field">62</td>
-                                    <td class="p-2 text-center editable-field">3</td>
-                                    <td class="p-2 text-center editable-field">1</td>
-                                    <td class="p-2 text-center editable-field">0</td>
-                                    <td class="p-2 text-center font-bold text-cyan-400">66</td>
-                                </tr>
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-2 font-medium text-slate-200">CMB</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center font-bold text-cyan-400">0</td>
-                                </tr>
-                                <tr class="hover:bg-slate-800/40">
-                                    <td class="p-2 font-medium text-slate-200">Latihan Kerja</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center editable-field">5</td>
-                                    <td class="p-2 text-center editable-field">-</td>
-                                    <td class="p-2 text-center font-bold text-cyan-400">5</td>
-                                </tr>
-                                <tr class="bg-cyan-950/40 font-bold text-cyan-200 border-t border-cyan-500/40">
-                                    <td class="p-2">TOTAL KLIEN</td>
-                                    <td class="p-2 text-center">1225</td>
-                                    <td class="p-2 text-center">56</td>
-                                    <td class="p-2 text-center">20</td>
-                                    <td class="p-2 text-center">0</td>
-                                    <td class="p-2 text-center text-sm font-extrabold electric-text">1301</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <!-- Data Klien Table -->
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                    <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-users text-xs"></i> Data Klien Pemasyarakatan
+                    </h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-xs text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-800/80 text-amber-300 border-b border-slate-700">
+                                    <th class="p-2">JENIS BIMBINGAN</th>
+                                    <th class="p-2 text-center">DEWASA (L)</th>
+                                    <th class="p-2 text-center">DEWASA (P)</th>
+                                    <th class="p-2 text-center">ANAK (L)</th>
+                                    <th class="p-2 text-center">ANAK (P)</th>
+                                    <th class="p-2 text-center font-bold text-amber-400">TOTAL</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-800">
+                                <tr>
+                                    <td class="p-2 font-medium">PB</td>
+                                    <td class="p-2 text-center editable-field">1163</td>
+                                    <td class="p-2 text-center editable-field">53</td>
+                                    <td class="p-2 text-center editable-field">14</td>
+                                    <td class="p-2 text-center editable-field">0</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">1230</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">CB</td>
+                                    <td class="p-2 text-center editable-field">62</td>
+                                    <td class="p-2 text-center editable-field">3</td>
+                                    <td class="p-2 text-center editable-field">1</td>
+                                    <td class="p-2 text-center editable-field">0</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">66</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">CMB</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">0</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-2 font-medium">Latihan Kerja</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center editable-field">5</td>
+                                    <td class="p-2 text-center editable-field">-</td>
+                                    <td class="p-2 text-center font-bold text-amber-300">5</td>
+                                </tr>
+                                <tr class="bg-amber-500/10 font-bold text-amber-200">
+                                    <td class="p-2">TOTAL KLIEN</td>
+                                    <td class="p-2 text-center">1225</td>
+                                    <td class="p-2 text-center">56</td>
+                                    <td class="p-2 text-center">20</td>
+                                    <td class="p-2 text-center">0</td>
+                                    <td class="p-2 text-center text-sm font-extrabold text-amber-400">1301</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
 
-                <!-- Perkara & Litmas -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-cyan-500/30">
-                        <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Jenis Perkara Klien</h3>
-                        <div class="space-y-1.5 text-xs">
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
-                                <span class="text-slate-300">Narkotika</span>
-                                <span class="font-semibold text-cyan-300 editable-field">582 (Dewasa) / 1 (Anak)</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
-                                <span class="text-slate-300">Terorisme</span>
-                                <span class="font-semibold text-cyan-300 editable-field">3 (Dewasa) / 0 (Anak)</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
-                                <span class="text-slate-300">Korupsi</span>
-                                <span class="font-semibold text-cyan-300 editable-field">20 (Dewasa) / 0 (Anak)</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-slate-300">Lain - Lain</span>
-                                <span class="font-semibold text-cyan-300 editable-field">695 (Dewasa) / 18 (Anak)</span>
-                            </div>
-                        </div>
-                    </div>
+                <!-- Perkara & Litmas -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Jenis Perkara Klien</h3>
+                        <div class="space-y-1.5 text-xs">
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Narkotika</span>
+                                <span class="font-semibold text-amber-200 editable-field">582 (Dewasa) / 1 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Terorisme</span>
+                                <span class="font-semibold text-amber-200 editable-field">3 (Dewasa) / 0 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                                <span class="text-slate-300">Korupsi</span>
+                                <span class="font-semibold text-amber-200 editable-field">20 (Dewasa) / 0 (Anak)</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-300">Lain - Lain</span>
+                                <span class="font-semibold text-amber-200 editable-field">695 (Dewasa) / 18 (Anak)</span>
+                            </div>
+                        </div>
+                    </div>
 
-                    <div class="bg-slate-900/80 p-4 rounded-xl border border-cyan-500/30">
-                        <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-2">Rekapitulasi Litmas</h3>
-                        <div class="grid grid-cols-2 gap-2 text-xs">
-                            <div class="bg-slate-800/60 p-2 rounded border border-cyan-500/20">
-                                <div class="text-slate-300 font-semibold mb-1">Litmas Dewasa</div>
-                                <div class="text-[10px] space-y-0.5 text-slate-400">
-                                    <div>Asimilasi: <b class="editable-field text-cyan-200">3</b></div>
-                                    <div>CB: <b class="editable-field text-cyan-200">122</b></div>
-                                    <div>PB: <b class="editable-field text-cyan-200">317</b></div>
-                                    <div>Pembinaan Awal: <b class="editable-field text-cyan-200">5</b></div>
-                                </div>
-                            </div>
-                            <div class="bg-slate-800/60 p-2 rounded border border-cyan-500/20">
-                                <div class="text-slate-300 font-semibold mb-1">Litmas Anak</div>
-                                <div class="text-[10px] space-y-0.5 text-slate-400">
-                                    <div>Diversi: <b class="editable-field text-cyan-200">12</b></div>
-                                    <div>Peradilan: <b class="editable-field text-cyan-200">48</b></div>
-                                    <div>PB/CB: <b class="editable-field text-cyan-200">3 / 0</b></div>
-                                    <div>Saksi: <b class="editable-field text-cyan-200">1</b></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2">Rekapitulasi Litmas</h3>
+                        <div class="grid grid-cols-2 gap-2 text-xs">
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Dewasa</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Asimilasi: <b class="editable-field">3</b></div>
+                                    <div>CB: <b class="editable-field">122</b></div>
+                                    <div>PB: <b class="editable-field">317</b></div>
+                                    <div>Pembinaan Awal: <b class="editable-field">5</b></div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                <div class="text-slate-400 font-semibold mb-1">Litmas Anak</div>
+                                <div class="text-[10px] space-y-0.5">
+                                    <div>Diversi: <b class="editable-field">12</b></div>
+                                    <div>Peradilan: <b class="editable-field">48</b></div>
+                                    <div>PB/CB: <b class="editable-field">3 / 0</b></div>
+                                    <div>Saksi: <b class="editable-field">1</b></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                <!-- Anggaran -->
-                <div class="bg-slate-900/80 p-3 rounded-xl border border-cyan-500/30 flex flex-wrap justify-between items-center gap-2 text-xs">
-                    <span class="text-slate-300 font-medium"><i class="fa-solid fa-wallet text-cyan-400 mr-1"></i> Alokasi Anggaran:</span>
-                    <span class="font-bold text-cyan-300 editable-field">Rp. 4.927.664.000,-</span>
-                    <span class="text-slate-300 font-medium ml-4"><i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i> Penyerapan:</span>
-                    <span class="font-bold text-emerald-400 editable-field">Rp. 3.576.958.795 (72.59%)</span>
-                </div>
+                <!-- Anggaran -->
+                <div class="bg-slate-900/60 p-3 rounded-xl border border-slate-700/60 flex flex-wrap justify-between items-center gap-2 text-xs">
+                    <span class="text-slate-300 font-medium"><i class="fa-solid fa-wallet text-amber-400 mr-1"></i> Alokasi Anggaran:</span>
+                    <span class="font-bold text-amber-300 editable-field">Rp. 4.927.664.000,-</span>
+                    <span class="text-slate-300 font-medium ml-4"><i class="fa-solid fa-chart-line text-emerald-400 mr-1"></i> Penyerapan:</span>
+                    <span class="font-bold text-emerald-400 editable-field">Rp. 3.576.958.795 (72.59%)</span>
+                </div>
 
-            </div>
+            </div>
 
-            <!-- Right Side / Foto Petugas Piket (4 Cols) -->
-            <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/80 p-4 rounded-xl border border-cyan-500/30">
-                <div class="w-full text-center">
-                    <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-3">PETUGAS PIKET</h3>
-                    <div class="relative w-full aspect-[4/5] bg-slate-950 rounded-lg overflow-hidden border-2 border-cyan-400/60 shadow-[0_0_15px_rgba(6,182,212,0.2)] flex items-center justify-center">
-                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" crossorigin="anonymous" class="w-full h-full object-cover">
-                    </div>
-                </div>
+            <!-- Right Side / Foto Petugas Piket (4 Cols) -->
+            <div class="md:col-span-4 flex flex-col items-center justify-between bg-slate-900/60 p-4 rounded-xl border border-slate-700/60">
+                <div class="w-full text-center">
+                    <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-3">PETUGAS PIKET</h3>
+                    <div class="relative w-full aspect-[4/5] bg-slate-800 rounded-lg overflow-hidden border-2 border-amber-500/40 shadow-md flex items-center justify-center">
+                        <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" crossorigin="anonymous" class="w-full h-full object-cover">
+                    </div>
+                </div>
 
-                <div class="mt-4 text-center w-full bg-cyan-950/40 py-2 rounded-lg border border-cyan-500/30">
-                    <p class="text-xs font-bold text-cyan-300 tracking-wider editable-field">FIKRI & FAOZI</p>
-                    <p class="text-[10px] text-slate-400 uppercase mt-0.5">PETUGAS PIKET</p>
-                </div>
-            </div>
+                <div class="mt-4 text-center w-full bg-amber-500/10 py-2 rounded-lg border border-amber-500/30">
+                    <p class="text-xs font-bold text-amber-300 tracking-wider editable-field">FIKRI & FAOZI</p>
+                    <p class="text-[10px] text-slate-300 uppercase mt-0.5">PETUGAS PIKET</p>
+                </div>
+            </div>
 
-        </div>
+        </div>
 
-        <!-- Footer -->
-        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
-            <span>Sistem Pelaporan Harian Otomatis - Balai Pemasyarakatan Kelas II Ciangir</span>
-            <span>Kementerian Imigrasi Dan Pemasyarakatan</span>
-        </div>
+        <!-- Footer -->
+        <div class="mt-6 pt-4 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-400">
+            <span>Sistem Pelaporan Harian Otomatis - Balai Pemasyarakatan Kelas II Ciangir</span>
+            <span>Kementerian Imigrasi Dan Pemasyrakatan </span>
+        </div>
 
-    </div>
+    </div>
 
-    <!-- JavaScript logic -->
-    <script>
-        const ADMIN_PASSWORD = "Bapas2026";
-        let isAdmin = false;
+    <!-- JavaScript logic -->
+    <script>
+        const ADMIN_PASSWORD = "Bapas2026";
+        let isAdmin = false;
 
-        function updateRealtimeDate() {
-            const now = new Date();
-            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            const formattedDate = now.toLocaleDateString('id-ID', options);
+        function updateRealtimeDate() {
+            const now = new Date();
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const formattedDate = now.toLocaleDateString('id-ID', options);
 
-            const hours = now.getHours();
-            let shift = "PAGI";
-            if (hours >= 12 && hours < 15) {
-                shift = "SIANG";
-            } else if (hours >= 15 && hours < 18) {
-                shift = "SORE";
-            } else if (hours >= 18 || hours < 6) {
-                shift = "MALAM";
-            }
+            const hours = now.getHours();
+            let shift = "PAGI";
+            if (hours >= 12 && hours < 15) {
+                shift = "SIANG";
+            } else if (hours >= 15 && hours < 18) {
+                shift = "SORE";
+            } else if (hours >= 18 || hours < 6) {
+                shift = "MALAM";
+            }
 
-            const dateElement = document.getElementById('realtimeDate');
-            if (dateElement) {
-                dateElement.innerText = `${shift} - ${formattedDate}`;
-            }
-        }
+            const dateElement = document.getElementById('realtimeDate');
+            if (dateElement) {
+                dateElement.innerText = `${shift} - ${formattedDate}`;
+            }
+        }
 
-        function toggleAdminMode() {
-            if (!isAdmin) {
-                const pass = prompt("Masukkan Password Admin untuk mengedit data:");
-                if (pass === ADMIN_PASSWORD) {
-                    isAdmin = true;
-                    updateUIState();
-                } else if (pass !== null) {
-                    alert("Password salah! Akses ditolak.");
-                }
-            } else {
-                isAdmin = false;
-                updateUIState();
-            }
-        }
+        function toggleAdminMode() {
+            if (!isAdmin) {
+                const pass = prompt("Masukkan Password Admin untuk mengedit data:");
+                if (pass === ADMIN_PASSWORD) {
+                    isAdmin = true;
+                    updateUIState();
+                } else if (pass !== null) {
+                    alert("Password salah! Akses ditolak.");
+                }
+            } else {
+                isAdmin = false;
+                updateUIState();
+            }
+        }
 
-        function updateUIState() {
-            const adminBadge = document.getElementById('adminBadge');
-            const statusInfo = document.getElementById('statusInfo');
-            const btnGantiFoto = document.getElementById('btnGantiFoto');
-            const btnGantiLogoKiri = document.getElementById('btnGantiLogoKiri');
-            const btnGantiLogoKanan = document.getElementById('btnGantiLogoKanan');
-            const btnAdminText = document.getElementById('btnAdminText');
-            const lockIcon = document.getElementById('lockIcon');
-            const fields = document.querySelectorAll('.editable-field');
+        function updateUIState() {
+            const adminBadge = document.getElementById('adminBadge');
+            const statusInfo = document.getElementById('statusInfo');
+            const btnGantiFoto = document.getElementById('btnGantiFoto');
+            const btnGantiLogoKiri = document.getElementById('btnGantiLogoKiri');
+            const btnGantiLogoKanan = document.getElementById('btnGantiLogoKanan');
+            const btnAdminText = document.getElementById('btnAdminText');
+            const lockIcon = document.getElementById('lockIcon');
+            const fields = document.querySelectorAll('.editable-field');
 
-            if (isAdmin) {
-                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
-                adminBadge.innerText = "Mode Admin (Edit Aktif)";
-                statusInfo.innerText = "Klik pada teks/angka mana saja di layar untuk mengubah data.";
+            if (isAdmin) {
+                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/40";
+                adminBadge.innerText = "Mode Admin (Edit Aktif)";
+                statusInfo.innerText = "Klik pada teks/angka mana saja di layar untuk mengubah data.";
 
-                btnAdminText.innerText = "Keluar Mode Admin";
-                lockIcon.className = "fa-solid fa-unlock";
+                btnAdminText.innerText = "Keluar Mode Admin";
+                lockIcon.className = "fa-solid fa-unlock";
 
-                btnGantiFoto.classList.remove('hidden');
-                btnGantiFoto.classList.add('flex');
+                btnGantiFoto.classList.remove('hidden');
+                btnGantiFoto.classList.add('flex');
 
-                btnGantiLogoKiri.classList.remove('hidden');
-                btnGantiLogoKiri.classList.add('flex');
+                btnGantiLogoKiri.classList.remove('hidden');
+                btnGantiLogoKiri.classList.add('flex');
 
-                btnGantiLogoKanan.classList.remove('hidden');
-                btnGantiLogoKanan.classList.add('flex');
+                btnGantiLogoKanan.classList.remove('hidden');
+                btnGantiLogoKanan.classList.add('flex');
 
-                fields.forEach(el => {
-                    el.setAttribute('contenteditable', 'true');
-                    el.classList.add('editable-active');
-                });
-            } else {
-                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-cyan-500/20 text-cyan-300 border border-cyan-500/40";
-                adminBadge.innerText = "Mode Publik (Read-Only)";
-                statusInfo.innerText = "Halaman ini dapat dilihat oleh publik.";
+                fields.forEach(el => {
+                    el.setAttribute('contenteditable', 'true');
+                    el.classList.add('editable-active');
+                });
+            } else {
+                adminBadge.className = "px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-500/40";
+                adminBadge.innerText = "Mode Publik (Read-Only)";
+                statusInfo.innerText = "Halaman ini dapat dilihat oleh publik.";
 
-                btnAdminText.innerText = "Masuk Mode Admin";
-                lockIcon.className = "fa-solid fa-lock";
+                btnAdminText.innerText = "Masuk Mode Admin";
+                lockIcon.className = "fa-solid fa-lock";
 
-                btnGantiFoto.classList.add('hidden');
-                btnGantiLogoKiri.classList.add('hidden');
-                btnGantiLogoKanan.classList.add('hidden');
+                btnGantiFoto.classList.add('hidden');
+                btnGantiLogoKiri.classList.add('hidden');
+                btnGantiLogoKanan.classList.add('hidden');
 
-                fields.forEach(el => {
-                    el.setAttribute('contenteditable', 'false');
-                    el.classList.remove('editable-active');
-                });
-            }
-        }
+                fields.forEach(el => {
+                    el.setAttribute('contenteditable', 'false');
+                    el.classList.remove('editable-active');
+                });
+            }
+        }
 
-        function loadLogo(event, containerId, storageKey) {
-            if (!isAdmin) return;
-            const container = document.getElementById(containerId);
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageData = e.target.result;
-                    container.innerHTML = `<img src="${imageData}" class="max-h-20 max-w-full object-contain">`;
-                    try {
-                        localStorage.setItem(storageKey, imageData);
-                    } catch(err) {
-                        console.warn("Gagal menyimpan logo ke LocalStorage (Ukuran gambar terlalu besar).");
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+        function loadLogo(event, containerId, storageKey) {
+            if (!isAdmin) return;
+            const container = document.getElementById(containerId);
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    container.innerHTML = `<img src="${imageData}" class="max-h-20 max-w-full object-contain">`;
+                    try {
+                        localStorage.setItem(storageKey, imageData);
+                    } catch(err) {
+                        console.warn("Gagal menyimpan logo ke LocalStorage (Ukuran gambar terlalu besar).");
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-        function restoreSavedLogos() {
-            const savedLogoKiri = localStorage.getItem('savedLogoKiri');
-            if (savedLogoKiri) {
-                document.getElementById('logoKemenimipasContainer').innerHTML = `<img src="${savedLogoKiri}" class="max-h-20 max-w-full object-contain">`;
-            }
+        function restoreSavedLogos() {
+            const savedLogoKiri = localStorage.getItem('savedLogoKiri');
+            if (savedLogoKiri) {
+                document.getElementById('logoKemenimipasContainer').innerHTML = `<img src="${savedLogoKiri}" class="max-h-20 max-w-full object-contain">`;
+            }
 
-            const savedLogoKanan = localStorage.getItem('savedLogoKanan');
-            if (savedLogoKanan) {
-                document.getElementById('logoPemasyarakatanContainer').innerHTML = `<img src="${savedLogoKanan}" class="max-h-20 max-w-full object-contain">`;
-            }
-        }
+            const savedLogoKanan = localStorage.getItem('savedLogoKanan');
+            if (savedLogoKanan) {
+                document.getElementById('logoPemasyarakatanContainer').innerHTML = `<img src="${savedLogoKanan}" class="max-h-20 max-w-full object-contain">`;
+            }
+        }
 
-        function loadFoto(event) {
-            if (!isAdmin) return;
-            const output = document.getElementById('previewFoto');
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    output.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
+        function loadFoto(event) {
+            if (!isAdmin) return;
+            const output = document.getElementById('previewFoto');
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    output.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
 
-        // Fungsi Download PDF
-        async function downloadPDF() {
-            if (typeof html2pdf === 'undefined') {
-                alert("Library penunjang PDF belum selesai dimuat. Harap periksa koneksi internet Anda.");
-                return;
-            }
+        // Fungsi Download PDF Terperbaiki & Anti-Hanging
+        async function downloadPDF() {
+            if (typeof html2pdf === 'undefined') {
+                alert("Library penunjang PDF belum selesai dimuat. Harap periksa koneksi internet Anda.");
+                return;
+            }
 
-            const btnPdf = document.getElementById('btnPdf');
-            const txtPdf = document.getElementById('txtPdf');
-            const element = document.getElementById('reportArea');
+            const btnPdf = document.getElementById('btnPdf');
+            const txtPdf = document.getElementById('txtPdf');
+            const element = document.getElementById('reportArea');
 
-            btnPdf.disabled = true;
-            txtPdf.innerText = "Memproses...";
+            // Nonaktifkan tombol & aktifkan indikator proses
+            btnPdf.disabled = true;
+            txtPdf.innerText = "Memproses...";
 
-            const opt = {
-                margin:       [0.2, 0.2, 0.2, 0.2],
-                filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
-            };
+            const opt = {
+                margin:       [0.2, 0.2, 0.2, 0.2],
+                filename:     'Laporan_Harian_Bapas_Ciangir.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true, logging: false, scrollX: 0, scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'landscape' }
+            };
 
-            try {
-                await html2pdf().set(opt).from(element).save();
-            } catch (error) {
-                console.error("Gagal mengunduh PDF:", error);
-                alert("Terjadi kesalahan saat membuat file PDF.");
-            } finally {
-                btnPdf.disabled = false;
-                txtPdf.innerText = "Download PDF";
-            }
-        }
+            try {
+                await html2pdf().set(opt).from(element).save();
+            } catch (error) {
+                console.error("Gagal mengunduh PDF:", error);
+                alert("Terjadi kesalahan saat membuat file PDF.");
+            } finally {
+                btnPdf.disabled = false;
+                txtPdf.innerText = "Download PDF";
+            }
+        }
 
-        // Fungsi Download PNG
-        async function downloadPNG() {
-            if (typeof html2canvas === 'undefined') {
-                alert("Library penunjang PNG belum selesai dimuat. Harap periksa koneksi internet Anda.");
-                return;
-            }
+        // Fungsi Download PNG Terperbaiki & Anti-Hanging
+        async function downloadPNG() {
+            if (typeof html2canvas === 'undefined') {
+                alert("Library penunjang PNG belum selesai dimuat. Harap periksa koneksi internet Anda.");
+                return;
+            }
 
-            const btnPng = document.getElementById('btnPng');
-            const txtPng = document.getElementById('txtPng');
-            const element = document.getElementById('reportArea');
+            const btnPng = document.getElementById('btnPng');
+            const txtPng = document.getElementById('txtPng');
+            const element = document.getElementById('reportArea');
 
-            btnPng.disabled = true;
-            txtPng.innerText = "Memproses...";
+            // Nonaktifkan tombol & aktifkan indikator proses
+            btnPng.disabled = true;
+            txtPng.innerText = "Memproses...";
 
-            try {
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    useCORS: true,
-                    logging: false,
-                    scrollX: 0,
-                    scrollY: 0,
-                    backgroundColor: '#030712'
-                });
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    logging: false,
+                    scrollX: 0,
+                    scrollY: 0,
+                    backgroundColor: '#0f2027'
+                });
 
-                const link = document.createElement('a');
-                link.download = 'Laporan_Harian_Bapas_Ciangir.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            } catch (error) {
-                console.error("Gagal mengunduh PNG:", error);
-                alert("Terjadi kesalahan saat membuat gambar PNG.");
-            } finally {
-                btnPng.disabled = false;
-                txtPng.innerText = "Download PNG";
-            }
-        }
+                const link = document.createElement('a');
+                link.download = 'Laporan_Harian_Bapas_Ciangir.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            } catch (error) {
+                console.error("Gagal mengunduh PNG:", error);
+                alert("Terjadi kesalahan saat membuat gambar PNG.");
+            } finally {
+                btnPng.disabled = false;
+                txtPng.innerText = "Download PNG";
+            }
+        }
 
-        document.addEventListener("DOMContentLoaded", function() {
-            updateRealtimeDate();
-            restoreSavedLogos();
-        });
-    </script>
+        document.addEventListener("DOMContentLoaded", function() {
+            updateRealtimeDate();
+            restoreSavedLogos();
+        });
+    </script>
 </body>
 </html>
