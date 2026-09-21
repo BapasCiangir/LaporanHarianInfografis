@@ -49,7 +49,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* --- STYLES KHUSUS EKSPOR (MENGHILANGKAN SEMUA WARNA KUNING ELEMEN EDITABLE) --- */
+        /* --- STYLES KHUSUS EKSPOR --- */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -61,7 +61,6 @@
             outline: none !important;
         }
 
-        /* Mengubah teks gradasi emas menjadi warna emas padat/netral agar tidak menghasilkan latar kuning di canvas */
         .exporting .gold-gradient-text {
             background: none !important;
             -webkit-background-clip: unset !important;
@@ -69,7 +68,6 @@
             color: #f39c12 !important;
         }
 
-        /* Portrait A4 Print Adjustments */
         @media print {
             .no-print {
                 display: none !important;
@@ -111,7 +109,7 @@
             </button>
 
             <!-- Admin Panel Tools -->
-            <div id="adminPanel" class="hidden flex items-center gap-2">
+            <div id="adminPanel" class="hidden flex flex-wrap items-center gap-2">
                 <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kiri
                 </button>
@@ -127,8 +125,18 @@
                 </button>
                 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="loadFoto(event)">
 
+                <!-- Ekspor & Impor Data (Solusi Buka di Tempat Lain) -->
+                <button onclick="exportJSONData()" class="bg-amber-700 hover:bg-amber-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-amber-500" title="Simpan file cadangan untuk dibuka di perangkat lain">
+                    <i class="fa-solid fa-download"></i> Backup Data
+                </button>
+                
+                <button onclick="document.getElementById('importJsonInput').click()" class="bg-indigo-700 hover:bg-indigo-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-indigo-500" title="Muat file cadangan dari perangkat lain">
+                    <i class="fa-solid fa-upload"></i> Restore Data
+                </button>
+                <input type="file" id="importJsonInput" accept=".json" class="hidden" onchange="importJSONData(event)">
+
                 <button onclick="resetDataStorage()" class="bg-red-700 hover:bg-red-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-red-500">
-                    <i class="fa-solid fa-rotate-right"></i> Reset Data
+                    <i class="fa-solid fa-rotate-right"></i> Reset
                 </button>
             </div>
             
@@ -165,7 +173,6 @@
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
                     <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
                     <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
-                    <!-- Balai Pemasyarakatan ukuran disamakan persis dengan Kementerian -->
                     <h1 data-key="header-l4" class="text-xs font-bold tracking-wider gold-gradient-text uppercase leading-snug editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
                     <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-1 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
@@ -375,8 +382,8 @@
     <!-- SCRIPT INTEGRATION -->
     <script>
         let isAdminLoggedIn = false;
-        const STORAGE_KEY_TEXT = 'bapas_report_texts';
-        const STORAGE_KEY_IMAGES = 'bapas_report_images';
+        const STORAGE_KEY_TEXT = 'bapas_report_texts_v2';
+        const STORAGE_KEY_IMAGES = 'bapas_report_images_v2';
 
         // 1. UPDATE WAKTU REALTIME
         function updateRealtimeDateTime() {
@@ -445,33 +452,41 @@
             }
         }
 
-        // 3. PERSISTENSI DATA (LOCALSTORAGE)
+        // 3. PERSISTENSI DATA (LOCALSTORAGE) & AUTO-SAVE PERBAIKAN
         function saveDataToStorage() {
             const textData = {};
             document.querySelectorAll('[data-key]').forEach(el => {
                 textData[el.getAttribute('data-key')] = el.innerText;
             });
-            localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(textData));
+            try {
+                localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(textData));
+            } catch (e) {
+                console.error("Gagal menyimpan teks ke localStorage:", e);
+            }
         }
 
         function loadDataFromStorage() {
             // Load Teks
             const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
             if (savedText) {
-                const textData = JSON.parse(savedText);
-                Object.keys(textData).forEach(key => {
-                    const el = document.querySelector(`[data-key="${key}"]`);
-                    if (el) el.innerText = textData[key];
-                });
+                try {
+                    const textData = JSON.parse(savedText);
+                    Object.keys(textData).forEach(key => {
+                        const el = document.querySelector(`[data-key="${key}"]`);
+                        if (el) el.innerText = textData[key];
+                    });
+                } catch(e) { console.error(e); }
             }
 
-            // Load Gambars/Logo (Termasuk Logo Kementerian)
+            // Load Gambar/Logo
             const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
             if (savedImages) {
-                const imageData = JSON.parse(savedImages);
-                if (imageData.logoKiri) document.getElementById('logoKiri').src = imageData.logoKiri;
-                if (imageData.logoKanan) document.getElementById('logoKanan').src = imageData.logoKanan;
-                if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
+                try {
+                    const imageData = JSON.parse(savedImages);
+                    if (imageData.logoKiri) document.getElementById('logoKiri').src = imageData.logoKiri;
+                    if (imageData.logoKanan) document.getElementById('logoKanan').src = imageData.logoKanan;
+                    if (imageData.previewFoto) document.getElementById('previewFoto').src = imageData.previewFoto;
+                } catch(e) { console.error(e); }
             }
         }
 
@@ -479,7 +494,45 @@
             let savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
             savedImages = savedImages ? JSON.parse(savedImages) : {};
             savedImages[imgId] = base64;
-            localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(savedImages));
+            try {
+                localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(savedImages));
+            } catch (e) {
+                alert("Ukuran gambar terlalu besar untuk disimpan otomatis. Gunakan fitur 'Backup Data' untuk menyimpan.");
+            }
+        }
+
+        // FUNGSI KOMPRESI GAMBAR AGAR TIDAK MELEBIHI KUOTA LOCALSTORAGE
+        function compressAndProcessImage(file, maxDimension, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > maxDimension) {
+                            height *= maxDimension / width;
+                            width = maxDimension;
+                        }
+                    } else {
+                        if (height > maxDimension) {
+                            width *= maxDimension / height;
+                            height = maxDimension;
+                        }
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', 0.85);
+                    callback(compressedBase64);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
         }
 
         function resetDataStorage() {
@@ -490,44 +543,82 @@
             }
         }
 
-        // 4. FUNGSI UPLOAD LOGO & FOTO
-        function loadLogoKiri(event) {
+        // 4. FITUR EKSPOR & IMPOR DATA (SOLUSI PINTASAN BUKA DI TEMPAT LAIN)
+        function exportJSONData() {
+            saveDataToStorage();
+            const textData = JSON.parse(localStorage.getItem(STORAGE_KEY_TEXT) || '{}');
+            const imageData = JSON.parse(localStorage.getItem(STORAGE_KEY_IMAGES) || '{}');
+
+            const backupObject = {
+                texts: textData,
+                images: imageData,
+                exportDate: new Date().toISOString()
+            };
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObject));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Backup_Data_Bapas_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function importJSONData(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    document.getElementById('logoKiri').src = e.target.result;
-                    saveImageToStorage('logoKiri', e.target.result);
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        if (importedData.texts) {
+                            localStorage.setItem(STORAGE_KEY_TEXT, JSON.stringify(importedData.texts));
+                        }
+                        if (importedData.images) {
+                            localStorage.setItem(STORAGE_KEY_IMAGES, JSON.stringify(importedData.images));
+                        }
+                        alert("Data dan Logo berhasil dipulihkan dari file backup!");
+                        location.reload();
+                    } catch (err) {
+                        alert("Format file backup tidak valid!");
+                    }
                 };
-                reader.readAsDataURL(file);
+                reader.readAsText(file);
+            }
+        }
+
+        // 5. FUNGSI UPLOAD LOGO & FOTO
+        function loadLogoKiri(event) {
+            const file = event.target.files[0];
+            if (file) {
+                compressAndProcessImage(file, 300, (compressedBase64) => {
+                    document.getElementById('logoKiri').src = compressedBase64;
+                    saveImageToStorage('logoKiri', compressedBase64);
+                });
             }
         }
 
         function loadLogoKanan(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('logoKanan').src = e.target.result;
-                    saveImageToStorage('logoKanan', e.target.result);
-                };
-                reader.readAsDataURL(file);
+                compressAndProcessImage(file, 300, (compressedBase64) => {
+                    document.getElementById('logoKanan').src = compressedBase64;
+                    saveImageToStorage('logoKanan', compressedBase64);
+                });
             }
         }
 
         function loadFoto(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById('previewFoto').src = e.target.result;
-                    saveImageToStorage('previewFoto', e.target.result);
-                };
-                reader.readAsDataURL(file);
+                compressAndProcessImage(file, 400, (compressedBase64) => {
+                    document.getElementById('previewFoto').src = compressedBase64;
+                    saveImageToStorage('previewFoto', compressedBase64);
+                });
             }
         }
 
-        // 5. HITUNG OTOMATIS PEGAWAI
+        // 6. HITUNG OTOMATIS PEGAWAI
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -545,7 +636,7 @@
             if (totalEl) totalEl.innerText = total;
         }
 
-        // 6. HITUNG OTOMATIS TABEL KLIEN
+        // 7. HITUNG OTOMATIS TABEL KLIEN
         function calculateKlienTable() {
             const parseCell = (cell) => {
                 if (!cell) return 0;
@@ -592,7 +683,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 7. DOWNLOAD PDF
+        // 8. DOWNLOAD PDF
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -610,12 +701,11 @@
             });
         }
 
-        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI EFEK KUNING)
+        // 9. DOWNLOAD GAMBAR PNG/JPG
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
 
-            // Timeout kecil untuk memastikan CSS .exporting sudah ter-apply sempurna
             setTimeout(() => {
                 html2canvas(element, {
                     scale: 2,
@@ -635,7 +725,7 @@
             }, 50);
         }
 
-        // 9. INITIALIZATION
+        // 10. INITIALIZATION & AUTO SAVE LISTENERS
         document.addEventListener('DOMContentLoaded', () => {
             loadDataFromStorage();
 
@@ -644,6 +734,12 @@
 
             calculatePegawai();
             calculateKlienTable();
+
+            // Mendengarkan perubahan input teks secara langsung
+            document.querySelectorAll('.editable').forEach(el => {
+                el.addEventListener('keyup', saveDataToStorage);
+                el.addEventListener('blur', saveDataToStorage);
+            });
 
             document.addEventListener('input', (e) => {
                 if (e.target.classList.contains('pegawai-input')) {
