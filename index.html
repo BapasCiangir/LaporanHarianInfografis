@@ -12,6 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700;800&display=swap');
@@ -49,7 +51,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* --- STYLES KHUSUS EKSPOR (MENGHILANGKAN SEMUA WARNA KUNING ELEMEN EDITABLE) --- */
+        /* --- STYLES KHUSUS EKSPOR --- */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -61,7 +63,6 @@
             outline: none !important;
         }
 
-        /* Mengubah teks gradasi emas menjadi warna emas padat/netral agar tidak menghasilkan latar kuning di canvas */
         .exporting .gold-gradient-text {
             background: none !important;
             -webkit-background-clip: unset !important;
@@ -69,11 +70,8 @@
             color: #f39c12 !important;
         }
 
-        /* Portrait A4 Print Adjustments */
         @media print {
-            .no-print {
-                display: none !important;
-            }
+            .no-print { display: none !important; }
             body {
                 background: #0f2027 !important;
                 -webkit-print-color-adjust: exact;
@@ -98,19 +96,17 @@
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center">
 
-    <!-- Control Panel / Actions -->
+    <!-- Control Panel -->
     <div class="no-print w-full max-w-[210mm] mb-4 flex flex-wrap justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 gap-3">
         <div class="flex items-center space-x-2 text-amber-400 font-semibold text-xs md:text-sm">
             <i class="fa-solid fa-user-shield"></i>
             <span id="editStatusText">Mode Terkunci (Login Admin untuk Edit)</span>
         </div>
         <div class="flex flex-wrap items-center gap-2">
-            <!-- Button Login Admin -->
             <button id="btnLogin" onclick="handleAdminLogin()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-key"></i> Login Admin
             </button>
 
-            <!-- Admin Panel Tools -->
             <div id="adminPanel" class="hidden flex items-center gap-2">
                 <button onclick="document.getElementById('logoKiriInput').click()" class="bg-slate-700 hover:bg-slate-600 text-white px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition border border-slate-500">
                     <i class="fa-solid fa-image"></i> Logo Kiri
@@ -132,7 +128,6 @@
                 </button>
             </div>
             
-            <!-- Export Group Buttons -->
             <div class="flex items-center gap-1">
                 <button onclick="downloadPDF()" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center gap-1 transition shadow-lg shadow-emerald-600/20">
                     <i class="fa-solid fa-file-pdf"></i> PDF
@@ -147,29 +142,24 @@
         </div>
     </div>
 
-    <!-- Template Laporan Area (A4 Portrait Ratio Container) -->
+    <!-- Container Laporan -->
     <div id="reportArea" class="report-container w-full max-w-[210mm] min-h-[297mm] glass-card rounded-xl p-5 text-slate-100 relative overflow-hidden flex flex-col justify-between">
         
-        <!-- Background Ornaments -->
         <div class="absolute -top-24 -right-24 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -left-24 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
         <div>
             <!-- Header -->
             <div class="flex items-center justify-between border-b-2 border-amber-500/40 pb-3 mb-4 gap-2">
-                <!-- Logo Kemenimipas (Kiri) -->
                 <img id="logoKiri" src="https://upload.wikimedia.org/wikipedia/commons/2/23/Logo_Kementerian_Imigrasi_dan_Pemasyarakatan.png" alt="Logo Kemenimipas" class="h-20 w-auto object-contain">
                 
-                <!-- Header Titles -->
                 <div class="text-center flex-1 px-1">
                     <h2 data-key="header-l1" class="text-xs font-bold tracking-wider text-amber-400 uppercase leading-snug editable" contenteditable="false">Kementerian Imigrasi Dan Pemasyarakatan</h2>
                     <h3 data-key="header-l2" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Direktorat Jenderal Pemasyarakatan</h3>
                     <h3 data-key="header-l3" class="text-[11px] font-semibold text-slate-200 uppercase leading-snug editable" contenteditable="false">Kantor Wilayah Banten</h3>
-                    <!-- Balai Pemasyarakatan ukuran disamakan persis dengan Kementerian -->
                     <h1 data-key="header-l4" class="text-xs font-bold tracking-wider gold-gradient-text uppercase leading-snug editable" contenteditable="false">Balai Pemasyarakatan Kelas II Ciangir</h1>
                     <h2 data-key="header-l5" class="text-xs font-extrabold text-amber-300 tracking-widest uppercase mt-1 editable" contenteditable="false">LAPORAN HARIAN INFOGRAFIS</h2>
                     
-                    <!-- Status Realtime Waktu & Hari Tanggal -->
                     <div class="date-badge inline-flex items-center gap-2 mt-1 px-3 py-0.5 bg-amber-500/20 border border-amber-500/40 rounded-full text-xs">
                         <span id="realtimeDate" class="font-semibold text-amber-300">Memuat tanggal...</span>
                         <span class="text-amber-500">•</span>
@@ -177,11 +167,10 @@
                     </div>
                 </div>
 
-                <!-- Logo Pemasyarakatan (Kanan) -->
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
-            <!-- Section Kehadiran Pegawai -->
+            <!-- Kehadiran Pegawai -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-id-card"></i> Jumlah Pegawai Hari Ini
@@ -211,7 +200,7 @@
             <!-- Main Content Layout -->
             <div class="space-y-4">
                 
-                <!-- Section Data Klien -->
+                <!-- Data Klien -->
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                         <i class="fa-solid fa-users"></i> Data Klien Pemasyarakatan
@@ -274,30 +263,30 @@
                     </div>
                 </div>
 
-                <!-- TATA LETAK 3 KOLOM MENYAMPING -->
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <!-- TATA LETAK GRID TERPISAH (4 KOLOM) -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
                     
                     <!-- Kolom 1: Jenis Perkara -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <i class="fa-solid fa-gavel"></i> Jenis Perkara Klien
+                            <i class="fa-solid fa-gavel"></i> Jenis Perkara
                         </h3>
-                        <div class="space-y-1.5 text-xs">
+                        <div class="space-y-1.5 text-[11px]">
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Narkotika</span>
-                                <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582 (D) / 1 (A)</span>
+                                <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582(D) / 1(A)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Terorisme</span>
-                                <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3 (D) / 0 (A)</span>
+                                <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3(D) / 0(A)</span>
                             </div>
                             <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Korupsi</span>
-                                <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20 (D) / 0 (A)</span>
+                                <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20(D) / 0(A)</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-300">Pidum / Lainnya</span>
-                                <span data-key="perkara-pidum" class="font-semibold text-amber-200 editable" contenteditable="false">695 (D) / 18 (A)</span>
+                                <span data-key="perkara-pidum" class="font-semibold text-amber-200 editable" contenteditable="false">695(D) / 18(A)</span>
                             </div>
                         </div>
                     </div>
@@ -305,9 +294,9 @@
                     <!-- Kolom 2: Rekap Litmas -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
                         <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <i class="fa-solid fa-file-contract"></i> Rekapitulasi Litmas
+                            <i class="fa-solid fa-file-contract"></i> Rekap Litmas
                         </h3>
-                        <div class="grid grid-cols-2 gap-1.5 text-xs">
+                        <div class="grid grid-cols-2 gap-1 text-xs">
                             <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
                                 <div class="text-amber-300 font-semibold text-[10px] mb-0.5">Dewasa</div>
                                 <div class="text-[10px] space-y-0.5 text-slate-300">
@@ -327,34 +316,33 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Realisasi Anggaran & Petugas Piket -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between space-y-2">
-                        <!-- Sub-Anggaran -->
-                        <div>
-                            <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1">
-                                <i class="fa-solid fa-wallet"></i> Realisasi Anggaran
-                            </h3>
-                            <div class="text-[10px] space-y-1">
-                                <div class="flex justify-between items-center bg-slate-800/40 p-1 rounded">
-                                    <span class="text-slate-300">Pagu:</span>
-                                    <span data-key="anggaran-pagu" class="font-bold text-amber-300 editable" contenteditable="false">Rp. 4.927.664.000,-</span>
-                                </div>
-                                <div class="flex justify-between items-center bg-slate-800/40 p-1 rounded">
-                                    <span class="text-slate-300">Serap:</span>
-                                    <span data-key="anggaran-serap" class="font-bold text-emerald-400 editable" contenteditable="false">Rp. 3.576.958.795 (72.59%)</span>
-                                </div>
-                            </div>
+                    <!-- Kolom 3: Realisasi Anggaran (Diagram Grafik) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                            <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
+                        </h3>
+                        <div class="relative w-full h-28 flex justify-center items-center">
+                            <canvas id="anggaranChart"></canvas>
                         </div>
+                        <div class="text-[9px] text-center mt-1 text-slate-300">
+                            Pagu: <span class="font-bold text-amber-300">Rp 4.927.664.000</span><br>
+                            Serap: <span class="font-bold text-emerald-400">72.59%</span>
+                        </div>
+                    </div>
 
-                        <!-- Sub-Petugas Piket -->
-                        <div class="pt-1.5 border-t border-slate-800 flex items-center gap-2">
-                            <div class="w-10 h-12 bg-slate-800 rounded border border-amber-500/40 overflow-hidden flex-shrink-0">
+                    <!-- Kolom 4: Petugas Piket (Terapisah Masuk Kolom Sendiri) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-shield"></i> Petugas Piket
+                        </h3>
+                        <div class="flex items-center gap-2">
+                            <div class="w-12 h-14 bg-slate-800 rounded border border-amber-500/40 overflow-hidden flex-shrink-0">
                                 <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
                             </div>
                             <div class="flex-1 text-left">
-                                <span class="text-[8px] text-amber-400 font-bold uppercase tracking-wider block">PETUGAS PIKET</span>
-                                <p data-key="petugas-nama" class="text-[11px] font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
-                                <p class="text-[9px] text-slate-400 uppercase">Dinas Piket Harian</p>
+                                <span class="text-[9px] text-amber-400 font-bold uppercase tracking-wider block">PIKET HARIAN</span>
+                                <p data-key="petugas-nama" class="text-xs font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
+                                <p class="text-[9px] text-slate-400 uppercase">Dinas Piket</p>
                             </div>
                         </div>
                     </div>
@@ -377,8 +365,40 @@
         let isAdminLoggedIn = false;
         const STORAGE_KEY_TEXT = 'bapas_report_texts';
         const STORAGE_KEY_IMAGES = 'bapas_report_images';
+        let anggaranChartInstance = null;
 
-        // 1. UPDATE WAKTU REALTIME
+        // Render Grafik Anggaran
+        function renderAnggaranChart() {
+            const ctx = document.getElementById('anggaranChart').getContext('2d');
+            
+            if (anggaranChartInstance) {
+                anggaranChartInstance.destroy();
+            }
+
+            anggaranChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Terserap (72.59%)', 'Sisa Pagu (27.41%)'],
+                    datasets: [{
+                        data: [3576958795, 1350705205],
+                        backgroundColor: ['#10b981', '#334155'],
+                        borderColor: ['#059669', '#1e293b'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        }
+
         function updateRealtimeDateTime() {
             const now = new Date();
             const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -396,7 +416,6 @@
             if (clockElement) clockElement.innerText = timeString;
         }
 
-        // 2. SISTEM LOGIN ADMIN
         function handleAdminLogin() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
@@ -445,7 +464,6 @@
             }
         }
 
-        // 3. PERSISTENSI DATA (LOCALSTORAGE)
         function saveDataToStorage() {
             const textData = {};
             document.querySelectorAll('[data-key]').forEach(el => {
@@ -455,7 +473,6 @@
         }
 
         function loadDataFromStorage() {
-            // Load Teks
             const savedText = localStorage.getItem(STORAGE_KEY_TEXT);
             if (savedText) {
                 const textData = JSON.parse(savedText);
@@ -465,7 +482,6 @@
                 });
             }
 
-            // Load Gambars/Logo (Termasuk Logo Kementerian)
             const savedImages = localStorage.getItem(STORAGE_KEY_IMAGES);
             if (savedImages) {
                 const imageData = JSON.parse(savedImages);
@@ -490,7 +506,6 @@
             }
         }
 
-        // 4. FUNGSI UPLOAD LOGO & FOTO
         function loadLogoKiri(event) {
             const file = event.target.files[0];
             if (file) {
@@ -527,7 +542,6 @@
             }
         }
 
-        // 5. HITUNG OTOMATIS PEGAWAI
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -545,7 +559,6 @@
             if (totalEl) totalEl.innerText = total;
         }
 
-        // 6. HITUNG OTOMATIS TABEL KLIEN
         function calculateKlienTable() {
             const parseCell = (cell) => {
                 if (!cell) return 0;
@@ -592,7 +605,6 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
-        // 7. DOWNLOAD PDF
         function downloadPDF() {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
@@ -610,12 +622,10 @@
             });
         }
 
-        // 8. DOWNLOAD GAMBAR PNG/JPG (BERSIH DARI EFEK KUNING)
         function downloadImage(format) {
             const element = document.getElementById('reportArea');
             element.classList.add('exporting');
 
-            // Timeout kecil untuk memastikan CSS .exporting sudah ter-apply sempurna
             setTimeout(() => {
                 html2canvas(element, {
                     scale: 2,
@@ -635,7 +645,6 @@
             }, 50);
         }
 
-        // 9. INITIALIZATION
         document.addEventListener('DOMContentLoaded', () => {
             loadDataFromStorage();
 
@@ -644,6 +653,7 @@
 
             calculatePegawai();
             calculateKlienTable();
+            renderAnggaranChart();
 
             document.addEventListener('input', (e) => {
                 if (e.target.classList.contains('pegawai-input')) {
