@@ -51,7 +51,7 @@
             box-shadow: 0 0 0 1px #d4af37;
         }
 
-        /* STYLES KHUSUS EKSPOR */
+        /* --- STYLES KHUSUS EKSPOR --- */
         .exporting .date-badge,
         .exporting .editable,
         .exporting [contenteditable="true"],
@@ -96,6 +96,7 @@
 </head>
 <body class="p-2 md:p-6 flex flex-col items-center">
 
+    <!-- Control Panel / Actions -->
     <div class="no-print w-full max-w-[210mm] mb-4 flex flex-wrap justify-between items-center bg-slate-900/90 p-3 rounded-xl border border-amber-500/30 gap-3">
         <div class="flex items-center space-x-3 text-amber-400 font-semibold text-xs md:text-sm">
             <i class="fa-solid fa-user-shield"></i>
@@ -139,6 +140,7 @@
         </div>
     </div>
 
+    <!-- Template Laporan Area -->
     <div id="reportArea" class="report-container w-full max-w-[210mm] min-h-[297mm] glass-card rounded-xl p-5 text-slate-100 relative overflow-hidden flex flex-col justify-between">
         
         <!-- Background Ornaments -->
@@ -169,6 +171,7 @@
                 <img id="logoKanan" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/Logo_Pemasyarakatan.png" alt="Logo Pemasyarakatan" class="h-20 w-auto object-contain">
             </div>
 
+            <!-- SECTION 1: JUMLAH PEGAWAI -->
             <div class="mb-4 bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                 <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                     <i class="fa-solid fa-users-gear"></i> Rekapitulasi Pegawai
@@ -193,6 +196,7 @@
                 </div>
             </div>
 
+            <!-- SECTION 2: DATA KLIEN TABLE -->
             <div class="space-y-4">
                 <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70">
                     <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
@@ -260,104 +264,51 @@
                     </div>
                 </div>
 
-                <!-- TATA LETAK GRID 5 KOLOM TERINTEGRASI -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2.5">
+                <!-- TATA LETAK GRID MULTI KOLOM INFORMASI -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
                     
-                    <!-- Kolom 1: KLIEN WAJIB LAPOR (BARU) -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-amber-500/40 flex flex-col justify-between shadow-lg shadow-amber-500/5">
-                        <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
-                            <i class="fa-solid fa-clipboard-user text-amber-300"></i> Klien Wajib Lapor
+                    <!-- Kolom 1: Jenis Perkara -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-gavel"></i> Jenis Perkara
                         </h3>
                         <div class="space-y-1 text-[10px]">
                             <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">1. PB</span>
-                                <span data-key="wajib-lapor-pb" class="font-semibold text-amber-200 editable" contenteditable="false">120</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">2. CB</span>
-                                <span data-key="wajib-lapor-cb" class="font-semibold text-amber-200 editable" contenteditable="false">15</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">3. CMB</span>
-                                <span data-key="wajib-lapor-cmb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">4. CMK</span>
-                                <span data-key="wajib-lapor-cmk" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">5. PiB</span>
-                                <span data-key="wajib-lapor-pib" class="font-semibold text-amber-200 editable" contenteditable="false">2</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">6. Asimilasi</span>
-                                <span data-key="wajib-lapor-asimilasi" class="font-semibold text-amber-200 editable" contenteditable="false">5</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">7. Pid. Kerja Sosial</span>
-                                <span data-key="wajib-lapor-pks" class="font-semibold text-amber-200 editable" contenteditable="false">1</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">8. Pid. Pengawasan</span>
-                                <span data-key="wajib-lapor-pengawasan" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">9. Pid. Latihan Kerja</span>
-                                <span data-key="wajib-lapor-latihan-kerja" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
-                                <span class="text-slate-300">10. Pid. Dengan Syarat</span>
-                                <span data-key="wajib-lapor-bersyarat" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                            <div class="flex justify-between pt-0.5">
-                                <span class="text-slate-300">11. Pid. Di Dalam Lembaga</span>
-                                <span data-key="wajib-lapor-lembaga" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Kolom 2: Jenis Perkara -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between">
-                        <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                            <i class="fa-solid fa-gavel"></i> Jenis Perkara
-                        </h3>
-                        <div class="space-y-2 text-[10px]">
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
                                 <span class="text-slate-300">Narkotika</span>
-                                <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582(D) / 1(A)</span>
+                                <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582(D)/1(A)</span>
                             </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
                                 <span class="text-slate-300">Terorisme</span>
-                                <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3(D) / 0(A)</span>
+                                <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3(D)/0(A)</span>
                             </div>
-                            <div class="flex justify-between border-b border-slate-800 pb-1">
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
                                 <span class="text-slate-300">Korupsi</span>
-                                <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20(D) / 0(A)</span>
+                                <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20(D)/0(A)</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-slate-300">Pidum / Lainnya</span>
-                                <span data-key="perkara-pidum" class="font-semibold text-amber-200 editable" contenteditable="false">695(D) / 18(A)</span>
+                                <span data-key="perkara-pidum" class="font-semibold text-amber-200 editable" contenteditable="false">695(D)/18(A)</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Kolom 3: Rekap Litmas -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between">
-                        <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                    <!-- Kolom 2: Rekap Litmas -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                             <i class="fa-solid fa-file-contract"></i> Rekap Litmas
                         </h3>
                         <div class="grid grid-cols-2 gap-1 text-[10px]">
                             <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
-                                <div class="text-amber-300 font-semibold text-[10px] mb-0.5">Dewasa</div>
-                                <div class="text-[9px] space-y-0.5 text-slate-300">
+                                <div class="text-amber-300 font-semibold text-[9px] mb-0.5">Dewasa</div>
+                                <div class="space-y-0.5 text-slate-300">
                                     <div>Asimilasi: <b data-key="litmas-d-asi" class="editable text-white" contenteditable="false">3</b></div>
                                     <div>CB/PB: <b data-key="litmas-d-cb" class="editable text-white" contenteditable="false">439</b></div>
                                     <div>Pindah: <b data-key="litmas-d-pindah" class="editable text-white" contenteditable="false">87</b></div>
                                 </div>
                             </div>
                             <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
-                                <div class="text-amber-300 font-semibold text-[10px] mb-0.5">Anak</div>
-                                <div class="text-[9px] space-y-0.5 text-slate-300">
+                                <div class="text-amber-300 font-semibold text-[9px] mb-0.5">Anak</div>
+                                <div class="space-y-0.5 text-slate-300">
                                     <div>Diversi: <b data-key="litmas-a-div" class="editable text-white" contenteditable="false">12</b></div>
                                     <div>Peradilan: <b data-key="litmas-a-peradil" class="editable text-white" contenteditable="false">48</b></div>
                                     <div>PB/CB: <b data-key="litmas-a-pb" class="editable text-white" contenteditable="false">3</b></div>
@@ -366,9 +317,91 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 4: Realisasi Anggaran -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between select-none">
-                        <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                    <!-- Kolom 3: Klien Baru (5 Poin) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-plus"></i> Klien Baru
+                        </h3>
+                        <div class="space-y-1 text-[10px]">
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <span class="text-slate-300">1. PB</span>
+                                <span data-key="klien-baru-pb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <span class="text-slate-300">2. CB</span>
+                                <span data-key="klien-baru-cb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <span class="text-slate-300">3. CMB</span>
+                                <span data-key="klien-baru-cmb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <span class="text-slate-300">4. PiB</span>
+                                <span data-key="klien-baru-pib" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-300">5. CMK</span>
+                                <span data-key="klien-baru-cmk" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom 4: Klien Wajib Lapor (11 Poin) -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                            <i class="fa-solid fa-clipboard-user"></i> Klien Wajib Lapor
+                        </h3>
+                        <div class="space-y-0.5 text-[9px]">
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">1. PB</span>
+                                <span data-key="wajib-lapor-pb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">2. CB</span>
+                                <span data-key="wajib-lapor-cb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">3. CMB</span>
+                                <span data-key="wajib-lapor-cmb" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">4. CMK</span>
+                                <span data-key="wajib-lapor-cmk" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">5. PiB</span>
+                                <span data-key="wajib-lapor-pib" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">6. Asimilasi</span>
+                                <span data-key="wajib-lapor-asimilasi" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">7. Pid. Kerja Sosial</span>
+                                <span data-key="wajib-lapor-pks" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">8. Pid. Pengawasan</span>
+                                <span data-key="wajib-lapor-pengawasan" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">9. Pid. Latihan Kerja</span>
+                                <span data-key="wajib-lapor-latihan-kerja" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between border-b border-slate-800/80 pb-0.5">
+                                <span class="text-slate-300">10. Pid. Dgn Syarat</span>
+                                <span data-key="wajib-lapor-bersyarat" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-slate-300">11. Pid. Dalam Lembaga</span>
+                                <span data-key="wajib-lapor-lembaga" class="font-semibold text-amber-200 editable" contenteditable="false">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom 5: Realisasi Anggaran -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between select-none">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                             <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
                         </h3>
                         <div class="relative w-full h-24 flex justify-center items-center">
@@ -380,12 +413,12 @@
                         </div>
                     </div>
 
-                    <!-- Kolom 5: Petugas Piket -->
-                    <div class="bg-slate-900/70 p-2.5 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center">
-                        <h3 class="text-[11px] font-bold text-amber-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5 w-full justify-start">
+                    <!-- Kolom 6: Petugas Piket -->
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center">
+                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 w-full justify-start">
                             <i class="fa-solid fa-user-shield"></i> Petugas Piket
                         </h3>
-                        <div class="w-24 h-28 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md mb-1.5">
+                        <div class="w-24 h-28 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md my-1">
                             <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
                         </div>
                         <div>
@@ -399,6 +432,7 @@
             </div>
         </div>
 
+        <!-- Footer -->
         <div class="mt-4 pt-3 border-t border-slate-800 flex justify-between items-center text-[9px] text-slate-400">
             <span>Sistem Laporan Otomatis Realtime - Bapas Kelas II Ciangir</span>
             <span>Kemenimipas RI</span>
@@ -406,6 +440,7 @@
 
     </div>
 
+    <!-- FIREBASE MODULE & APPLICATION LOGIC -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -447,6 +482,7 @@
             }
         }
 
+        // Initialize Firebase Authentication & Realtime Firestore Listener
         async function initFirebase() {
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
@@ -537,6 +573,7 @@
             }, 600);
         }
 
+        // Admin Authentication Logic
         window.handleAdminLogin = function() {
             const adminPanel = document.getElementById('adminPanel');
             const editStatusText = document.getElementById('editStatusText');
@@ -597,23 +634,16 @@
                     "klien-cb-dl": "62", "klien-cb-al": "1", "klien-cb-dp": "3", "klien-cb-ap": "0",
                     "klien-cmb-dl": "0", "klien-cmb-al": "0", "klien-cmb-dp": "0", "klien-cmb-ap": "0",
                     "klien-asi-dl": "0", "klien-asi-al": "5", "klien-asi-dp": "0", "klien-asi-ap": "0",
-                    "wajib-lapor-pb": "120",
-                    "wajib-lapor-cb": "15",
-                    "wajib-lapor-cmb": "0",
-                    "wajib-lapor-cmk": "0",
-                    "wajib-lapor-pib": "2",
-                    "wajib-lapor-asimilasi": "5",
-                    "wajib-lapor-pks": "1",
-                    "wajib-lapor-pengawasan": "0",
-                    "wajib-lapor-latihan-kerja": "0",
-                    "wajib-lapor-bersyarat": "0",
-                    "wajib-lapor-lembaga": "0",
-                    "perkara-narkotika": "582(D) / 1(A)",
-                    "perkara-terorisme": "3(D) / 0(A)",
-                    "perkara-korupsi": "20(D) / 0(A)",
-                    "perkara-pidum": "695(D) / 18(A)",
+                    "perkara-narkotika": "582(D)/1(A)",
+                    "perkara-terorisme": "3(D)/0(A)",
+                    "perkara-korupsi": "20(D)/0(A)",
+                    "perkara-pidum": "695(D)/18(A)",
                     "litmas-d-asi": "3", "litmas-d-cb": "439", "litmas-d-pindah": "87",
                     "litmas-a-div": "12", "litmas-a-peradil": "48", "litmas-a-pb": "3",
+                    "klien-baru-pb": "0", "klien-baru-cb": "0", "klien-baru-cmb": "0", "klien-baru-pib": "0", "klien-baru-cmk": "0",
+                    "wajib-lapor-pb": "0", "wajib-lapor-cb": "0", "wajib-lapor-cmb": "0", "wajib-lapor-cmk": "0", "wajib-lapor-pib": "0",
+                    "wajib-lapor-asimilasi": "0", "wajib-lapor-pks": "0", "wajib-lapor-pengawasan": "0", "wajib-lapor-latihan-kerja": "0",
+                    "wajib-lapor-bersyarat": "0", "wajib-lapor-lembaga": "0",
                     "petugas-nama": "FIKRI & FAOZI"
                 };
 
@@ -640,6 +670,7 @@
             }
         };
 
+        // Render Realtime Clock and Date
         function updateRealtimeDateTime() {
             const now = new Date();
             const optionsDate = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
@@ -657,6 +688,7 @@
             if (clockElement) clockElement.innerText = timeString;
         }
 
+        // Dynamic Calculations
         function calculatePegawai() {
             const parseVal = (id) => {
                 const el = document.getElementById(id);
@@ -720,6 +752,7 @@
             if (grandTotalEl) grandTotalEl.innerText = grandTotal;
         }
 
+        // Render Chart.js
         function renderAnggaranChart() {
             const canvas = document.getElementById('anggaranChart');
             if (!canvas) return;
@@ -790,6 +823,7 @@
             }, 50);
         };
 
+        // Event Listener Initialization
         document.addEventListener('DOMContentLoaded', () => {
             updateRealtimeDateTime();
             setInterval(updateRealtimeDateTime, 1000);
@@ -798,6 +832,7 @@
             calculateKlienTable();
             renderAnggaranChart();
 
+            // Setup input listener for live updates
             document.addEventListener('input', (e) => {
                 if (e.target.id === 'pegawaiHadir' || e.target.id === 'pegawaiCuti' || e.target.id === 'pegawaiDL') {
                     calculatePegawai();
@@ -810,6 +845,7 @@
                 }
             });
 
+            // Start Firebase Auth & Realtime Sync
             initFirebase();
         });
     </script>
