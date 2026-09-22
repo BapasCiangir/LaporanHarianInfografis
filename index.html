@@ -264,8 +264,8 @@
                     </div>
                 </div>
 
-                <!-- TATA LETAK GRID MULTI KOLOM INFORMASI SIMETRIS DAN RAPI -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 items-stretch">
+                <!-- TATA LETAK GRID ATAS: 4 KOLOM INFORMASI DATA -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-stretch">
                     
                     <!-- Kolom 1: Jenis Perkara -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between h-full">
@@ -273,16 +273,16 @@
                             <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <i class="fa-solid fa-gavel"></i> Jenis Perkara
                             </h3>
-                            <div class="space-y-1 text-[10px]">
-                                <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                            <div class="space-y-1.5 text-[10px]">
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
                                     <span class="text-slate-300">Narkotika</span>
                                     <span data-key="perkara-narkotika" class="font-semibold text-amber-200 editable" contenteditable="false">582(D)/1(A)</span>
                                 </div>
-                                <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
                                     <span class="text-slate-300">Terorisme</span>
                                     <span data-key="perkara-terorisme" class="font-semibold text-amber-200 editable" contenteditable="false">3(D)/0(A)</span>
                                 </div>
-                                <div class="flex justify-between border-b border-slate-800 pb-0.5">
+                                <div class="flex justify-between border-b border-slate-800 pb-1">
                                     <span class="text-slate-300">Korupsi</span>
                                     <span data-key="perkara-korupsi" class="font-semibold text-amber-200 editable" contenteditable="false">20(D)/0(A)</span>
                                 </div>
@@ -300,18 +300,18 @@
                             <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
                                 <i class="fa-solid fa-file-contract"></i> Rekap Litmas
                             </h3>
-                            <div class="grid grid-cols-2 gap-1 text-[10px]">
-                                <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
-                                    <div class="text-amber-300 font-semibold text-[9px] mb-0.5">Dewasa</div>
-                                    <div class="space-y-0.5 text-slate-300">
+                            <div class="grid grid-cols-2 gap-1.5 text-[10px]">
+                                <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                    <div class="text-amber-300 font-semibold text-[9px] mb-1">Dewasa</div>
+                                    <div class="space-y-1 text-slate-300">
                                         <div>Asimilasi: <b data-key="litmas-d-asi" class="editable text-white" contenteditable="false">3</b></div>
                                         <div>CB/PB: <b data-key="litmas-d-cb" class="editable text-white" contenteditable="false">439</b></div>
                                         <div>Pindah: <b data-key="litmas-d-pindah" class="editable text-white" contenteditable="false">87</b></div>
                                     </div>
                                 </div>
-                                <div class="bg-slate-800/50 p-1.5 rounded border border-slate-700/50">
-                                    <div class="text-amber-300 font-semibold text-[9px] mb-0.5">Anak</div>
-                                    <div class="space-y-0.5 text-slate-300">
+                                <div class="bg-slate-800/50 p-2 rounded border border-slate-700/50">
+                                    <div class="text-amber-300 font-semibold text-[9px] mb-1">Anak</div>
+                                    <div class="space-y-1 text-slate-300">
                                         <div>Diversi: <b data-key="litmas-a-div" class="editable text-white" contenteditable="false">12</b></div>
                                         <div>Peradilan: <b data-key="litmas-a-peradil" class="editable text-white" contenteditable="false">48</b></div>
                                         <div>PB/CB: <b data-key="litmas-a-pb" class="editable text-white" contenteditable="false">3</b></div>
@@ -407,33 +407,38 @@
                         </div>
                     </div>
 
+                </div>
+
+                <!-- TATA LETAK GRID BAWAH: REALISASI ANGGARAN & PETUGAS PIKET (DIPINDAHKAN KE BAWAH SEJAJAR) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 items-stretch">
+                    
                     <!-- Kolom 5: Realisasi Anggaran -->
                     <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between h-full select-none">
                         <div>
                             <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5">
                                 <i class="fa-solid fa-chart-pie"></i> Realisasi Anggaran
                             </h3>
-                            <div class="relative w-full h-24 flex justify-center items-center my-auto">
+                            <div class="relative w-full h-28 flex justify-center items-center my-auto">
                                 <canvas id="anggaranChart"></canvas>
                             </div>
                         </div>
-                        <div class="text-[9px] text-center mt-1 text-slate-300">
-                            Pagu: <span class="font-bold text-amber-300">Rp 4.927.664.000</span><br>
+                        <div class="text-[10px] text-center mt-2 text-slate-300">
+                            Pagu: <span class="font-bold text-amber-300">Rp 4.927.664.000</span> &nbsp;|&nbsp; 
                             Serap: <span class="font-bold text-emerald-400">72.59%</span>
                         </div>
                     </div>
 
                     <!-- Kolom 6: Petugas Piket -->
-                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-col justify-between items-center text-center h-full">
-                        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 w-full justify-start">
-                            <i class="fa-solid fa-user-shield"></i> Petugas Piket
-                        </h3>
-                        <div class="w-24 h-28 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md my-auto">
-                            <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
+                    <div class="bg-slate-900/70 p-3 rounded-lg border border-slate-700/70 flex flex-row items-center justify-around text-center h-full gap-3 p-4">
+                        <div class="text-left flex-1">
+                            <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-shield"></i> Petugas Piket
+                            </h3>
+                            <p data-key="petugas-nama" class="text-sm font-bold text-amber-200 editable mb-1" contenteditable="false">FIKRI & FAOZI</p>
+                            <p class="text-[10px] text-slate-400 uppercase font-semibold">Petugas Piket Harian Bapas Kelas II Ciangir</p>
                         </div>
-                        <div class="mt-1">
-                            <p data-key="petugas-nama" class="text-[11px] font-bold text-amber-200 editable" contenteditable="false">FIKRI & FAOZI</p>
-                            <p class="text-[8px] text-slate-400 uppercase font-semibold">Petugas Piket Harian</p>
+                        <div class="w-24 h-28 bg-slate-800 rounded-lg border-2 border-amber-500/50 overflow-hidden shadow-md shrink-0">
+                            <img id="previewFoto" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80" alt="Foto Petugas Piket" class="w-full h-full object-cover">
                         </div>
                     </div>
 
