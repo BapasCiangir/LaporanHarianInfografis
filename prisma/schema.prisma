@@ -1,0 +1,90 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql" // Bisa diganti 'sqlite' atau 'mysql'
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  name      String
+  role      String   @default("ADMIN")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ReportData {
+  id              String   @id @default("main") // Single active report record
+  
+  // Rekapitulasi Pegawai
+  pegawaiHadir    Int      @default(25)
+  pegawaiCuti     Int      @default(2)
+  pegawaiDL       Int      @default(3)
+
+  // Data Klien Pemasyarakatan
+  klienPbDl       Int      @default(1163)
+  klienPbAl       Int      @default(14)
+  klienPbDp       Int      @default(53)
+  klienPbAp       Int      @default(0)
+
+  klienCbDl       Int      @default(62)
+  klienCbAl       Int      @default(1)
+  klienCbDp       Int      @default(3)
+  klienCbAp       Int      @default(0)
+
+  klienCmbDl      Int      @default(0)
+  klienCmbAl      Int      @default(0)
+  klienCmbDp      Int      @default(0)
+  klienCmbAp      Int      @default(0)
+
+  klienAsiDl      Int      @default(0)
+  klienAsiAl      Int      @default(5)
+  klienAsiDp      Int      @default(0)
+  klienAsiAp      Int      @default(0)
+
+  // Jenis Perkara
+  perkaraNarkotika String  @default("582(D)/1(A)")
+  perkaraTerorisme String  @default("3(D)/0(A)")
+  perkaraKorupsi   String  @default("20(D)/0(A)")
+  perkaraPidum     String  @default("695(D)/18(A)")
+
+  // Rekap Litmas
+  litmasDAsi      Int      @default(3)
+  litmasDCb       Int      @default(439)
+  litmasDPindah   Int      @default(87)
+  litmasADiv      Int      @default(12)
+  litmasAPeradil  Int      @default(48)
+  litmasAPb       Int      @default(3)
+
+  // Klien Baru
+  klienBaruPb     Int      @default(0)
+  klienBaruCb     Int      @default(0)
+  klienBaruCmb    Int      @default(0)
+  klienBaruPib    Int      @default(0)
+  klienBaruCmk    Int      @default(0)
+
+  // Klien Wajib Lapor
+  wajibLaporPb        Int  @default(0)
+  wajibLaporCb        Int  @default(0)
+  wajibLaporCmb       Int  @default(0)
+  wajibLaporCmk       Int  @default(0)
+  wajibLaporPib       Int  @default(0)
+  wajibLaporAsimilasi Int  @default(0)
+  wajibLaporPks       Int  @default(0)
+  wajibLaporPengawasan Int @default(0)
+  wajibLaporLatihanKerja Int @default(0)
+  wajibLaporBersyarat Int  @default(0)
+  wajibLaporLembaga   Int  @default(0)
+
+  // Petugas & Foto
+  petugasNama     String   @default("FIKRI & FAOZI")
+  fotoPiketiBase64 String? @db.Text
+
+  updatedAt       DateTime @updatedAt
+}
