@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const { PrismaClient } = require('@prisma/client');
 const path = require('path');
 
@@ -6,23 +7,18 @@ const prisma = new PrismaClient();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware batas ukuran payload (15MB untuk foto base64)
+// 1. MIDDLEWARE UTAMA
+app.use(cors());
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ limit: '15mb', extended: true }));
 
-// Menyajikan file statis dari folder 'public'
-app.use(express.static(path.join(__dirname, 'public')));
-
-// 1. GET API: Mengambil data laporan harian
+// 2. ROUTE API (WAJIB DI ATAS STATIC FILES)
 app.get('/api/report', async (req, res) => {
     try {
         let report = await prisma.report.findFirst();
-        
-        // Jika belum ada data di DB, cipta data awal
         if (!report) {
             report = await prisma.report.create({ data: {} });
         }
-        
         res.json(report);
     } catch (error) {
         console.error('Error fetching report:', error);
@@ -30,13 +26,10 @@ app.get('/api/report', async (req, res) => {
     }
 });
 
-// 2. PUT API: Menyimpan atau memperbarui data laporan harian
 app.put('/api/report', async (req, res) => {
     try {
         let report = await prisma.report.findFirst();
         const dataPayload = { ...req.body };
-
-        // Hapus field id dan updatedAt agar tidak bentrok saat update
         delete dataPayload.id;
         delete dataPayload.updatedAt;
 
@@ -58,7 +51,10 @@ app.put('/api/report', async (req, res) => {
     }
 });
 
-// Jalankan Server
+// 3. STATIC FILES (SEBAGAI PENUTUP)
+app.use(express.static(path.join(__dirname, 'public')));
+
+// 4. JALANKAN SERVER
 app.listen(PORT, () => {
     console.log(`Server Bapas Ciangir berjalan di http://localhost:${PORT}`);
 });
