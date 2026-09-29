@@ -56,5 +56,5 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // 4. JALANKAN SERVER
 app.listen(PORT, () => {
-    console.log(`Server Bapas Ciangir berjalan di http://localhost:${PORT}`);
+    console.log(`Server Bapas Ciangir berjalan di http://localhost:3000`);
 });
