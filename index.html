@@ -180,10 +180,11 @@ function draw(){
  $('#klien').innerHTML=tK();$('#pid').innerHTML=tP();
  const pc=N(S.alok)?Math.round(N(S.serap)/N(S.alok)*100):0;
  $('#bud').innerHTML=`<tr><th>Alokasi Anggaran</th><td>${rp(S.alok)}</td></tr><tr class="s"><th>Penyerapan</th><td>${rp(S.serap)} (${pc}%)</td></tr>`;
- [0,1,2].forEach(i=>$('#p'+i).textContent=N(S.pend[i]));${const nf=S.foto==='none',im=$('.pk img');
+ [0,1,2].forEach(i=>$('#p'+i).textContent=N(S.pend[i]));
+ const nf=S.foto==='none',im=$('.pk img');
  im.style.display=nf?'none':'';
  if(!nf)im.src=S.foto||FOTO0;
- $('#pk').textContent=S.piket||(nf?'Tidak ada petugas piket':'')}
+ $('#pk').textContent=S.piket||(nf?'Tidak ada petugas piket':'');
  $('#litd').innerHTML=lit(S.litd,'#CDCDA0');$('#lita').innerHTML=lit(S.lita,'#E2C25E');$('#pie').innerHTML=pie(S.peg)}
 function fit(){$('#poster').style.zoom=Math.min(1,$('#stage').clientWidth/540)}
 /* ===== Editor ===== */
