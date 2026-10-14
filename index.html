@@ -180,7 +180,10 @@ function draw(){
  $('#klien').innerHTML=tK();$('#pid').innerHTML=tP();
  const pc=N(S.alok)?Math.round(N(S.serap)/N(S.alok)*100):0;
  $('#bud').innerHTML=`<tr><th>Alokasi Anggaran</th><td>${rp(S.alok)}</td></tr><tr class="s"><th>Penyerapan</th><td>${rp(S.serap)} (${pc}%)</td></tr>`;
- [0,1,2].forEach(i=>$('#p'+i).textContent=N(S.pend[i]));$('#pk').textContent=S.piket;$('.pk img').src=S.foto||FOTO0;
+ [0,1,2].forEach(i=>$('#p'+i).textContent=N(S.pend[i]));${const nf=S.foto==='none',im=$('.pk img');
+ im.style.display=nf?'none':'';
+ if(!nf)im.src=S.foto||FOTO0;
+ $('#pk').textContent=S.piket||(nf?'Tidak ada petugas piket':'')}
  $('#litd').innerHTML=lit(S.litd,'#CDCDA0');$('#lita').innerHTML=lit(S.lita,'#E2C25E');$('#pie').innerHTML=pie(S.peg)}
 function fit(){$('#poster').style.zoom=Math.min(1,$('#stage').clientWidth/540)}
 /* ===== Editor ===== */
@@ -195,7 +198,7 @@ function buildEd(){
 $('#ed').addEventListener('input',e=>{if(!ADM)return;const p=e.target.dataset.p;if(!p)return;let v=e.target.type==='number'?N(e.target.value):e.target.value;if(p==='tgl'&&!v)return;
  const a=p.split('.');let o=S;a.slice(0,-1).forEach(x=>o=o[x]);o[a[a.length-1]]=v;draw();save()});
 $('#ed').addEventListener('click',e=>{if(!ADM)return;const t=e.target;
- if(t.dataset.del){const[k,i]=t.dataset.del.split('.');S[k].splice(+i,1)}else if(t.dataset.add){S[t.dataset.add].push([...SECT.find(s=>s[0]===t.dataset.add)[3]])}else if(t.dataset.pegadd){const n=$('#pegNew').value.trim();if(!n)return;if(!PEG.some(x=>x.toLowerCase()===n.toLowerCase())){PEG.push(n);pegSave()}setTimeout(()=>$('#pegNew').focus())}else if(t.dataset.pegdel){PEG.splice(+t.dataset.pegdel,1);pegSave()}else if(t.dataset.fotoreset){delete S.foto}else return;
+ if(t.dataset.del){const[k,i]=t.dataset.del.split('.');S[k].splice(+i,1)}else if(t.dataset.add){S[t.dataset.add].push([...SECT.find(s=>s[0]===t.dataset.add)[3]])}else if(t.dataset.pegadd){const n=$('#pegNew').value.trim();if(!n)return;if(!PEG.some(x=>x.toLowerCase()===n.toLowerCase())){PEG.push(n);pegSave()}setTimeout(()=>$('#pegNew').focus())}else if(t.dataset.pegdel){PEG.splice(+t.dataset.pegdel,1);pegSave()}else if(t.dataset.fotodel){S.foto='none';S.piket=''}else if(t.dataset.fotodel){S.foto='none';S.piket=''}else if(t.dataset.fotoreset){delete S.foto}else return;
  buildEd();draw();save()});
 /* ===== Toolbar ===== */
 $('#bEd').onclick=()=>{const o=$('#ed').classList.toggle('on');if(o&&innerWidth<1100)$('#ed').scrollIntoView({behavior:'smooth'})};
@@ -239,7 +242,7 @@ $('#file').onchange=e=>{imp(e.target.files[0]);e.target.value=''};
 /* ===== Piket pegawai ===== */
 function pkNames(){const m=new Map();[...PEG,...pkSplit(S.piket)].forEach(n=>{if(!m.has(n.toLowerCase()))m.set(n.toLowerCase(),n)});return[...m.values()]}
 function pkBlock(){const sel=new Set(pkSplit(S.piket).map(x=>x.toLowerCase())),ns=pkNames();
- return `<h3>Petugas piket</h3><div>${ns.map(n=>`<label class="ck"><input type="checkbox" data-pk="${E(n)}" ${sel.has(n.toLowerCase())?'checked':''}>${E(n)}</label>`).join('')||'<small>Belum ada pegawai - tambahkan di bawah.</small>'}</div><div class="rw" style="grid-template-columns:1fr auto;margin-top:6px"><input id="pegNew" placeholder="Nama pegawai baru"><button data-pegadd="1">+ Tambah</button></div><div style="margin:8px 0"><label class="btn" for="fotoIn" style="display:inline-block;cursor:pointer">Ganti foto petugas</label><input id="fotoIn" type="file" accept="image/*" hidden> ${S.foto?'<button data-fotoreset="1">Pakai foto awal</button>':''}</div>`+
+ return `<h3>Petugas piket</h3><div>${ns.map(n=>`<label class="ck"><input type="checkbox" data-pk="${E(n)}" ${sel.has(n.toLowerCase())?'checked':''}>${E(n)}</label>`).join('')||'<small>Belum ada pegawai - tambahkan di bawah.</small>'}</div><div class="rw" style="grid-template-columns:1fr auto;margin-top:6px"><input id="pegNew" placeholder="Nama pegawai baru"><button data-pegadd="1">+ Tambah</button></div><div style="margin:8px 0"><label class="btn" for="fotoIn" style="display:inline-block;cursor:pointer">Ganti foto petugas</label><input id="fotoIn" type="file" accept="image/*" hidden> ${S.foto==='none'?'<button data-fotoreset="1">Tampilkan foto lagi</button>':'<button data-fotodel="1">Hapus foto (tidak ada piket)</button> '+(S.foto?'<button data-fotoreset="1">Pakai foto awal</button>':'')}</div>`+
  (PEG.length?`<details><summary style="font-size:12px;cursor:pointer;margin-bottom:6px">Kelola daftar pegawai</summary>${PEG.map((n,i)=>`<div class="rw" style="grid-template-columns:1fr 30px"><span style="font-size:13px">${E(n)}</span><button class="x" data-pegdel="${i}" aria-label="Hapus ${E(n)} dari daftar">×</button></div>`).join('')}</details>`:'')}
 $('#ed').addEventListener('change',e=>{const t=e.target;if(!ADM||t.dataset.pk==null)return;const cur=new Set(pkSplit(S.piket).map(x=>x.toLowerCase())),k=t.dataset.pk.toLowerCase();
  S.piket=pkNames().filter(n=>{const l=n.toLowerCase();return l===k?t.checked:cur.has(l)}).join(' & ');draw();save()});
